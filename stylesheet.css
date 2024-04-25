@@ -1,0 +1,146 @@
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: auto;
+    width: 70%;
+    font-family: Verdana, Roboto, sans-serif;
+	line-height: 1.5;
+	text-align: left;
+	}
+
+a {
+	text-decoration: none;
+	color: #1f8bff;
+}
+
+a:hover {
+    text-decoration: underline;
+}
+
+
+.header {
+    text-align: center;
+    background: white;
+    color: black;
+}
+
+.header h1 {
+    font-size: 40px;
+}
+
+/* Navigation bar */
+.navbar {
+    overflow: hidden;
+    background-color: #1f8bff;
+    border-radius: 3px;
+}
+
+/* Navigation bar links */
+.navbar a {
+    float: left;
+    display: block;
+    color: white;
+    text-align: center;
+    padding: 14px 20px;
+    text-decoration: none;
+    transition: .3s background-color;
+}
+
+
+/* Hover links*/
+.navbar a:hover {
+    background-color: white;
+    color: #1f8bff;
+    text-decoration: none;
+}
+
+/* Active links*/
+.navbar a.active {
+	 background-color: white;
+	 text-shadow: none;
+	 cursor: default;
+	 color: black;
+}
+/* Column */
+.row {  
+    display: -ms-flexbox; /* IE10 */
+    display: flex;
+    -ms-flex-wrap: wrap; /* IE10 */
+    flex-wrap: wrap;
+}
+
+.indented {
+    top: -1.5em;
+    padding-left: 30pt;
+    padding-right: 50pt;
+  }
+
+.narrow {
+  width: 600px;
+  position: absolute;
+  left: 20%;
+  top: 30%;
+}
+
+/* Sidebar column*/
+.side {
+    -ms-flex: 30%; /* IE10 */
+    flex: 30%;
+    background-color: white;
+    padding: 20px;
+}
+
+/* Sidebar image */
+.side img {
+	max-width: 100%;
+	height: auto;
+	float: center;
+}
+
+/* Main column */
+.main {   
+    -ms-flex: 70%; /* IE10 */
+    flex: 70%;
+    background-color: white;
+    padding: 20px;
+}
+
+/* General hover links*/
+a {
+	text-decoration: none;
+	color: #1f8bff;
+}
+
+/* General links hover*/
+
+a:hover {
+    text-decoration: underline;
+}
+
+/* Footer */
+.footer {
+    padding: 20px;
+    text-align: center;
+    background-color: #1f8bff;
+    border-radius: 3px;
+}
+
+
+/* If screen is less than 700px wide, make the two columns stack on top of each other and same ofr navigation links. Increase width. */
+@media screen and (max-width: 700px) {
+    
+    body {
+    	width: 95%;
+	 }
+   
+    .row {   
+        flex-direction: column;
+    }
+
+    .navbar a {
+        float: none;
+        width: 100%;
+    }
+}
