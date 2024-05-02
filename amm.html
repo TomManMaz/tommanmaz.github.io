@@ -19,6 +19,40 @@
             font-weight: bold;
         }
 
+    /* Navigation bar */
+    .navbar {
+        overflow: hidden;
+        background-color: #1f8bff;
+        border-radius: 3px;
+    }
+
+    /* Navigation bar links */
+    .navbar a {
+        float: left;
+        display: block;
+        color: white;
+        text-align: center;
+        padding: 14px 20px;
+        text-decoration: none;
+        transition: .3s background-color;
+    }
+
+
+    /* Hover links*/
+    .navbar a:hover {
+        background-color: white;
+        color: #1f8bff;
+        text-decoration: none;
+    }
+
+    /* Active links*/
+    .navbar a.active {
+        background-color: white;
+        text-shadow: none;
+        cursor: default;
+        color: black;
+    }
+
         .useful-links {
             font-size: 18px;
             margin-bottom: 20px;
@@ -52,11 +86,20 @@
     </style>
 </head>
 <body>
+
+    <div class="header">
+        <h1>Tommaso Mannelli Mazzoli</h1>
+        <p>TU Wien, Vienna, Austria</p>
+    </div>
+    
+    
+    
     <div class="navbar"></div>
         <a href="index.html">Home</a></li>
         <a href="publications.html">Publications</a></li>
         <a class="active" href="amm.html">AMM</a></li>
     </div>
+
     <h1>American Mathematical Monthly Problems</h1>
     <div class="useful-links"></div>
         <strong>Useful Links</strong><br />
@@ -70,7 +113,11 @@
             tommaso.mazzoli [at] tuwien.ac.at</strong>
         </p>
     </div>
+
+
+
     <table class="problem-table">
+
         <tr>
             <th>Problem 12243 - by M. Lawrence Glasser (USA) </th>
         </tr>
@@ -87,6 +134,26 @@
 
             <th><a href="https://tommanmaz.github.io/AMM/12243.pdf">solution</a></th>
         </tr>
+        
+        <tr>
+            <th>Problem 12388 - byby A.Garcia(France) </th>
+        </tr>
+        <tr>
+            <td>
+                <p>
+                    Let \(\alpha\) be a real number. Evaluate      
+        \[
+         \int_0^a \frac{\ln^2(x)\arctan(x)}{x^2-2\cos(\alpha)x+1} \mathop{}\!\mathrm{d} x.
+        \]
+	
+                </p>
+            </td>
+
+            <th><a href="https://tommanmaz.github.io/AMM/12388.pdf">solution</a></th>
+        </tr>
+        <tr>
+
+       
         <tr>
             <th>Problem 12229 - by Moubinool Omarjee (France)</th>
         </tr>
