@@ -3,17 +3,25 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tag Collection</title>
+    <title>Bus Driver Scheduling Problem Instance Set</title>
     <style>
         body {
             font-family: Arial, sans-serif;
             margin: 0;
             padding: 20px;
+            background-color: #f9f9f9;
+        }
+        h1, h3 {
+            color: #333;
+        }
+        p {
+            line-height: 1.6;
         }
         table {
             width: 100%;
             border-collapse: collapse;
             margin-bottom: 20px;
+            background-color: #fff;
         }
         th, td {
             padding: 12px;
@@ -23,58 +31,120 @@
         th {
             background-color: #f4f4f4;
         }
-        input[type="text"] {
-            width: 100%;
+        pre {
+            background-color: #f4f4f4;
             padding: 10px;
-            margin-bottom: 20px;
+            overflow-x: auto;
+        }
+        a {
+            color: #007bff;
+            text-decoration: none;
+        }
+        a:hover {
+            text-decoration: underline;
+        }
+        hr {
+            border: 0;
+            border-top: 1px solid #ddd;
+            margin: 20px 0;
         }
     </style>
-    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <!-- <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script> -->
     <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
 </head>
 <body>
 
-    <h1>2omf Instance Set</h1>
+    <h1>The Bus Driver Scheduling Problem with Complex Break Constraint Instance Set</h1>
 
+    <hr />
+    <h3>L. Kletzander, N. Musliu [<a href="refs.html#Elshafei:77">Kletzander:20</a>]</h3>
+    <p>There are \(50\) real-world like instances of the BDSP. The optimal solutions are due to <cite><a href="https://ojs.aaai.org/index.php/AAAI/article/view/17408" target="_blank">Branch and Price for Bus Driver Scheduling with Complex Break Constraints</a></cite>.</p>
+    <p>For more details, see the paper: <cite><a href="https://ojs.aaai.org/index.php/ICAPS/article/view/6688" target="_blank">Solving Large Real-Life Bus Driver Scheduling Problems with Complex Break Constraints</a></cite>.</p><br>
+    <!-- <pre>
+   name              n_legs  n_tours  feas.sol.  permutation/bound      gap -->
+   <!-- ------------------------------------------------------------------------------ -->
+   <!-- <a href="news.html#05/11">*</a> <a href="http://coral.ise.lehigh.edu/wp-content/uploads/2014/07/data.d/esc16a.dat">realistic_10_1</a>  16  <a href="http://coral.ise.lehigh.edu/wp-content/uploads/2014/07/soln.d/esc16a.sln">68</a> (OPT)  (2,14,10,16,5,3,7,8,4,6,12,11,15,13,9,1) -->
+   <!-- <a href="http://coral.ise.lehigh.edu/wp-content/uploads/2014/07/data.d/esc16b.dat">realistic_10_2</a>  16  <a href="http://coral.ise.lehigh.edu/wp-content/uploads/2014/07/soln.d/esc16b.sln">292</a> (OPT)  (6,3,7,5,13,1,15,2,4,11,9,14,10,12,8,16) -->
+   We also include the relative gap between
 
-    <hr>
+   best feasible soltion and best known lower bound in percent, i.e.
+   
+   \[\mathrm{gap} = \frac{\mathrm{solution} – \mathrm{bound}}{\mathrm{bound}}\cdot 100 \].
+<table border="1">
+    <tr>
+     <th style="width:10px;">Name</th>
+     <th style="width:25px;">n_tours</th>
+     <th style="width:25px;">n_legs</th>
+     <th style="width:100px;">feas.solution</th>
+     <th style="width:100px;">bound</th>
+     <th style="width:100px;"> gap (%)</th>
+    </tr>
+    <tr><td>realistic_10_1</td><td>8</td><td>73</td><td>14417 (OPT)</td><td>14417</td><td>0.00</td></tr>
+    <tr><td>realistic_10_2</td><td>8</td><td>77</td><td>14572 (OPT)</td><td>14572</td><td>0.00</td></tr>
+    <tr><td>realistic_10_3</td><td>8</td><td>81</td><td>15103 (OPT)</td><td>15103</td><td>0.00</td></tr>
+    <tr><td>realistic_10_4</td><td>8</td><td>78</td><td>15148 (OPT)</td><td>15148</td><td>0.00</td></tr>
+    <tr><td>realistic_10_5</td><td>8</td><td>76</td><td>14306 (OPT)</td><td>14306</td><td>0.00</td></tr>
+    <tr><td>realistic_20_6</td><td>17</td><td>169</td><td>30427 (OPT)</td><td>30427</td><td>0.00</td></tr>
+    <tr><td>realistic_20_7</td><td>17</td><td>166</td><td>30610 (OPT)</td><td>30587.67</td><td>0.07</td></tr>
+    <tr><td>realistic_20_8</td><td>17</td><td>165</td><td>30437 (BP)</td><td>30437</td><td>0.00</td></tr>
+    <tr><td>realistic_20_9</td><td>17</td><td>160</td><td>29520 (OPT)</td><td>29520</td><td>0.00</td></tr>
+    <tr><td>realistic_20_10</td><td>17</td><td>174</td><td>30480 (OPT)</td><td>30480</td><td>0.11</td></tr>
+    <tr><td>realistic_30_11</td><td>29</td><td>273</td><td>48677.32</td><td>48677.32</td><td>0.38</td></tr>
+    <tr><td>realistic_30_12</td><td>29</td><td>283</td><td>50920.05</td><td>50920.05</td><td>0.36</td></tr>
+    <tr><td>realistic_30_13</td><td>29</td><td>265</td><td>50780.95</td><td>50780.95</td><td>0.74</td></tr>
+    <tr><td>realistic_30_14</td><td>29</td><td>256</td><td>48444.75</td><td>48444.75</td><td>0.15</td></tr>
+    <tr><td>realistic_30_15</td><td>29</td><td>265</td><td>49548.86</td><td>49548.86</td><td>0.17</td></tr>
+    <tr><td>realistic_40_16</td><td>39</td><td>367</td><td>66301.8</td><td>66301.8</td><td>0.15</td></tr>
+    <tr><td>realistic_40_17</td><td>39</td><td>356</td><td>67595.47</td><td>67595.47</td><td>0.54</td></tr>
+    <tr><td>realistic_40_18</td><td>39</td><td>346</td><td>67059.64</td><td>67059.64</td><td>0.08</td></tr>
+    <tr><td>realistic_40_19</td><td>39</td><td>358</td><td>66424.7</td><td>66424.7</td><td>0.70</td></tr>
+    <tr><td>realistic_40_20</td><td>39</td><td>363</td><td>66519.74</td><td>66519.74</td><td>0.64</td></tr>
+    <tr><td>realistic_50_21</td><td>50</td><td>437</td><td>82618.88</td><td>82618.88</td><td>0.31</td></tr>
+    <tr><td>realistic_50_22</td><td>50</td><td>457</td><td>84575.75</td><td>84575.75</td><td>0.22</td></tr>
+    <tr><td>realistic_50_23</td><td>50</td><td>456</td><td>83414.95</td><td>83414.95</td><td>0.35</td></tr>
+    <tr><td>realistic_50_24</td><td>50</td><td>447</td><td>85326.67</td><td>85326.67</td><td>0.27</td></tr>
+    <tr><td>realistic_50_25</td><td>50</td><td>458</td><td>84274.42</td><td>84274.42</td><td>0.11</td></tr>
+    <tr><td>realistic_60_26</td><td>58</td><td>517</td><td>99289.61</td><td>99289.61</td><td>0.84</td></tr>
+    <tr><td>realistic_60_27</td><td>58</td><td>534</td><td>100368.75</td><td>100368.75</td><td>0.18</td></tr>
+    <tr><td>realistic_60_28</td><td>58</td><td>546</td><td>99178</td><td>99178</td><td>0.39</td></tr>
+    <tr><td>realistic_60_29</td><td>58</td><td>528</td><td>99373</td><td>99373</td><td>0.46</td></tr>
+    <tr><td>realistic_60_30</td><td>58</td><td>549</td><td>99472</td><td>99472</td><td>23.57</td></tr>
+    <tr><td>realistic_70_31</td><td>70</td><td>629</td><td>116863</td><td>116863</td><td>0.14</td></tr>
+    <tr><td>realistic_70_32</td><td>70</td><td>652</td><td>118472</td><td>118472</td><td>28.89</td></tr>
+    <tr><td>realistic_70_33</td><td>70</td><td>643</td><td>119454</td><td>119454</td><td>1.44</td></tr>
+    <tr><td>realistic_70_34</td><td>70</td><td>636</td><td>118983</td><td>118983</td><td>1.09</td></tr>
+    <tr><td>realistic_70_35</td><td>70</td><td>637</td><td>118849</td><td>118849</td><td>24.14</td></tr>
+    <tr><td>realistic_80_36</td><td>79</td><td>764</td><td>133384</td><td>133384</td><td>20.03</td></tr>
+    <tr><td>realistic_80_37</td><td>79</td><td>748</td><td>135354</td><td>135354</td><td>24.29</td></tr>
+    <tr><td>realistic_80_38</td><td>79</td><td>753</td><td>135508</td><td>135508</td><td>39.09</td></tr>
+    <tr><td>realistic_80_39</td><td>79</td><td>713</td><td>135508</td><td>135508</td><td>39.09</td></tr>
+    <tr><td>realistic_80_40</td><td>79</td><td>732</td><td>133510</td><td>133510</td><td>41.23</td></tr>
+    <tr><td>realistic_90_41</td><td>88</td><td>810</td><td>149342</td><td>149342</td><td>25.32</td></tr>
+    <tr><td>realistic_90_42</td><td>88</td><td>841</td><td>149985</td><td>149985</td><td>60.09</td></tr>
+    <tr><td>realistic_90_43</td><td>88</td><td>826</td><td>151246</td><td>151246</td><td>82.26</td></tr>
+    <tr><td>realistic_90_44</td><td>88</td><td>849</td><td>149956</td><td>149956</td><td>23.97</td></tr>
+    <tr><td>realistic_90_45</td><td>88</td><td>832</td><td>151325</td><td>151325</td><td>111.32</td></tr>
+    <tr><td>realistic_100_46</td><td>98</td><td>924</td><td>170866</td><td>170866</td><td>52.66</td></tr>
+    <tr><td>realistic_100_47</td><td>98</td><td>860</td><td>165268</td><td>165268</td><td>60.55</td></tr>
+    <tr><td>realistic_100_48</td><td>98</td><td>906</td><td>173431</td><td>173431</td><td>46.27</td></tr>
+    <tr><td>realistic_100_49</td><td>98</td><td>924</td><td>171275</td><td>171275</td><td>65.67</td></tr>
+    <tr><td>realistic_100_50</td><td>98</td><td>876</td><td>165752</td><td>165752</td><td>0.00</td></tr>
+</table>
+  
+  
 
-    Uniform Instances
+<!-- </pre> -->
 
+    <hr />
+    <h3>L. Kletzander, T. Mannelli Mazzoli, N. Musliu [<a href="refs.html#Elshafei:77">Elshafei:77</a>]</h3>
+    <p>There are 15 real-world like larger instances of the BDSP. The optimal solutions are due to [<a href="refs.html#ClPe:94">ClPe:94</a>] (\( n = 16 \)).</p>
+    <pre>
+   name              n_legs  n_tours  feas.sol.  permutation/bound      gap
+   ------------------------------------------------------------------------------
+   <a href="news.html#05/11">*</a> <a href="http://coral.ise.lehigh.edu/wp-content/uploads/2014/07/data.d/esc16a.dat">realistic_10_1</a>  16  <a href="http://coral.ise.lehigh.edu/wp-content/uploads/2014/07/soln.d/esc16a.sln">68</a> (OPT)  (2,14,10,16,5,3,7,8,4,6,12,11,15,13,9,1)
+  <a></a> <a href="http://coral.ise.lehigh.edu/wp-content/uploads/2014/07/data.d/esc16b.dat">realistic_10_2</a>  16  <a href="http://coral.ise.lehigh.edu/wp-content/uploads/2014/07/soln.d/esc16b.sln">292</a> (OPT)  (6,3,7,5,13,1,15,2,4,11,9,14,10,12,8,16)
+    </pre>
 
-    <table id="tagTable">
-        <thead>
-            <tr>
-                <th>ID</th>
-                <th>Name</th>
-                <th>\( n \)</th>
-                <th>\( m \)</th>
-                <th>Value</th>
-                <th>Solution</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr>
-                <td>1</td>
-                <td>Instance A</td>
-                <td>1000</td>
-                <td>20</td>
-                <td>100 (OPT)</td>
-
-            </tr>
-        </tbody>
-    </table>
-
-    <hr>
-
-    Monarchy Instances
-
-    <hr>
-
-    Diarchy Instances
-
-    <hr> 
-    Real Life Instances
-
+    <p><a name="HRW"></a></p>
 </body>
 </html>
