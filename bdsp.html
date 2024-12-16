@@ -72,8 +72,9 @@
 
     <h1>The Bus Driver Scheduling Problem with Complex Break Constraint Instance Set</h1>
 
+    The instances can be downloaded <a href="https://cdlab-artis.dbai.tuwien.ac.at/papers/sa-bds/">here</a>.
     <hr />
-    <h3>L. Kletzander, N. Musliu [<a href="refs.html#Elshafei:77">Kletzander:20</a>]</h3>
+    <h3>L. Kletzander, N. Musliu [Kletzander20]</h3>
     <p>There are \(50\) real-world like instances of the BDSP. The optimal solutions are due to <cite><a href="https://ojs.aaai.org/index.php/AAAI/article/view/17408" target="_blank">Branch and Price for Bus Driver Scheduling with Complex Break Constraints</a></cite>.</p>
     <p>For more details, see the paper: <cite><a href="https://ojs.aaai.org/index.php/ICAPS/article/view/6688" target="_blank">Solving Large Real-Life Bus Driver Scheduling Problems with Complex Break Constraints</a></cite>.</p><br>
     <!-- <pre>
@@ -554,72 +555,11 @@
     </tbody>
   </table>
 
-<!-- <table border="1">
-    <tr>
-     <th style="width:10px;">Name</th>
-     <th style="width:10px;">n_tours</th>
-     <th style="width:10px;">n_legs</th>
-     <th style="width:200px;">feas.solution</th>
-     <th style="width:100px;">bound</th>
-     <th style="width:100px;"> gap (%)</th>
-    </tr>
-    <tr><td>realistic_10_1</td><td>8</td><td>73</td><td><a href="https://tommanmaz.github.io/sols/realistic_10_1.csv"> 14417</a> (OPT)</td><td>14417</td><td>0.00</td></tr>
-    <tr><td>realistic_10_2</td><td>8</td><td>77</td><td>14572 (OPT)</td><td>14572</td><td>0.00</td></tr>
-    <tr><td>realistic_10_3</td><td>8</td><td>81</td><td>15103 (OPT)</td><td>15103</td><td>0.00</td></tr>
-    <tr><td>realistic_10_4</td><td>8</td><td>78</td><td>15148 (OPT)</td><td>15148</td><td>0.00</td></tr>
-    <tr><td>realistic_10_5</td><td>8</td><td>76</td><td>14306 (OPT)</td><td>14306</td><td>0.00</td></tr>
-    <tr><td>realistic_20_6</td><td>17</td><td>169</td><td>30427 (OPT)</td><td>30427</td><td>0.00</td></tr>
-    <tr><td>realistic_20_7</td><td>17</td><td>166</td><td>30610 (OPT)</td><td>30587.67</td><td>0.07</td></tr>
-    <tr><td>realistic_20_8</td><td>17</td><td>165</td><td>30437 (BP)</td><td>30437</td><td>0.00</td></tr>
-    <tr><td>realistic_20_9</td><td>17</td><td>160</td><td>29520 (OPT)</td><td>29520</td><td>0.00</td></tr>
-    <tr><td>realistic_20_10</td><td>17</td><td>174</td><td>30480 (OPT)</td><td>30480</td><td>0.11</td></tr>
-    <tr><td>realistic_30_11</td><td>29</td><td>273</td><td>48731 (BP)</td><td>48677.32</td><td>0.38</td></tr>
-    <tr><td>realistic_30_12</td><td>29</td><td>283</td><td>51115 (BP)</td><td>50920.05</td><td>0.36</td></tr>
-    <tr><td>realistic_30_13</td><td>29</td><td>265</td><td>50962 (BP)</td><td>50780.95</td><td>0.74</td></tr>
-    <tr><td>realistic_30_14</td><td>29</td><td>256</td><td>48802 (BP)</td><td>48444.75</td><td>0.15</td></tr>
-    <tr><td>realistic_30_15</td><td>29</td><td>265</td><td>49622 (BP)</td><td>49548.86</td><td>0.17</td></tr>
-    <tr><td>realistic_40_16</td><td>39</td><td>367</td><td>66417 (BP)</td><td>66301.8</td><td>0.15</td></tr>
-    <tr><td>realistic_40_17</td><td>39</td><td>356</td><td>67695 (BP)</td><td>67595.47</td><td>0.54</td></tr>
-    <tr><td>realistic_40_18</td><td>39</td><td>346</td><td>67424 (BP)</td><td>67059.64</td><td>0.08</td></tr>
-    <tr><td>realistic_40_19</td><td>39</td><td>358</td><td>66478 (BP)</td><td>66424.7</td><td>0.70</td></tr>
-    <tr><td>realistic_40_20</td><td>39</td><td>363</td><td>66519.74</td><td>66519.74</td><td>0.64</td></tr>
-    <tr><td>realistic_50_21</td><td>50</td><td>437</td><td>82618.88</td><td>82618.88</td><td>0.31</td></tr>
-    <tr><td>realistic_50_22</td><td>50</td><td>457</td><td>84575.75</td><td>84575.75</td><td>0.22</td></tr>
-    <tr><td>realistic_50_23</td><td>50</td><td>456</td><td>83414.95</td><td>83414.95</td><td>0.35</td></tr>
-    <tr><td>realistic_50_24</td><td>50</td><td>447</td><td>85326.67</td><td>85326.67</td><td>0.27</td></tr>
-    <tr><td>realistic_50_25</td><td>50</td><td>458</td><td>84274.42</td><td>84274.42</td><td>0.11</td></tr>
-    <tr><td>realistic_60_26</td><td>58</td><td>517</td><td>99289.61</td><td>99289.61</td><td>0.84</td></tr>
-    <tr><td>realistic_60_27</td><td>58</td><td>534</td><td>100368.75</td><td>100368.75</td><td>0.18</td></tr>
-    <tr><td>realistic_60_28</td><td>58</td><td>546</td><td>99178</td><td>99178</td><td>0.39</td></tr>
-    <tr><td>realistic_60_29</td><td>58</td><td>528</td><td>99373</td><td>99373</td><td>0.46</td></tr>
-    <tr><td>realistic_60_30</td><td>58</td><td>549</td><td>99472</td><td>99472</td><td>23.57</td></tr>
-    <tr><td>realistic_70_31</td><td>70</td><td>629</td><td>116863</td><td>116863</td><td>0.14</td></tr>
-    <tr><td>realistic_70_32</td><td>70</td><td>652</td><td>118472</td><td>118472</td><td>28.89</td></tr>
-    <tr><td>realistic_70_33</td><td>70</td><td>643</td><td>119454</td><td>119454</td><td>1.44</td></tr>
-    <tr><td>realistic_70_34</td><td>70</td><td>636</td><td>118983</td><td>118983</td><td>1.09</td></tr>
-    <tr><td>realistic_70_35</td><td>70</td><td>637</td><td>118406 (LNS)</td><td>118849</td><td>24.14</td></tr>
-    <tr><td>realistic_80_36</td><td>79</td><td>764</td><td>133384</td><td>133384</td><td>20.03</td></tr>
-    <tr><td>realistic_80_37</td><td>79</td><td>748</td><td>135354</td><td>135354</td><td>24.29</td></tr>
-    <tr><td>realistic_80_38</td><td>79</td><td>753</td><td>135508</td><td>135508</td><td>39.09</td></tr>
-    <tr><td>realistic_80_39</td><td>79</td><td>713</td><td>135508</td><td>135508</td><td>39.09</td></tr>
-    <tr><td>realistic_80_40</td><td>79</td><td>732</td><td>133510</td><td>133510</td><td>41.23</td></tr>
-    <tr><td>realistic_90_41</td><td>88</td><td>810</td><td>149342</td><td>149342</td><td>25.32</td></tr>
-    <tr><td>realistic_90_42</td><td>88</td><td>841</td><td>149985</td><td>149985</td><td>60.09</td></tr>
-    <tr><td>realistic_90_43</td><td>88</td><td>826</td><td>151246 (LNS)</td><td>151246</td><td>82.26</td></tr>
-    <tr><td>realistic_90_44</td><td>88</td><td>849</td><td>149956 (LNS)</td><td>149956</td><td>23.97</td></tr>
-    <tr><td>realistic_90_45</td><td>88</td><td>832</td><td>151325 (LNS)</td><td>151325</td><td>111.32</td></tr>
-    <tr><td>realistic_100_46</td><td>98</td><td>924</td><td>165821 (LNS)</td><td>170866</td><td>52.66</td></tr>
-    <tr><td>realistic_100_47</td><td>98</td><td>860</td><td>165268 (BP)</td><td>108262.39</td><td>60.55</td></tr>
-    <tr><td>realistic_100_48</td><td>98</td><td>906</td><td>167760 (LNS)</td><td>173431</td><td>46.27</td></tr>
-    <tr><td>realistic_100_49</td><td>98</td><td>924</td><td>168925 (LNS)</td><td>171275</td><td>65.67</td></tr>
-    <tr><td>realistic_100_50</td><td>98</td><td>876</td><td>165554 (LNS)</td><td>165752</td><td>0.00</td></tr>
-</table>
-   -->
-  
 
-
+  You can download the table <a href="BKS_realistic_1.csv">here</a>.
 <hr />
-<h3>L. Kletzander, T. Mannelli Mazzoli, N. Musliu </h3>
+<h3>Larger Instances  [Kletzander22]</h3>
+
 <p>There are \(15\) real-world like larger instances of the BDSP.</p>
 
 <table border="1" class="dataframe">
@@ -740,5 +680,33 @@
       </tr>
     </tbody>
   </table>
+
+
+
+You can download the table <a href="BKS_realistic_2.csv">here</a>. </p>
+
+
+<dl>
+    <dt>REFERENCE:</dt>
+    <dd>
+        <p>
+            [Mazzoli24]Mazzoli, T. M., Kletzander, L., Van Hentenryck, P., & Musliu, N. (2024, May). 
+            <em>Investigating Large Neighbourhood Search for Bus Driver Scheduling.</em> 
+            In Proceedings of the International Conference on Automated Planning and Scheduling 
+            (Vol. 34, pp. 360-368). 
+            DOI: <a href="https://doi.org/10.1609/icaps.v34i1.31495">https://doi.org/10.1609/icaps.v34i1.31495</a>
+        </p>
+        <p>[Kletzander22]
+            Kletzander, L., Mazzoli, T. M., & Musliu, N. (2022, July). 
+            <em>Metaheuristic algorithms for the bus driver scheduling problem with complex break constraints.</em> 
+            In Proceedings of the Genetic and Evolutionary Computation Conference (pp. 232-240). 
+            DOI: <a href="https://doi.org/10.1145/3512290.3528876">https://doi.org/10.1145/3512290.3528876</a>
+        </p>
+        <p>[Kletzander20]
+            Kletzander, L., & Musliu, N. (2020, June). Solving large real-life bus driver scheduling problems with complex break constraints. In Proceedings of the International Conference on Automated Planning and Scheduling (Vol. 30, pp. 421-429).
+            DOI: <a href="https://doi.org/10.1609/icaps.v30i1.6688">https://doi.org/10.1609/icaps.v30i1.6688</a>
+        </p>
+    </dd>
+</dl>
 </body>
 </html>
