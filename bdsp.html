@@ -2,67 +2,89 @@
 <html lang="en">
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Bus Driver Scheduling Problem Instance Set</title>
-    <link rel="shortcut icon" href="favicon.ico" type="image/x-icon">
-    <link rel="stylesheet" href="stylesheet.css">
+    <meta http-equiv="content-type" charset="utf-8" />
+    <title>AMM Problems - Tommaso Mannelli Mazzoli</title>
+    <!-- <link type="text/css" rel="stylesheet" href="stylesheet.css"/> -->
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <meta name="keywords" content="monthly, problems, problem, amm, american, mathematical, solution, solutions" />
     <style>
         body {
-            font-family: Arial, sans-serif;
-            margin: 20px;
-            padding: 0;
-            background-color: #f9f9f9;
+            font-family: Verdana, sans-serif;
+            color: #000000;
         }
 
-        h1, h3 {
-            color: #333;
+        h1 {
+            text-align: center;
+            font-size: 24px;
+            font-weight: bold;
         }
 
-        p {
-            line-height: 1.6;
-        }
+    /* Navigation bar */
+    .navbar {
+        overflow: hidden;
+        background-color: #1f8bff;
+        border-radius: 3px;
+    }
 
-        table {
-            width: 100%;
-            border-collapse: collapse;
+    /* Navigation bar links */
+    .navbar a {
+        float: left;
+        display: block;
+        color: white;
+        text-align: center;
+        padding: 14px 20px;
+        text-decoration: none;
+        transition: .3s background-color;
+    }
+
+
+    /* Hover links*/
+    .navbar a:hover {
+        background-color: white;
+        color: #1f8bff;
+        text-decoration: none;
+    }
+
+    /* Active links*/
+    .navbar a.active {
+        background-color: white;
+        text-shadow: none;
+        cursor: default;
+        color: black;
+    }
+
+        .useful-links {
+            font-size: 18px;
             margin-bottom: 20px;
-            background-color: #fff;
         }
 
-        th, td {
-            padding: 12px;
-            border: 1px solid #ddd;
-            text-align: left;
-        }
-
-        th {
-            background-color: #f4f4f4;
-        }
-
-        pre {
-            background-color: #f4f4f4;
-            padding: 10px;
-            overflow-x: auto;
-        }
-
-        a {
-            color: #007bff;
+        .useful-links a {
+            color: #0000FF;
             text-decoration: none;
         }
 
-        a:hover {
-            text-decoration: underline;
+        .problem-table {
+            border-collapse: collapse;
+            width: 100%;
         }
 
-        hr {
-            border: 0;
-            border-top: 1px solid #ddd;
-            margin: 20px 0;
+        .problem-table th,
+        .problem-table td {
+            border: 1px solid black;
+            padding: 8px;
+            text-align: left;
+        }
+
+        .problem-table th {
+            background-color: #f2f2f2;
+        }
+
+        .problem-table a {
+            color: #0000FF;
+            text-decoration: none;
         }
     </style>
-
-<script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
 </head>
 
 <body>
