@@ -8,31 +8,11 @@
   </title>
   <link href="favicon.ico" rel="shortcut icon" type="image/x-icon"/>
   <link href="stylesheet.css" rel="stylesheet"/>
-  <!-- Favicon Configuration -->
-  <link href="favicon.ico" rel="shortcut icon" type="image/x-icon"/>
-  <link href="https://tommanmaz.github.io/icon.png" rel="icon" sizes="32x32" type="image/png"/>
-  <!-- <link rel="icon" type="image/png" sizes="16x16" href="https://tommanmaz.github.io/icon-small.png"> -->
   <style>
-   body {
-        font-family: Arial, sans-serif;
-        margin: 20px;
-        padding: 0;
-        background-color: #f9f9f9;
-    }
-
-    h1, h3 {
-        color: #333;
-    }
-
-    p {
-        line-height: 1.6;
-    }
-
     table {
         width: 100%;
         border-collapse: collapse;
         margin-bottom: 20px;
-        background-color: #fff;
     }
 
     th, td {
@@ -42,33 +22,28 @@
     }
 
     th {
+        position: sticky;
+        top: 0;
         background-color: #f4f4f4;
+        z-index: 1;
     }
 
-    pre {
-        background-color: #f4f4f4;
-        padding: 10px;
-        overflow-x: auto;
+    tr:hover {
+        background-color: #eaeaea;
     }
 
-    a {
-        color: #007bff;
-        text-decoration: none;
+    @media screen and (max-width: 700px) {
+        table {
+            display: block;
+            overflow-x: auto;
+            white-space: nowrap;
+        }
     }
-
-    a:hover {
-        text-decoration: underline;
-    }
-
-    hr {
-        border: 0;
-        border-top: 1px solid #ddd;
-        margin: 20px 0;
-    }
-  </style>
+</style>
   <script async="" id="MathJax-script" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
   </script>
  </head>
+
  <body>
   <div class="navbar">
    <a href="index.html">
@@ -120,9 +95,11 @@
    best feasible soltion and best known lower bound in percent, i.e.
    
    \[\mathrm{GAP} = \frac{\mathrm{solution} – \mathrm{bound}}{\mathrm{bound}}\cdot 100 \]
-  <table border="1" class="dataframe responsive-table">
+  
+   <button onclick="exportTableToCSV('BKS_realistic_1.csv')">Download CSV</button>
+   <table border="1" class="dataframe responsive-table">
    <thead>
-    <tr style="text-align: right;">
+    <tr class="row-regular" style="text-align: right;">
      <th>
       Name
      </th>
@@ -147,7 +124,7 @@
     </tr>
    </thead>
    <tbody>
-    <tr>
+    <tr class="row-alt">
      <td>
       realistic_10_1
      </td>
@@ -170,7 +147,7 @@
       BP
      </td>
     </tr>
-    <tr>
+    <tr class="row-regular">
      <td>
       realistic_10_2
      </td>
@@ -193,7 +170,7 @@
       BP
      </td>
     </tr>
-    <tr>
+    <tr class="row-alt">
      <td>
       realistic_10_3
      </td>
@@ -216,7 +193,7 @@
       BP
      </td>
     </tr>
-    <tr>
+    <tr class="row-regular">
      <td>
       realistic_10_4
      </td>
@@ -239,7 +216,7 @@
       BP
      </td>
     </tr>
-    <tr>
+    <tr class="row-alt">
      <td>
       realistic_10_5
      </td>
@@ -262,7 +239,7 @@
       BP
      </td>
     </tr>
-    <tr>
+    <tr class="row-regular">
      <td>
       realistic_20_6
      </td>
@@ -285,7 +262,7 @@
       BP
      </td>
     </tr>
-    <tr>
+    <tr class="row-alt">
      <td>
       realistic_20_7
      </td>
@@ -308,7 +285,7 @@
       BP
      </td>
     </tr>
-    <tr>
+    <tr class="row-regular">
      <td>
       realistic_20_8
      </td>
@@ -331,7 +308,7 @@
       BP
      </td>
     </tr>
-    <tr>
+    <tr class="row-alt">
      <td>
       realistic_20_9
      </td>
@@ -354,7 +331,7 @@
       BP
      </td>
     </tr>
-    <tr>
+    <tr class="row-regular">
      <td>
       realistic_20_10
      </td>
@@ -377,7 +354,7 @@
       BP
      </td>
     </tr>
-    <tr>
+    <tr class="row-alt">
      <td>
       realistic_30_11
      </td>
@@ -400,7 +377,7 @@
       BP
      </td>
     </tr>
-    <tr>
+    <tr class="row-regular">
      <td>
       realistic_30_12
      </td>
@@ -423,7 +400,7 @@
       BP
      </td>
     </tr>
-    <tr>
+    <tr class="row-alt">
      <td>
       realistic_30_13
      </td>
@@ -446,7 +423,7 @@
       BP
      </td>
     </tr>
-    <tr>
+    <tr class="row-regular">
      <td>
       realistic_30_14
      </td>
@@ -469,7 +446,7 @@
       BP
      </td>
     </tr>
-    <tr>
+    <tr class="row-alt">
      <td>
       realistic_30_15
      </td>
@@ -492,7 +469,7 @@
       BP
      </td>
     </tr>
-    <tr>
+    <tr class="row-regular">
      <td>
       realistic_40_16
      </td>
@@ -515,7 +492,7 @@
       BP
      </td>
     </tr>
-    <tr>
+    <tr class="row-alt">
      <td>
       realistic_40_17
      </td>
@@ -538,7 +515,7 @@
       BP
      </td>
     </tr>
-    <tr>
+    <tr class="row-regular">
      <td>
       realistic_40_18
      </td>
@@ -561,7 +538,7 @@
       BP
      </td>
     </tr>
-    <tr>
+    <tr class="row-alt">
      <td>
       realistic_40_19
      </td>
@@ -584,7 +561,7 @@
       BP
      </td>
     </tr>
-    <tr>
+    <tr class="row-regular">
      <td>
       realistic_40_20
      </td>
@@ -607,7 +584,7 @@
       LNS
      </td>
     </tr>
-    <tr>
+    <tr class="row-alt">
      <td>
       realistic_50_21
      </td>
@@ -630,7 +607,7 @@
       BP
      </td>
     </tr>
-    <tr>
+    <tr class="row-regular">
      <td>
       realistic_50_22
      </td>
@@ -653,7 +630,7 @@
       BP
      </td>
     </tr>
-    <tr>
+    <tr class="row-alt">
      <td>
       realistic_50_23
      </td>
@@ -676,7 +653,7 @@
       BP
      </td>
     </tr>
-    <tr>
+    <tr class="row-regular">
      <td>
       realistic_50_24
      </td>
@@ -699,7 +676,7 @@
       BP
      </td>
     </tr>
-    <tr>
+    <tr class="row-alt">
      <td>
       realistic_50_25
      </td>
@@ -722,7 +699,7 @@
       BP
      </td>
     </tr>
-    <tr>
+    <tr class="row-regular">
      <td>
       realistic_60_26
      </td>
@@ -745,7 +722,7 @@
       BP
      </td>
     </tr>
-    <tr>
+    <tr class="row-alt">
      <td>
       realistic_60_27
      </td>
@@ -768,7 +745,7 @@
       BP
      </td>
     </tr>
-    <tr>
+    <tr class="row-regular">
      <td>
       realistic_60_28
      </td>
@@ -791,7 +768,7 @@
       BP
      </td>
     </tr>
-    <tr>
+    <tr class="row-alt">
      <td>
       realistic_60_29
      </td>
@@ -814,7 +791,7 @@
       BP
      </td>
     </tr>
-    <tr>
+    <tr class="row-regular">
      <td>
       realistic_60_30
      </td>
@@ -837,7 +814,7 @@
       BP
      </td>
     </tr>
-    <tr>
+    <tr class="row-alt">
      <td>
       realistic_70_31
      </td>
@@ -860,7 +837,7 @@
       BP
      </td>
     </tr>
-    <tr>
+    <tr class="row-regular">
      <td>
       realistic_70_32
      </td>
@@ -883,7 +860,7 @@
       BP
      </td>
     </tr>
-    <tr>
+    <tr class="row-alt">
      <td>
       realistic_70_33
      </td>
@@ -906,7 +883,7 @@
       LNS
      </td>
     </tr>
-    <tr>
+    <tr class="row-regular">
      <td>
       realistic_70_34
      </td>
@@ -929,7 +906,7 @@
       BP
      </td>
     </tr>
-    <tr>
+    <tr class="row-alt">
      <td>
       realistic_70_35
      </td>
@@ -952,7 +929,7 @@
       LNS
      </td>
     </tr>
-    <tr>
+    <tr class="row-regular">
      <td>
       realistic_80_36
      </td>
@@ -975,7 +952,7 @@
       BP
      </td>
     </tr>
-    <tr>
+    <tr class="row-alt">
      <td>
       realistic_80_37
      </td>
@@ -998,7 +975,7 @@
       BP
      </td>
     </tr>
-    <tr>
+    <tr class="row-regular">
      <td>
       realistic_80_38
      </td>
@@ -1021,7 +998,7 @@
       BP
      </td>
     </tr>
-    <tr>
+    <tr class="row-alt">
      <td>
       realistic_80_39
      </td>
@@ -1044,7 +1021,7 @@
       BP
      </td>
     </tr>
-    <tr>
+    <tr class="row-regular">
      <td>
       realistic_80_40
      </td>
@@ -1067,7 +1044,7 @@
       BP
      </td>
     </tr>
-    <tr>
+    <tr class="row-alt">
      <td>
       realistic_90_41
      </td>
@@ -1090,7 +1067,7 @@
       BP
      </td>
     </tr>
-    <tr>
+    <tr class="row-regular">
      <td>
       realistic_90_42
      </td>
@@ -1113,7 +1090,7 @@
       BP
      </td>
     </tr>
-    <tr>
+    <tr class="row-alt">
      <td>
       realistic_90_43
      </td>
@@ -1136,7 +1113,7 @@
       LNS
      </td>
     </tr>
-    <tr>
+    <tr class="row-regular">
      <td>
       realistic_90_44
      </td>
@@ -1159,7 +1136,7 @@
       BP
      </td>
     </tr>
-    <tr>
+    <tr class="row-alt">
      <td>
       realistic_90_45
      </td>
@@ -1182,7 +1159,7 @@
       BP
      </td>
     </tr>
-    <tr>
+    <tr class="row-regular">
      <td>
       realistic_100_46
      </td>
@@ -1205,7 +1182,7 @@
       LNS
      </td>
     </tr>
-    <tr>
+    <tr class="row-alt">
      <td>
       realistic_100_47
      </td>
@@ -1228,7 +1205,7 @@
       BP
      </td>
     </tr>
-    <tr>
+    <tr class="row-regular">
      <td>
       realistic_100_48
      </td>
@@ -1251,7 +1228,7 @@
       LNS
      </td>
     </tr>
-    <tr>
+    <tr class="row-alt">
      <td>
       realistic_100_49
      </td>
@@ -1274,7 +1251,7 @@
       LNS
      </td>
     </tr>
-    <tr>
+    <tr class="row-regular">
      <td>
       realistic_100_50
      </td>
@@ -1299,10 +1276,7 @@
     </tr>
    </tbody>
   </table>
-  You can download the table
-  <a href="BKS_realistic_1.csv">
-   here
-  </a>
+
   .
   <hr/>
   <h3>
@@ -1311,9 +1285,11 @@
   <p>
    There are \(15\) real-world like larger instances of the BDSP.
   </p>
+
+  <button onclick="exportTableToCSV('BKS_realistic_2.csv')">Download CSV</button>
   <table border="1" class="dataframe responsive-table">
    <thead>
-    <tr style="text-align: right;">
+    <tr class="row-regular" style="text-align: right;">
      <th>
       Name
      </th>
@@ -1332,7 +1308,7 @@
     </tr>
    </thead>
    <tbody>
-    <tr>
+    <tr class="row-alt">
      <td>
       realistic_150_51
      </td>
@@ -1349,7 +1325,7 @@
       LNS
      </td>
     </tr>
-    <tr>
+    <tr class="row-regular">
      <td>
       realistic_150_52
      </td>
@@ -1366,7 +1342,7 @@
       LNS
      </td>
     </tr>
-    <tr>
+    <tr class="row-alt">
      <td>
       realistic_150_53
      </td>
@@ -1383,7 +1359,7 @@
       LNS
      </td>
     </tr>
-    <tr>
+    <tr class="row-regular">
      <td>
       realistic_150_54
      </td>
@@ -1400,7 +1376,7 @@
       LNS
      </td>
     </tr>
-    <tr>
+    <tr class="row-alt">
      <td>
       realistic_150_55
      </td>
@@ -1417,7 +1393,7 @@
       LNS
      </td>
     </tr>
-    <tr>
+    <tr class="row-regular">
      <td>
       realistic_200_56
      </td>
@@ -1434,7 +1410,7 @@
       LNS
      </td>
     </tr>
-    <tr>
+    <tr class="row-alt">
      <td>
       realistic_200_57
      </td>
@@ -1451,7 +1427,7 @@
       LNS
      </td>
     </tr>
-    <tr>
+    <tr class="row-regular">
      <td>
       realistic_200_58
      </td>
@@ -1468,7 +1444,7 @@
       LNS
      </td>
     </tr>
-    <tr>
+    <tr class="row-alt">
      <td>
       realistic_200_59
      </td>
@@ -1485,7 +1461,7 @@
       LNS
      </td>
     </tr>
-    <tr>
+    <tr class="row-regular">
      <td>
       realistic_200_60
      </td>
@@ -1502,7 +1478,7 @@
       LNS
      </td>
     </tr>
-    <tr>
+    <tr class="row-alt">
      <td>
       realistic_250_61
      </td>
@@ -1519,7 +1495,7 @@
       LNS
      </td>
     </tr>
-    <tr>
+    <tr class="row-regular">
      <td>
       realistic_250_62
      </td>
@@ -1536,7 +1512,7 @@
       LNS
      </td>
     </tr>
-    <tr>
+    <tr class="row-alt">
      <td>
       realistic_250_63
      </td>
@@ -1553,7 +1529,7 @@
       LNS
      </td>
     </tr>
-    <tr>
+    <tr class="row-regular">
      <td>
       realistic_250_64
      </td>
@@ -1570,7 +1546,7 @@
       LNS
      </td>
     </tr>
-    <tr>
+    <tr class="row-alt">
      <td>
       realistic_250_65
      </td>
@@ -1589,10 +1565,7 @@
     </tr>
    </tbody>
   </table>
-  You can download the table
-  <a href="BKS_realistic_2.csv">
-   here
-  </a>
+
   .
   <hr/>
   <h3>
@@ -1647,5 +1620,29 @@
     </p>
    </dd>
   </dl>
+
+
+  <script>
+    function exportTableToCSV(filename) {
+        const table = document.getElementById('realisticInstancesTable');
+        let csv = [];
+        const rows = table.querySelectorAll('tr');
+
+        rows.forEach(row => {
+            const cells = row.querySelectorAll('th, td');
+            const rowData = [];
+            cells.forEach(cell => rowData.push(cell.textContent));
+            csv.push(rowData.join(','));
+        });
+
+        const csvContent = csv.join('\n');
+        const blob = new Blob([csvContent], { type: 'text/csv' });
+        const link = document.createElement('a');
+        link.href = URL.createObjectURL(blob);
+        link.download = filename;
+        link.click();
+    }
+</script>
+
  </body>
 </html>

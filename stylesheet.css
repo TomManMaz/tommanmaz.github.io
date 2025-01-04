@@ -188,3 +188,12 @@ a:hover {
         white-space: nowrap;
     }
 }
+
+/* Alternate row colors */
+.row-regular {
+    background-color: #f9f9f9;
+}
+
+.row-alt {
+    background-color: #ffffff;
+}
