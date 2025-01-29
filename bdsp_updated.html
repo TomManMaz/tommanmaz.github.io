@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bus Driver Scheduling Problem Instance Set</title>
+    <link rel="stylesheet" href="stylesheet.css">
+    <style>
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+
+        th, td {
+            padding: 12px;
+            border: 1px solid #ddd;
+            text-align: left;
+        }
+
+        th {
+            position: sticky;
+            top: 0;
+            background-color: #f4f4f4;
+            z-index: 1;
+        }
+
+        tr:hover {
+            background-color: #eaeaea;
+        }
+
+        @media screen and (max-width: 700px) {
+            table {
+                display: block;
+                overflow-x: auto;
+                white-space: nowrap;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="navbar">
+        <a href="index.html">Home</a>
+        <a href="publications.html">Publications</a>
+        <a href="amm.html">AMM</a>
+        <a href="bdsp.html">BDSP</a>
+    </div>
+
+    <h1>The Bus Driver Scheduling Problem with Complex Break Constraint Instance Set</h1>
+
+    <p>The instances can be downloaded <a href="https://cdlab-artis.dbai.tuwien.ac.at/papers/sa-bds/">here</a>.</p>
+
+    <button onclick="exportTableToCSV('realistic_instances.csv')">Download CSV</button>
+
+    <table id="realisticInstancesTable">
+        <caption>Table 1: Realistic Instances</caption>
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>n_tours</th>
+                <th>n_legs</th>
+                <th>BKS</th>
+                <th>Bound</th>
+                <th>GAP (%)</th>
+                <th>Algorithm</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>realistic_10_1</td>
+                <td>8</td>
+                <td>73</td>
+                <td>14417</td>
+                <td>14417.00</td>
+                <td>0.00</td>
+                <td>BP</td>
+            </tr>
+            <tr>
+                <td>realistic_10_2</td>
+                <td>8</td>
+                <td>77</td>
+                <td>14572</td>
+                <td>14572.00</td>
+                <td>0.00</td>
+                <td>BP</td>
+            </tr>
+            <!-- Additional rows would go here -->
+        </tbody>
+        <tfoot>
+            <tr>
+                <td colspan="7">Summary: Total GAP = 0.00%</td>
+            </tr>
+        </tfoot>
+    </table>
+
+    <script>
+        function exportTableToCSV(filename) {
+            const table = document.getElementById('realisticInstancesTable');
+            let csv = [];
+            const rows = table.querySelectorAll('tr');
+
+            rows.forEach(row => {
+                const cells = row.querySelectorAll('th, td');
+                const rowData = [];
+                cells.forEach(cell => rowData.push(cell.textContent));
+                csv.push(rowData.join(','));
+            });
+
+            const csvContent = csv.join('\n');
+            const blob = new Blob([csvContent], { type: 'text/csv' });
+            const link = document.createElement('a');
+            link.href = URL.createObjectURL(blob);
+            link.download = filename;
+            link.click();
+        }
+    </script>
+
+</body>
+
+</html>
