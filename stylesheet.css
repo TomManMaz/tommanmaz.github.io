@@ -1,3 +1,9 @@
+/*
+ * Stylesheet for Tommaso Mannelli Mazzoli's Personal Website
+ */
+
+/* --- General & Body Styles --- */
+
 * {
     box-sizing: border-box;
 }
@@ -6,40 +12,56 @@ body {
     margin: auto;
     width: 70%;
     font-family: Verdana, Roboto, sans-serif;
-	line-height: 1.5;
-	text-align: left;
-	}
+    line-height: 1.5;
+    text-align: left;
+}
 
+/* General link styling */
 a {
-	text-decoration: none;
-	color: #1f8bff;
+    text-decoration: none;
+    color: #1f8bff;
 }
 
 a:hover {
     text-decoration: underline;
 }
 
+/* --- Header --- */
 
 .header {
     text-align: center;
     background: white;
     color: black;
+    padding: 10px 0;
 }
 
 .header h1 {
     font-size: 40px;
+    margin-bottom: 0;
 }
 
-/* Navigation bar */
+/* --- Navigation Bar (for semantic <ul> list) --- */
+
 .navbar {
     overflow: hidden;
     background-color: #1f8bff;
     border-radius: 3px;
 }
 
-/* Navigation bar links */
-.navbar a {
+/* Remove default list styling */
+.navbar ul {
+    margin: 0;
+    padding: 0;
+    list-style-type: none;
+}
+
+/* Make list items arrange horizontally */
+.navbar li {
     float: left;
+}
+
+/* Style the links within the list items */
+.navbar a {
     display: block;
     color: white;
     text-align: center;
@@ -48,75 +70,55 @@ a:hover {
     transition: .3s background-color;
 }
 
-
-/* Hover links*/
 .navbar a:hover {
     background-color: white;
     color: #1f8bff;
-    text-decoration: none;
+    text-decoration: none; /* Override general hover */
 }
 
-/* Active links*/
 .navbar a.active {
-	 background-color: white;
-	 text-shadow: none;
-	 cursor: default;
-	 color: black;
+    background-color: white;
+    text-shadow: none;
+    cursor: default;
+    color: black;
 }
-/* Column */
+
+/* --- Main Layout --- */
+
 .row {  
-    display: -ms-flexbox; /* IE10 */
     display: flex;
-    -ms-flex-wrap: wrap; /* IE10 */
     flex-wrap: wrap;
+    /* Includes IE10 prefixes from original file */
+    display: -ms-flexbox;
+    -ms-flex-wrap: wrap;
 }
 
-.indented {
-    top: -1.5em;
-    padding-left: 30pt;
-    padding-right: 50pt;
-  }
-
-.narrow {
-  width: 600px;
-  position: absolute;
-  left: 20%;
-  top: 30%;
-}
-
-/* Sidebar column*/
 .side {
-    -ms-flex: 30%; /* IE10 */
+    padding: 20px;
     flex: 30%;
-    background-color: white;
-    padding: 20px;
+    -ms-flex: 30%;
 }
 
-/* Sidebar image */
-.side img {
-	max-width: 100%;
-	height: auto;
-	float: center;
-}
-
-/* Main column */
 .main {   
-    -ms-flex: 70%; /* IE10 */
-    flex: 70%;
-    background-color: white;
     padding: 20px;
+    flex: 70%;
+    -ms-flex: 70%;
 }
 
-/* General hover links*/
-a {
-	text-decoration: none;
-	color: #1f8bff;
+/* --- Specific Components & Sections --- */
+
+/* For the semantic <dl> contact list */
+.contact-details dt {
+    font-weight: bold;
+    float: left;
+    clear: left;
+    width: 80px;
+    margin-bottom: 10px;
 }
 
-/* General links hover*/
-
-a:hover {
-    text-decoration: underline;
+.contact-details dd {
+    margin-left: 90px;
+    margin-bottom: 10px;
 }
 
 /* Footer */
@@ -125,6 +127,23 @@ a:hover {
     text-align: center;
     background-color: #1f8bff;
     border-radius: 3px;
+    margin-top: 20px;
+}
+
+/* --- Styles for other pages (e.g., Publications) --- */
+/* These can be removed if not used elsewhere */
+
+.indented {
+    top: -1.5em;
+    padding-left: 30pt;
+    padding-right: 50pt;
+}
+
+.narrow {
+    width: 600px;
+    position: absolute;
+    left: 20%;
+    top: 30%;
 }
 
 .problem-table {
@@ -145,25 +164,9 @@ a:hover {
 
 .problem-table a {
     color: #0000FF;
-    text-decorat
-/* If screen is less than 700px wide, make the two columns stack on top of each other and same ofr navigation links. Increase width. */
-@media screen and (max-width: 700px) {
-    
-    body {
-    	width: 95%;
-	 }
-   
-    .row {   
-        flex-direction: column;
-    }
-
-    .navbar a {
-        float: none;
-        width: 100%;
-    }
+    text-decoration: none;
 }
 
-/* Responsive table styling */
 .responsive-table {
     width: 100%;
     border-collapse: collapse;
@@ -181,19 +184,35 @@ a:hover {
     background-color: #f4f4f4;
 }
 
-@media screen and (max-width: 700px) {
-    .responsive-table {
-        display: block;
-        overflow-x: auto;
-        white-space: nowrap;
-    }
-}
-
-/* Alternate row colors */
 .row-regular {
     background-color: #f9f9f9;
 }
 
 .row-alt {
     background-color: #ffffff;
+}
+
+/* --- Responsive Design --- */
+
+@media screen and (max-width: 700px) {
+    body {
+        width: 95%;
+    }
+   
+    .row {   
+        flex-direction: column;
+    }
+
+    /* Stack navbar items vertically */
+    .navbar li {
+        float: none;
+        width: 100%;
+    }
+
+    /* Make table horizontally scrollable */
+    .responsive-table {
+        display: block;
+        overflow-x: auto;
+        white-space: nowrap;
+    }
 }
