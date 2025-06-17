@@ -1,218 +1,105 @@
-/*
- * Stylesheet for Tommaso Mannelli Mazzoli's Personal Website
- */
-
-/* --- General & Body Styles --- */
-
-* {
-    box-sizing: border-box;
-}
-
 body {
-    margin: auto;
-    width: 70%;
-    font-family: Verdana, Roboto, sans-serif;
-    line-height: 1.5;
-    text-align: left;
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  margin: 0;
+  padding: 0;
+  background-color: #f9f9f9;
+  color: #333;
 }
-
-/* General link styling */
-a {
-    text-decoration: none;
-    color: #1f8bff;
-}
-
-a:hover {
-    text-decoration: underline;
-}
-
-/* --- Header --- */
 
 .header {
-    text-align: center;
-    background: white;
-    color: black;
-    padding: 10px 0;
+  background-color: #004080;
+  color: white;
+  padding: 20px;
+  text-align: center;
 }
-
-.header h1 {
-    font-size: 40px;
-    margin-bottom: 0;
-}
-
-/* --- Navigation Bar (for semantic <ul> list) --- */
 
 .navbar {
-    overflow: hidden;
-    background-color: #1f8bff;
-    border-radius: 3px;
+  background-color: #e0e0e0;
+  overflow: hidden;
+  text-align: center;
+  padding: 10px 0;
 }
 
-/* Remove default list styling */
-.navbar ul {
-    margin: 0;
-    padding: 0;
-    list-style-type: none;
-}
-
-/* Make list items arrange horizontally */
-.navbar li {
-    float: left;
-}
-
-/* Style the links within the list items */
 .navbar a {
-    display: block;
-    color: white;
-    text-align: center;
-    padding: 14px 20px;
-    text-decoration: none;
-    transition: .3s background-color;
+  display: inline-block;
+  color: #004080;
+  text-decoration: none;
+  padding: 10px 20px;
+  font-weight: bold;
 }
 
-.navbar a:hover {
-    background-color: white;
-    color: #1f8bff;
-    text-decoration: none; /* Override general hover */
+.navbar a:hover, .navbar a.active {
+  background-color: #004080;
+  color: white;
 }
 
-.navbar a.active {
-    background-color: white;
-    text-shadow: none;
-    cursor: default;
-    color: black;
-}
-
-/* --- Main Layout --- */
-
-.row {  
-    display: flex;
-    flex-wrap: wrap;
-    /* Includes IE10 prefixes from original file */
-    display: -ms-flexbox;
-    -ms-flex-wrap: wrap;
+.row {
+  display: flex;
+  flex-wrap: wrap;
+  padding: 20px;
 }
 
 .side {
-    padding: 20px;
-    flex: 30%;
-    -ms-flex: 30%;
+  flex: 1;
+  min-width: 200px;
+  padding: 20px;
 }
 
-.main {   
-    padding: 20px;
-    flex: 70%;
-    -ms-flex: 70%;
+.main {
+  flex: 3;
+  min-width: 300px;
+  padding: 20px;
+  background-color: white;
+  border-radius: 8px;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
 }
 
-/* --- Specific Components & Sections --- */
+h3 {
+  border-bottom: 2px solid #004080;
+  padding-bottom: 5px;
+  margin-top: 30px;
+}
 
-/* For the semantic <dl> contact list */
 .contact-details dt {
-    font-weight: bold;
-    float: left;
-    clear: left;
-    width: 80px;
-    margin-bottom: 10px;
+  font-weight: bold;
+  margin-top: 10px;
 }
 
-.contact-details dd {
-    margin-left: 90px;
-    margin-bottom: 10px;
-}
-
-/* Footer */
 .footer {
-    padding: 20px;
-    text-align: center;
-    background-color: #1f8bff;
-    border-radius: 3px;
-    margin-top: 20px;
+  text-align: center;
+  padding: 20px;
+  background-color: #eee;
+  margin-top: 40px;
 }
 
-/* --- Styles for other pages (e.g., Publications) --- */
-/* These can be removed if not used elsewhere */
-
-.indented {
-    top: -1.5em;
-    padding-left: 30pt;
-    padding-right: 50pt;
+a {
+  color: #004080;
+  text-decoration: none;
 }
 
-.narrow {
-    width: 600px;
-    position: absolute;
-    left: 20%;
-    top: 30%;
+a:hover {
+  text-decoration: underline;
 }
 
-.problem-table {
-    border-collapse: collapse;
-    width: 100%;
+img {
+  border-radius: 50%;
+  object-fit: cover;
 }
 
-.problem-table th,
-.problem-table td {
-    border: 1px solid black;
-    padding: 8px;
-    text-align: left;
+body {
+  font-family: Verdana, sans-serif;
+  color: #000;
+  margin: 0;
+  padding: 20px; /* Adds space around all content */
+  background-color: #f9f9f9;
+  box-sizing: border-box;
 }
 
-.problem-table th {
-    background-color: #f2f2f2;
-}
-
-.problem-table a {
-    color: #0000FF;
-    text-decoration: none;
-}
-
-.responsive-table {
-    width: 100%;
-    border-collapse: collapse;
-    margin-bottom: 20px;
-}
-
-.responsive-table th,
-.responsive-table td {
-    padding: 12px;
-    border: 1px solid #ddd;
-    text-align: left;
-}
-
-.responsive-table th {
-    background-color: #f4f4f4;
-}
-
-.row-regular {
-    background-color: #f9f9f9;
-}
-
-.row-alt {
-    background-color: #ffffff;
-}
-
-/* --- Responsive Design --- */
-
-@media screen and (max-width: 700px) {
-    body {
-        width: 95%;
-    }
-   
-    .row {   
-        flex-direction: column;
-    }
-
-    /* Stack navbar items vertically */
-    .navbar li {
-        float: none;
-        width: 100%;
-    }
-
-    /* Make table horizontally scrollable */
-    .responsive-table {
-        display: block;
-        overflow-x: auto;
-        white-space: nowrap;
-    }
+main {
+  background-color: white;
+  padding: 20px;
+  border-radius: 6px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  max-width: 1000px;
+  margin: auto;
 }
