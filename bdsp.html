@@ -6,38 +6,7 @@
   <title>   Bus Driver Scheduling Problem Instance Set  </title>
   <link href="favicon.ico" rel="shortcut icon" type="image/x-icon"/>
   <link href="stylesheet.css" rel="stylesheet"/>
-  <style>
-    table {
-        width: 100%;
-        border-collapse: collapse;
-        margin-bottom: 20px;
-    }
 
-    th, td {
-        padding: 12px;
-        border: 1px solid #ddd;
-        text-align: left;
-    }
-
-    th {
-        position: sticky;
-        top: 0;
-        background-color: #f4f4f4;
-        z-index: 1;
-    }
-
-    tr:hover {
-        background-color: #eaeaea;
-    }
-
-    @media screen and (max-width: 700px) {
-        table {
-            display: block;
-            overflow-x: auto;
-            white-space: nowrap;
-        }
-    }
-</style>
   <script async="" id="MathJax-script" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
   </script>
  </head>
@@ -47,13 +16,12 @@
     <h1>Tommaso Mannelli Mazzoli</h1>
     <p>TU Wien, Vienna, Austria</p>
   </header>
-  <div class="navbar">
-   <a href="index.html">    Home   </a>
-   <a href="publications.html">    Publications   </a>
-   <a  class="active href="bdsp.html">    BDSP    </a>
-    <a href="amm.html">    AMM   </a>
-
-  </div>
+  <nav class="navbar">
+   <a href="index.html">Home</a>
+   <a href="publications.html">Publications</a>
+   <a class="active" href="bdsp.html">BDSP</a>
+   <a href="amm.html">AMM</a>
+  </nav>
 
   <main>
   <h1>
@@ -93,7 +61,7 @@
    \[\mathrm{GAP} = \frac{\mathrm{solution} – \mathrm{bound}}{\mathrm{bound}}\cdot 100 \]
   
    <button onclick="exportTableToCSV('BKS_realistic_1.csv')">Download CSV</button>
-   <table id="realisticInstancesTable">  
+   <table id="realisticInstancesTable" class="data-table responsive-table">  
     <thead>
         <tr style="text-align: right;">
           <th>Instances</th>
@@ -567,7 +535,7 @@
   </p>
 
   <button onclick="exportTableToCSV('BKS_realistic_2.csv')">Download CSV</button>
-  <table border="1" class="dataframe responsive-table">
+  <table class="data-table responsive-table">
    <thead>
     <tr class="row-regular" style="text-align: right;">
      <th>
