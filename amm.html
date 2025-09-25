@@ -10,32 +10,13 @@
   <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
   <script async id="MathJax-script" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
   <style>
-
     .useful-links {
-      font-size: 18px;
-      margin: 20px;
-    }
-    .useful-links a {
-      color: #0000FF;
-      text-decoration: none;
-    }
-    .problem-table {
-      border-collapse: collapse;
-      width: 100%;
-      margin: 20px 0;
-    }
-    .problem-table th,
-    .problem-table td {
-      border: 1px solid #000;
-      padding: 8px;
-      text-align: left;
-    }
-    .problem-table th {
-      background-color: #f2f2f2;
-    }
-    .problem-table a {
-      color: #0000FF;
-      text-decoration: none;
+      font-size: 1.1rem;
+      margin: 24px 0;
+      padding: 20px;
+      background: var(--table-stripe);
+      border-radius: 8px;
+      border-left: 4px solid var(--accent-color);
     }
   </style>
 </head>
@@ -67,7 +48,7 @@
       <a href="mailto:tommaso.mazzoli@tuwien.ac.at">tommaso.mazzoli@tuwien.ac.at</a>
     </section>
 
-    <table class="problem-table">
+    <table class="data-table problem-table">
       <tr>
         <th>Problem</th>
         <th>Solution</th>

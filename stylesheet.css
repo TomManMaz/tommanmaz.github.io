@@ -1,62 +1,136 @@
-/* Using CSS variables for better maintainability */
+/* Enhanced CSS variables for better maintainability and modern design */
 :root {
-  --primary-color: #004080;
-  --secondary-bg-color: #e0e0e0;
-  --light-bg-color: #f9f9f9;
-  --text-color: #333;
-  --border-color: #ddd;
-  --hover-bg-color: #eaeaea;
-  --sticky-header-bg: #f4f4f4;
+  --primary-color: #0066cc;
+  --primary-dark: #004499;
+  --secondary-bg-color: #f0f4f8;
+  --light-bg-color: #fafbfc;
+  --text-color: #2c3e50;
+  --text-muted: #6c757d;
+  --border-color: #e1e8ed;
+  --hover-bg-color: #e3f2fd;
+  --sticky-header-bg: #ffffff;
+  --shadow-light: 0 2px 8px rgba(0, 102, 204, 0.1);
+  --shadow-medium: 0 4px 16px rgba(0, 102, 204, 0.15);
+  --accent-color: #17a2b8;
+  --success-color: #28a745;
+  --table-stripe: #f8f9fa;
 }
 
 body {
-  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
   margin: 0;
   padding: 0;
-  background-color: var(--light-bg-color);
+  background: linear-gradient(135deg, var(--light-bg-color) 0%, #ffffff 100%);
   color: var(--text-color);
-  box-sizing: border-box; /* Ensures padding doesn't add to element's total width/height */
+  box-sizing: border-box;
+  line-height: 1.6;
+  font-size: 16px;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: inherit;
 }
 
 /* Header Styles */
 .header {
-  background-color: var(--primary-color);
+  background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-dark) 100%);
   color: white;
-  padding: 20px;
+  padding: 32px 20px;
   text-align: center;
+  box-shadow: var(--shadow-medium);
+  position: relative;
+}
+
+.header::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: linear-gradient(90deg, var(--accent-color), var(--primary-color), var(--accent-color));
+}
+
+.header h1 {
+  margin: 0 0 8px 0;
+  font-size: 2.2rem;
+  font-weight: 300;
+  letter-spacing: -0.5px;
+}
+
+.header p {
+  margin: 0;
+  font-size: 1.1rem;
+  opacity: 0.9;
+  font-weight: 300;
 }
 
 /* Navigation Bar Styles */
 .navbar {
-  background-color: var(--secondary-bg-color);
+  background-color: white;
   overflow: hidden;
   text-align: center;
-  padding: 10px 0;
+  padding: 0;
+  box-shadow: var(--shadow-light);
+  position: sticky;
+  top: 0;
+  z-index: 1000;
 }
 
 .navbar a {
   display: inline-block;
-  color: var(--primary-color);
+  color: var(--text-color);
   text-decoration: none;
-  padding: 10px 20px;
-  font-weight: bold;
-  transition: background-color 0.3s ease, color 0.3s ease; /* Smooth transition for hover effects */
+  padding: 16px 24px;
+  font-weight: 500;
+  font-size: 0.95rem;
+  border-bottom: 3px solid transparent;
+  transition: all 0.3s ease;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
 }
 
-.navbar a:hover,
+.navbar a:hover {
+  background-color: var(--hover-bg-color);
+  color: var(--primary-color);
+  border-bottom-color: var(--accent-color);
+}
+
 .navbar a.active {
   background-color: var(--primary-color);
   color: white;
+  border-bottom-color: var(--accent-color);
 }
 
 /* Main Content Area */
 main {
-  padding: 20px;
-  max-width: 1000px; /* Constrain content width for readability */
-  margin: 20px auto; /* Center the main content with some top/bottom margin */
+  padding: 40px;
+  max-width: 1200px;
+  margin: 30px auto;
   background-color: white;
-  border-radius: 8px;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  border-radius: 12px;
+  box-shadow: var(--shadow-medium);
+  position: relative;
+}
+
+main::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: linear-gradient(90deg, var(--primary-color), var(--accent-color));
+  border-radius: 12px 12px 0 0;
+}
+
+/* Container wrapper for consistent spacing */
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 20px;
 }
 
 /* Section specific styling */
@@ -71,68 +145,203 @@ h1 {
 }
 
 h3 {
-  border-bottom: 2px solid var(--primary-color);
-  padding-bottom: 5px;
-  margin-top: 30px;
-  margin-bottom: 15px; /* Add some margin below the heading */
+  color: var(--primary-color);
+  border-bottom: 3px solid var(--accent-color);
+  padding-bottom: 8px;
+  margin-top: 40px;
+  margin-bottom: 20px;
+  font-size: 1.4rem;
+  font-weight: 600;
+  position: relative;
 }
 
-/* Table Styles */
-.data-table {
+h3::after {
+  content: '';
+  position: absolute;
+  bottom: -3px;
+  left: 0;
+  width: 60px;
+  height: 3px;
+  background: linear-gradient(90deg, var(--primary-color), var(--accent-color));
+}
+
+h4 {
+  color: var(--text-color);
+  margin-top: 32px;
+  margin-bottom: 16px;
+  font-size: 1.2rem;
+  font-weight: 500;
+}
+
+/* Enhanced Table Styles */
+.data-table,
+table {
   width: 100%;
   border-collapse: collapse;
-  margin-top: 15px; /* Space above the table */
-  margin-bottom: 20px;
+  margin: 24px 0;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: var(--shadow-light);
+  background-color: white;
 }
 
 .data-table th,
-.data-table td {
-  padding: 12px;
-  border: 1px solid var(--border-color);
+.data-table td,
+table th,
+table td {
+  padding: 16px 12px;
   text-align: left;
+  border-bottom: 1px solid var(--border-color);
+  color: var(--text-color);
 }
 
-.data-table th {
+.data-table th,
+table th {
+  background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-dark) 100%);
+  color: white !important;
+  font-weight: 600;
+  font-size: 0.9rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
   position: sticky;
   top: 0;
-  background-color: var(--sticky-header-bg);
-  z-index: 1;
+  z-index: 10;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
-.data-table tbody tr:hover {
+.data-table tbody tr:nth-child(even),
+table tbody tr:nth-child(even) {
+  background-color: var(--table-stripe);
+}
+
+.data-table tbody tr:hover,
+table tbody tr:hover {
   background-color: var(--hover-bg-color);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 8px rgba(0, 102, 204, 0.1);
+  transition: all 0.3s ease;
 }
 
-/* Responsive Table Behavior */
-@media screen and (max-width: 700px) {
+/* Enhanced table cell styling */
+.data-table td:first-child,
+table td:first-child {
+  font-weight: 500;
+  color: var(--text-color);
+}
+
+/* Numeric columns alignment */
+.data-table td:nth-child(n+4),
+table td:nth-child(n+4) {
+  text-align: right;
+  font-family: 'Monaco', 'Menlo', monospace;
+  font-size: 0.9rem;
+}
+
+/* Enhanced Responsive Design */
+@media screen and (max-width: 768px) {
+  main {
+    margin: 10px;
+    padding: 20px;
+    border-radius: 8px;
+  }
+
+  .header {
+    padding: 20px 10px;
+  }
+
+  .header h1 {
+    font-size: 1.8rem;
+  }
+
+  .navbar a {
+    padding: 12px 16px;
+    font-size: 0.9rem;
+  }
+
+  .data-table,
+  table,
   .responsive-table {
     display: block;
     overflow-x: auto;
-    white-space: nowrap; /* Prevents text from wrapping within cells */
+    white-space: nowrap;
+    box-shadow: none;
+    border-radius: 0;
   }
 
-  /* Optional: Make cells more compact on small screens */
-  .responsive-table th,
-  .responsive-table td {
-    padding: 8px;
+  .data-table th,
+  .data-table td,
+  table th,
+  table td {
+    padding: 8px 6px;
+    font-size: 0.85rem;
+  }
+
+  ol li, ul li {
+    padding: 16px;
+    margin: 12px 0;
+  }
+
+  ol li::before {
+    left: -12px;
+    width: 24px;
+    height: 24px;
+    font-size: 0.75rem;
+  }
+
+  h3 {
+    font-size: 1.2rem;
   }
 }
 
-/* Button Styling */
+@media screen and (max-width: 480px) {
+  .navbar {
+    padding: 0;
+  }
+
+  .navbar a {
+    display: block;
+    width: 100%;
+    padding: 12px;
+    border-bottom: 1px solid var(--border-color);
+    border-radius: 0;
+  }
+
+  .navbar a:last-child {
+    border-bottom: none;
+  }
+
+  main {
+    margin: 5px;
+    padding: 15px;
+  }
+}
+
+/* Enhanced Button Styling */
 button {
-  background-color: var(--primary-color);
+  background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-dark) 100%);
   color: white;
-  padding: 10px 15px;
+  padding: 12px 24px;
   border: none;
-  border-radius: 5px;
+  border-radius: 8px;
   cursor: pointer;
-  font-size: 16px;
-  margin-top: 10px;
-  transition: background-color 0.3s ease;
+  font-size: 0.9rem;
+  font-weight: 600;
+  margin: 16px 8px 8px 0;
+  transition: all 0.3s ease;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  box-shadow: var(--shadow-light);
 }
 
 button:hover {
-  background-color: #0056b3; /* A slightly darker shade for hover */
+  background: linear-gradient(135deg, var(--primary-dark) 0%, var(--primary-color) 100%);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-medium);
+}
+
+button:active {
+  transform: translateY(0);
+  box-shadow: var(--shadow-light);
 }
 
 /* Horizontal Rule Styling */
@@ -143,17 +352,80 @@ hr {
   margin: 30px 0; /* More consistent spacing for separators */
 }
 
+/* Enhanced Publication Styling */
+ol, ul {
+  padding-left: 0;
+}
+
+ol li, ul li {
+  background: white;
+  margin: 16px 0;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: var(--shadow-light);
+  border-left: 4px solid var(--primary-color);
+  list-style: none;
+  position: relative;
+  transition: all 0.3s ease;
+}
+
+ol li:hover, ul li:hover {
+  transform: translateX(4px);
+  box-shadow: var(--shadow-medium);
+}
+
+ol {
+  counter-reset: publication-counter;
+}
+
+ol li::before {
+  counter-increment: publication-counter;
+  content: counter(publication-counter);
+  position: absolute;
+  left: -15px;
+  top: 20px;
+  background: var(--primary-color);
+  color: white;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  font-size: 0.85rem;
+}
+
+ol li b {
+  color: var(--primary-color);
+  font-size: 1.05rem;
+  display: block;
+  margin-bottom: 8px;
+  line-height: 1.4;
+}
+
+ol li i {
+  color: var(--text-muted);
+  font-size: 0.95rem;
+  display: block;
+  margin-bottom: 8px;
+}
+
 /* Reference List Styling */
 dl {
   margin-top: 20px;
 }
 
 dl dd p {
-  margin-bottom: 10px; /* Space between reference entries */
+  margin-bottom: 16px;
+  padding: 16px;
+  background: var(--table-stripe);
+  border-radius: 6px;
+  border-left: 3px solid var(--accent-color);
 }
 
 cite {
-    font-style: normal; /* Often cite is italic by default, can reset if desired */
+  font-style: normal;
 }
 
 a {
@@ -163,6 +435,53 @@ a {
 
 a:hover {
   text-decoration: underline;
+}
+
+/* Contact Details Styling */
+dl {
+  background: var(--table-stripe);
+  padding: 24px;
+  border-radius: 8px;
+  margin: 24px 0;
+  border-left: 4px solid var(--primary-color);
+}
+
+dt {
+  font-weight: 600;
+  color: var(--primary-color);
+  margin-top: 16px;
+  margin-bottom: 4px;
+}
+
+dt:first-child {
+  margin-top: 0;
+}
+
+dd {
+  margin-left: 0;
+  margin-bottom: 0;
+  color: var(--text-color);
+  line-height: 1.6;
+}
+
+/* Image styling */
+img {
+  max-width: 100%;
+  height: auto;
+  border-radius: 8px;
+  box-shadow: var(--shadow-light);
+  transition: transform 0.3s ease;
+}
+
+img:hover {
+  transform: scale(1.02);
+}
+
+/* Paragraph styling */
+p {
+  margin-bottom: 20px;
+  line-height: 1.7;
+  color: var(--text-color);
 }
 
 /* Footer - (Not present in your provided HTML, but good to have) */
