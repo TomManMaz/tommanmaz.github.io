@@ -25,52 +25,82 @@
 
   <main>
   <h1>
-   The Bus Driver Scheduling Problem with Complex Break Constraint Instance Set
+   The Bus Driver Scheduling Problem with Complex Break Constraints
   </h1>
-  The instances can be downloaded
-  <a href="https://cdlab-artis.dbai.tuwien.ac.at/papers/sa-bds/">
-   here
-  </a>
 
-  <h3>
-   L. Kletzander, N. Musliu [1]
-  </h3>
+  <h2>Problem Definition</h2>
   <p>
-   There are \(50\) real-world like instances of the BDSP. The optimal solutions are due to
-   <cite>
-    <a href="https://ojs.aaai.org/index.php/AAAI/article/view/17408" target="_blank">
-     Branch and Price for Bus Driver Scheduling with Complex Break Constraints
-    </a>
-   </cite>
-   .
+   The Bus Driver Scheduling Problem (BDSP) is a complex combinatorial optimization problem that arises in public transportation systems. 
+   Given a set of predetermined bus tours that must be covered, the goal is to create driver shifts 
+   that minimise the total cost while satisfying various operational constraints.
+  </p>
+  <!-- <p>
+   Key constraints include:
+  </p>
+  <ul>
+   <li><strong>Break constraints:</strong> Drivers must take mandatory breaks after certain working periods</li>
+   <li><strong>Maximum working time:</strong> Legal limits on total shift duration</li>
+   <li><strong>Connectivity:</strong> Tours must form connected sequences of trips</li>
+   <li><strong>Depot constraints:</strong> All tours start and end at the depot</li>
+  </ul> -->
+
+  <h2>Instance Set</h2>
+  <p>
+   The instances can be downloaded 
+   <a href="https://cdlab-artis.dbai.tuwien.ac.at/papers/sa-bds/">here</a>.
+  </p>
+
+  <h3>Real-world Instances by L. Kletzander, N. Musliu</h3>
+  <p>
+   This set contains \(50\) real-world like instances of the BDSP, ranging from small instances with 8 tours and 73 legs 
+   to large instances with 98 tours and 924 legs. The instances are derived from actual bus transportation networks 
+   and represent realistic scheduling scenarios.
   </p>
   <p>
-   For more details, see the paper:
+   <strong>Lower bounds</strong> are computed using a Branch-and-Price algorithm, which provides tight bounds for most instances.
+   The optimal solutions and best known solutions are obtained using various optimization methods including Branch-and-Price (BP).
+  </p>
+  <p>
+   For detailed methodology, see the paper:
    <cite>
     <a href="https://ojs.aaai.org/index.php/ICAPS/article/view/6688" target="_blank">
      Solving Large Real-Life Bus Driver Scheduling Problems with Complex Break Constraints
     </a>
    </cite>
-   .
   </p>
-  <br/>
-  We also include the relative gap between
 
-   best feasible soltion and best known lower bound in percent, i.e.
-   
-   \[\mathrm{GAP} = \frac{\mathrm{solution} – \mathrm{bound}}{\mathrm{bound}}\cdot 100 \]
+  <div style="background-color: #f8f9fa; padding: 15px; border-left: 4px solid #0066cc; margin: 20px 0;">
+   <p><strong>Note:</strong> All lower bounds in the table are computed using a <strong>Branch-and-Price (BP)</strong> algorithm, 
+   which provides tight bounds for optimization problems by combining branch-and-bound with column generation.</p>
+  </div>
+
+  <p>
+   The table below shows the relative gap between the best known solution and the lower bound in percent:
+   \[\mathrm{GAP} = \frac{\mathrm{solution} - \mathrm{bound}}{\mathrm{bound}} \times 100 \]
+  </p>
   
+   <p><strong>Column Descriptions:</strong></p>
+   <ul>
+    <li><strong>Instance Name:</strong> Identifier for each problem instance</li>
+    <li><strong>Tours:</strong> Number of bus tours (vehicles) required</li>
+    <li><strong>Legs:</strong> Number of bus legs </li>
+    <li><strong>Best Solution:</strong> Best known objective value (total cost)</li>
+    <li><strong>Lower Bound (BP):</strong> Lower bound computed using Branch-and-Price</li>
+    <li><strong>Gap (%):</strong> Percentage difference between solution and bound</li>
+    <li><strong>Algorithm:</strong> Method used to obtain the best solution</li>
+   </ul>
+
    <button onclick="exportTableToCSV('BKS_realistic_1.csv')">Download CSV</button>
    <table id="realisticInstancesTable" class="data-table responsive-table">  
     <thead>
         <tr style="text-align: right;">
-          <th>Instances</th>
-          <th>n_tours</th>
-          <th>n_legs</th>
-          <th>BKS</th>
-          <th>bound</th>
-          <th>gap</th>
-          <th>algorithm</th>
+          <th>Instance Name</th>
+          <th>Tours</th>
+          <th>Legs</th>
+          <th>Best Solution</th>
+          <th>Lower Bound (BP)</th>
+          <th>Gap (%)</th>
+          <th>Algorithm <a href="#ref1">[1]</a></th>
         </tr>
       </thead>
       <tbody>
@@ -824,7 +854,7 @@
   </h2>
   <dl>
    <dd>
-    <p>
+    <p id="ref1">
      [1]
             Kletzander, L., &amp; Musliu, N. (2020, June). Solving large real-life bus driver scheduling problems with complex break constraints. In Proceedings of the International Conference on Automated Planning and Scheduling (Vol. 30, pp. 421-429).
             DOI:
@@ -866,6 +896,7 @@
     </p>
    </dd>
   </dl>
+
   </main>
   <script>
     function exportTableToCSV(filename) {
