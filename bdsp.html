@@ -76,7 +76,17 @@
 
   <p>
    The table below shows the relative gap between the best known solution and the lower bound in percent:
-   \[\mathrm{GAP} = \frac{\mathrm{solution} - \mathrm{bound}}{\mathrm{bound}} \times 100 \]
+      \[\mathrm{GAP} = \frac{\mathrm{solution} – \mathrm{bound}}{\mathrm{bound}}\cdot 100 \]
+
+   <div style="background-color: var(--optimal-bg); border-left: 4px solid var(--success-color); padding: 16px; margin: 20px 0; border-radius: 6px;">
+     <h4 style="color: var(--optimal-text); margin-top: 0;">🎯 Optimal Solutions</h4>
+     <p style="color: var(--optimal-text); margin-bottom: 0;">
+       Rows highlighted in <strong>green</strong> with <span style="background-color: var(--success-color); color: white; padding: 2px 6px; border-radius: 3px; font-weight: bold;">0.00%</span> gap 
+       represent instances where the <strong>optimal solution</strong> has been proven. These solutions cannot be improved further.
+     </p>
+   </div>
+  
+   <button onclick="exportTableToCSV('BKS_realistic_1.csv')">Download CSV</button>
   </p>
   
    <p><strong>Column Descriptions:</strong></p>
@@ -98,64 +108,64 @@
           <th>Tours</th>
           <th>Legs</th>
           <th>Best Solution</th>
-          <th>Lower Bound (BP)</th>
+          <th>Lower Bound</th>
           <th>Gap (%)</th>
-          <th>Algorithm <a href="#ref1">[1]</a></th>
+          <th>Algorithm</th>
         </tr>
       </thead>
       <tbody>
-        <tr>
+        <tr class="optimal-solution">
           <td>realistic_10_1</td>
           <td>8</td>
           <td>73</td>
           <td>14417</td>
           <td>14417.00</td>
-          <td>0.00</td>
+          <td class="gap-optimal">0.00</td>
           <td>BP</td>
         </tr>
-        <tr>
+        <tr class="optimal-solution">
           <td>realistic_10_2</td>
           <td>8</td>
           <td>77</td>
           <td>14572</td>
           <td>14572.00</td>
-          <td>0.00</td>
+          <td class="gap-optimal">0.00</td>
           <td>BP</td>
         </tr>
-        <tr>
+        <tr class="optimal-solution">
           <td>realistic_10_3</td>
           <td>8</td>
           <td>81</td>
           <td>15103</td>
           <td>15103.00</td>
-          <td>0.00</td>
+          <td class="gap-optimal">0.00</td>
           <td>BP</td>
         </tr>
-        <tr>
+        <tr class="optimal-solution">
           <td>realistic_10_4</td>
           <td>8</td>
           <td>78</td>
           <td>15148</td>
           <td>15148.00</td>
-          <td>0.00</td>
+          <td class="gap-optimal">0.00</td>
           <td>BP</td>
         </tr>
-        <tr>
+        <tr class="optimal-solution">
           <td>realistic_10_5</td>
           <td>8</td>
           <td>76</td>
           <td>14306</td>
           <td>14306.00</td>
-          <td>0.00</td>
+          <td class="gap-optimal">0.00</td>
           <td>BP</td>
         </tr>
-        <tr>
+        <tr class="optimal-solution">
           <td>realistic_20_6</td>
           <td>17</td>
           <td>169</td>
           <td>30427</td>
           <td>30427.00</td>
-          <td>0.00</td>
+          <td class="gap-optimal">0.00</td>
           <td>BP</td>
         </tr>
         <tr>
@@ -167,31 +177,31 @@
           <td>0.07</td>
           <td>BP</td>
         </tr>
-        <tr>
+        <tr class="optimal-solution">
           <td>realistic_20_8</td>
           <td>17</td>
           <td>165</td>
           <td>30437</td>
           <td>30437.00</td>
-          <td>0.00</td>
+          <td class="gap-optimal">0.00</td>
           <td>BP</td>
         </tr>
-        <tr>
+        <tr class="optimal-solution">
           <td>realistic_20_9</td>
           <td>17</td>
           <td>160</td>
           <td>29520</td>
           <td>29520.00</td>
-          <td>0.00</td>
+          <td class="gap-optimal">0.00</td>
           <td>BP</td>
         </tr>
-        <tr>
+        <tr class="optimal-solution">
           <td>realistic_20_10</td>
           <td>17</td>
           <td>174</td>
           <td>30480</td>
           <td>30480.00</td>
-          <td>0.00</td>
+          <td class="gap-optimal">0.00</td>
           <td>BP</td>
         </tr>
         <tr>
@@ -561,28 +571,20 @@
    Larger Instances  [2]
   </h3>
   <p>
-   There are \(15\) real-world like larger instances of the BDSP.
+   There are \(15\) real-world like larger instances of the BDSP. These instances are significantly more challenging, 
+   with up to 250 tours and over 2300 legs. For these instances, only heuristic solutions are available, 
+   obtained primarily using Large Neighborhood Search (LNS) algorithms.
   </p>
 
   <button onclick="exportTableToCSV('BKS_realistic_2.csv')">Download CSV</button>
   <table class="data-table responsive-table">
    <thead>
-    <tr class="row-regular" style="text-align: right;">
-     <th>
-      Name
-     </th>
-     <th>
-      n_tours
-     </th>
-     <th>
-      n_legs
-     </th>
-     <th>
-      BKS
-     </th>
-     <th>
-      Algorithm
-     </th>
+    <tr style="text-align: right;">
+     <th>Instance Name</th>
+     <th>Tours</th>
+     <th>Legs</th>
+     <th>Best Solution</th>
+     <th>Algorithm</th>
     </tr>
    </thead>
    <tbody>
