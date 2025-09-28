@@ -13,6 +13,9 @@
   --shadow-medium: 0 4px 16px rgba(0, 102, 204, 0.15);
   --accent-color: #17a2b8;
   --success-color: #28a745;
+  --optimal-bg: #d4edda;
+  --optimal-border: #c3e6cb;
+  --optimal-text: #155724;
   --table-stripe: #f8f9fa;
 }
 
@@ -236,6 +239,31 @@ table td:nth-child(n+4) {
   text-align: right;
   font-family: 'Monaco', 'Menlo', monospace;
   font-size: 0.9rem;
+}
+
+/* Optimal solution highlighting */
+.optimal-solution {
+  background-color: var(--optimal-bg) !important;
+  border-left: 4px solid var(--success-color) !important;
+}
+
+.optimal-solution:hover {
+  background-color: var(--optimal-border) !important;
+  box-shadow: 0 2px 8px rgba(40, 167, 69, 0.2) !important;
+}
+
+.optimal-solution td {
+  color: var(--optimal-text) !important;
+  font-weight: 500;
+}
+
+/* Emphasize the gap column for optimal solutions */
+.optimal-solution .gap-optimal {
+  background-color: var(--success-color) !important;
+  color: white !important;
+  font-weight: bold !important;
+  border-radius: 4px;
+  padding: 4px 8px !important;
 }
 
 /* Enhanced Responsive Design */
