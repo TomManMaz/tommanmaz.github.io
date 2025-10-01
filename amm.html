@@ -3,22 +3,11 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>AMM Problems - Tommaso Mannelli Mazzoli</title>
+  <title>AMM Problems</title>
   <link rel="stylesheet" href="stylesheet.css" />
   <link rel="shortcut icon" href="favicon.ico" type="image/x-icon" />
-  <meta name="keywords" content="monthly, problems, problem, amm, american, mathematical, solution, solutions" />
   <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
   <script async id="MathJax-script" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
-  <style>
-    .useful-links {
-      font-size: 1.1rem;
-      margin: 24px 0;
-      padding: 20px;
-      background: var(--table-stripe);
-      border-radius: 8px;
-      border-left: 4px solid var(--accent-color);
-    }
-  </style>
 </head>
 <body>
   <header class="header">
@@ -31,100 +20,100 @@
     <a href="publications.html">Publications</a>
     <a href="bdsp.html">BDSP</a>
     <a class="active" href="amm.html">AMM</a>
-
   </nav>
 
   <main>
     <h1>American Mathematical Monthly Problems</h1>
 
-    <section class="useful-links">
-      <strong>Useful Links</strong><br>
-      - <a href="https://ysharificalc.wordpress.com/">Yaghoub Sharif's Blog</a><br>
-      - <a href="http://www.wolframalpha.com/">Wolfram Alpha</a><br>
-    </section>
-
-    <section style="margin: 20px;">
-      <strong>If you want to comment or share solutions, contact me at:</strong><br>
+    <p>
+      Solutions to selected problems from the American Mathematical Monthly.
+      If you want to comment or share solutions, contact me at
       <a href="mailto:tommaso.mazzoli@tuwien.ac.at">tommaso.mazzoli@tuwien.ac.at</a>
-    </section>
+    </p>
 
-    <table class="data-table problem-table">
-      <tr>
-        <th>Problem</th>
-        <th>Solution</th>
-      </tr>
-      <tr>
-        <td>
-          Problem 12407 - by an anonymous contributor (New Delhi, India)<br>
-          Let \(r\) be a positive real. Evaluate
-          \[
-          \int_0^\infty \frac{x^{r-1}}{(1+x^2)(1+x^{2r})} \mathop{}\!\mathrm{d} x
-          \]
-        </td>
-        <td><a href="https://tommanmaz.github.io/AMM/12407.pdf">solution</a></td>
-      </tr>
-      <tr>
-        <td>
-          Problem 12406 - by R. Mortini and R. Rupp (Luxembourg/Germany)<br>
-          For fixed \(p \in \mathbb{R}\), find all functions \(f : [0, 1] \to \mathbb{R}\) that are continuous at 0 and 1 and satisfy
-          \[
-          f(x^2) + 2p \cdot f(x) = (x + p)^2
-          \]
-          for all \(x \in [0, 1]\).
-        </td>
-        <td><a href="https://tommanmaz.github.io/AMM/12406.pdf">solution</a></td>
-      </tr>
-      <tr>
-        <td>
-          Problem 12388 - by A. Garcia (France)<br>
-          \[
-          \int_0^a \frac{\ln^2(x)\arctan(x)}{x^2-2\cos(\alpha)x+1} \mathop{}\!\mathrm{d} x
-          \]
-        </td>
-        <td><a href="https://tommanmaz.github.io/AMM/12388.pdf">solution</a></td>
-      </tr>
-      <tr>
-        <td>
-          Problem 12243 - by M. Lawrence Glasser (USA)<br>
-          \[
-          I_a = \int_0^a \frac{t}{\sinh t \, \sqrt{1-\frac{\sinh^2(t)}{\sinh^2(a)}}} \mathop{}\!\mathrm{d} t
-          \]
-        </td>
-        <td><a href="https://tommanmaz.github.io/AMM/12243.pdf">solution</a></td>
-      </tr>
-      <tr>
-        <td>
-          Problem 12229 - by Moubinool Omarjee (France)<br>
-          \[
-          30240\left(\int_0^1 xf(x) \mathop{}\!\mathrm{d} x\right)^2 \le \int_0^1 \left(f''(x) \right)^2 \mathop{}\!\mathrm{d}x
-          \]
-        </td>
-        <td><a href="https://tommanmaz.github.io/AMM/12229.pdf">solution</a></td>
-      </tr>
-      <tr>
-        <td>
-          Problem 12221 - by N. Batir (Turkey)<br>
-          \[
-          \int_0^1 \frac{\ln(x^6+1)}{x^2+1} \mathop{}\!\mathrm{d} x = \frac{\pi\ln 6 }{2}- 3G
-          \]
-          where \(G\) is Catalan's constant.
-        </td>
-        <td><a href="https://tommanmaz.github.io/AMM/12221.pdf">solution</a></td>
-      </tr>
-      <tr>
-        <td>
-          Problem 12142 - by J. A. Scott (UK)<br>
-          \[
-          \int_a^b ( f''(x))^2  \mathop{}\!\mathrm{d} x \ge \frac{980}{\big(8\sqrt 2 -1\big)^2} \frac{(f(a)+f(b))^2}{(b-a)^3}
-          \]
-        </td>
-        <td><a href="https://tommanmaz.github.io/AMM/12142.pdf">solution</a></td>
-      </tr>
+    <h3>Useful Resources</h3>
+    <ul>
+      <li><a href="https://ysharificalc.wordpress.com/">Yaghoub Sharif's Blog</a></li>
+      <li><a href="http://www.wolframalpha.com/">Wolfram Alpha</a></li>
+    </ul>
+
+    <table>
+      <thead>
+        <tr>
+          <th>Problem</th>
+          <th>Solution</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>
+            <strong>Problem 12407</strong> by an anonymous contributor (New Delhi, India)<br>
+            Let \(r\) be a positive real. Evaluate
+            \[
+            \int_0^\infty \frac{x^{r-1}}{(1+x^2)(1+x^{2r})} \mathop{}\!\mathrm{d} x
+            \]
+          </td>
+          <td><a href="https://tommanmaz.github.io/AMM/12407.pdf">PDF</a></td>
+        </tr>
+        <tr>
+          <td>
+            <strong>Problem 12406</strong> by R. Mortini and R. Rupp (Luxembourg/Germany)<br>
+            For fixed \(p \in \mathbb{R}\), find all functions \(f : [0, 1] \to \mathbb{R}\) that are continuous at 0 and 1 and satisfy
+            \[
+            f(x^2) + 2p \cdot f(x) = (x + p)^2
+            \]
+            for all \(x \in [0, 1]\).
+          </td>
+          <td><a href="https://tommanmaz.github.io/AMM/12406.pdf">PDF</a></td>
+        </tr>
+        <tr>
+          <td>
+            <strong>Problem 12388</strong> by A. Garcia (France)<br>
+            \[
+            \int_0^a \frac{\ln^2(x)\arctan(x)}{x^2-2\cos(\alpha)x+1} \mathop{}\!\mathrm{d} x
+            \]
+          </td>
+          <td><a href="https://tommanmaz.github.io/AMM/12388.pdf">PDF</a></td>
+        </tr>
+        <tr>
+          <td>
+            <strong>Problem 12243</strong> by M. Lawrence Glasser (USA)<br>
+            \[
+            I_a = \int_0^a \frac{t}{\sinh t \, \sqrt{1-\frac{\sinh^2(t)}{\sinh^2(a)}}} \mathop{}\!\mathrm{d} t
+            \]
+          </td>
+          <td><a href="https://tommanmaz.github.io/AMM/12243.pdf">PDF</a></td>
+        </tr>
+        <tr>
+          <td>
+            <strong>Problem 12229</strong> by Moubinool Omarjee (France)<br>
+            \[
+            30240\left(\int_0^1 xf(x) \mathop{}\!\mathrm{d} x\right)^2 \le \int_0^1 \left(f''(x) \right)^2 \mathop{}\!\mathrm{d}x
+            \]
+          </td>
+          <td><a href="https://tommanmaz.github.io/AMM/12229.pdf">PDF</a></td>
+        </tr>
+        <tr>
+          <td>
+            <strong>Problem 12221</strong> by N. Batir (Turkey)<br>
+            \[
+            \int_0^1 \frac{\ln(x^6+1)}{x^2+1} \mathop{}\!\mathrm{d} x = \frac{\pi\ln 6 }{2}- 3G
+            \]
+            where \(G\) is Catalan's constant.
+          </td>
+          <td><a href="https://tommanmaz.github.io/AMM/12221.pdf">PDF</a></td>
+        </tr>
+        <tr>
+          <td>
+            <strong>Problem 12142</strong> by J. A. Scott (UK)<br>
+            \[
+            \int_a^b ( f''(x))^2  \mathop{}\!\mathrm{d} x \ge \frac{980}{\big(8\sqrt 2 -1\big)^2} \frac{(f(a)+f(b))^2}{(b-a)^3}
+            \]
+          </td>
+          <td><a href="https://tommanmaz.github.io/AMM/12142.pdf">PDF</a></td>
+        </tr>
+      </tbody>
     </table>
   </main>
-
-  <!-- <footer class="footer">
-    <p style="text-align:center;">&copy; Tommaso Mannelli Mazzoli</p>
-  </footer> -->
 </body>
 </html>

@@ -1,132 +1,78 @@
 <!DOCTYPE html>
 <html lang="en">
- <head>
-  <meta charset="utf-8"/>
+<head>
+  <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>   Bus Driver Scheduling Problem Instance Set  </title>
-  <link href="favicon.ico" rel="shortcut icon" type="image/x-icon"/>
-  <link href="stylesheet.css" rel="stylesheet"/>
-
-  <script async="" id="MathJax-script" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
-  </script>
- </head>
-
- <body>
-    <header class="header">
+  <title>Bus Driver Scheduling Problem</title>
+  <link rel="shortcut icon" href="favicon.ico" type="image/x-icon" />
+  <link rel="stylesheet" href="stylesheet.css" />
+  <script async id="MathJax-script" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+</head>
+<body>
+  <header class="header">
     <h1>Tommaso Mannelli Mazzoli</h1>
     <p>TU Wien, Vienna, Austria</p>
   </header>
+
   <nav class="navbar">
-   <a href="index.html">Home</a>
-   <a href="publications.html">Publications</a>
-   <a class="active" href="bdsp.html">BDSP</a>
-   <a href="amm.html">AMM</a>
+    <a href="index.html">Home</a>
+    <a href="publications.html">Publications</a>
+    <a class="active" href="bdsp.html">BDSP</a>
+    <a href="amm.html">AMM</a>
   </nav>
 
   <main>
-  <h1>
-   The Bus Driver Scheduling Problem with Complex Break Constraints
-  </h1>
+    <h1>Bus Driver Scheduling Problem</h1>
 
-  <h2>Problem Definition</h2>
-  <p>
-   The Bus Driver Scheduling Problem (BDSP) is a complex combinatorial optimization problem that arises in public transportation systems. 
-   Given a set of predetermined bus tours that must be covered, the goal is to create driver shifts 
-   that minimise the total cost while satisfying various operational constraints.
-  </p>
+    <h2>Problem Definition</h2>
+    <p>
+      The Bus Driver Scheduling Problem (BDSP) is a complex combinatorial optimization problem
+      in public transportation. Given predetermined bus tours, the goal is to create driver shifts
+      that minimize total cost while satisfying operational constraints.
+    </p>
 
-  <h2>Download Complete Instance Collection</h2>
-  
-  <p>
-   For convenience, we provide the entire BDSP instance collection.
-  </p>
-
-  <div style="background-color: #f8f9fa; border: 1px solid #dee2e6; padding: 20px; margin: 20px 0; border-radius: 8px;">
-    <h3 style="margin-top: 0; color: #495057;">📦 BDSP Instance Collection</h3>
-    
-    <table style="width: 100%; border-collapse: collapse; margin: 15px 0;">
+    <h2>Download Instance Collection</h2>
+    <p>
+      The complete BDSP instance collection is available for download:
+    </p>
+    <table>
       <thead>
-        <tr style="background-color: #e9ecef;">
-          <th style="border: 1px solid #dee2e6; padding: 8px; text-align: left;">File</th>
-          <th style="border: 1px solid #dee2e6; padding: 8px; text-align: left;">Description</th>
-          <th style="border: 1px solid #dee2e6; padding: 8px; text-align: left;">Updated</th>
-          <th style="border: 1px solid #dee2e6; padding: 8px; text-align: left;">Size</th>
+        <tr>
+          <th>File</th>
+          <th>Description</th>
+          <th>Size</th>
         </tr>
       </thead>
       <tbody>
         <tr>
-          <td style="border: 1px solid #dee2e6; padding: 8px;">
-            <a href="/downloads/collection.tar.gz" style="color: #007bff; text-decoration: none; font-weight: bold;">collection.tar.gz</a>
-          </td>
-          <td style="border: 1px solid #dee2e6; padding: 8px;">
-            TAR.GZ archive of all BDSP instances in the collection set. Includes 285 instances.
-          </td>
-          <td style="border: 1px solid #dee2e6; padding: 8px;">Sep 2025</td>
-          <td style="border: 1px solid #dee2e6; padding: 8px;">80 MB</td>
+          <td><a href="/downloads/collection.tar.gz">collection.tar.gz</a></td>
+          <td>Complete collection of 285 BDSP instances</td>
+          <td>80 MB</td>
         </tr>
       </tbody>
     </table>
 
+    <h2>Instance Sets</h2>
 
-  </div>
+    <h3>Real-world Instances (50 instances)</h3>
+    <p>
+      Instances range from 8 tours with 73 legs to 98 tours with 924 legs, derived from actual
+      bus transportation networks. Lower bounds are computed using Branch-and-Price (BP).
+    </p>
+    <p>
+      The table shows the gap between best known solutions and lower bounds:
+      \[\text{GAP} = \frac{\text{solution} - \text{bound}}{\text{bound}} \times 100\%\]
+    </p>
+    <p>
+      Rows highlighted in green with 0.00% gap represent proven optimal solutions.
+    </p>
 
-  <h2>Instance Set Details</h2>
+    <button onclick="exportTableToCSV('BKS_realistic_1.csv')">Download CSV</button>
 
-  <h3>Real-world Instances by L. Kletzander, N. Musliu</h3>
-  <p>
-   This set contains \(50\) real-world like instances of the BDSP, ranging from small instances with 8 tours and 73 legs 
-   to large instances with 98 tours and 924 legs. The instances are derived from actual bus transportation networks 
-   and represent realistic scheduling scenarios.
-  </p>
-  <p>
-   <strong>Lower bounds</strong> are computed using a Branch-and-Price algorithm, which provides tight bounds for most instances.
-   The optimal solutions and best known solutions are obtained using various optimization methods including Branch-and-Price (BP).
-  </p>
-  <p>
-   For detailed methodology, see the paper:
-   <cite>
-    <a href="https://ojs.aaai.org/index.php/ICAPS/article/view/6688" target="_blank">
-     Solving Large Real-Life Bus Driver Scheduling Problems with Complex Break Constraints
-    </a>
-   </cite>
-  </p>
-
-  <div style="background-color: #f8f9fa; padding: 15px; border-left: 4px solid #0066cc; margin: 20px 0;">
-   <p><strong>Note:</strong> All lower bounds in the table are computed using a <strong>Branch-and-Price (BP)</strong> algorithm, 
-   which provides tight bounds for optimization problems by combining branch-and-bound with column generation.</p>
-  </div>
-
-  <p>
-   The table below shows the relative gap between the best known solution and the lower bound in percent:
-      \[\mathrm{GAP} = \frac{\mathrm{solution} – \mathrm{bound}}{\mathrm{bound}}\cdot 100 \]
-
-   <div style="background-color: var(--optimal-bg); border-left: 4px solid var(--success-color); padding: 16px; margin: 20px 0; border-radius: 6px;">
-     <h4 style="color: var(--optimal-text); margin-top: 0;">🎯 Optimal Solutions</h4>
-     <p style="color: var(--optimal-text); margin-bottom: 0;">
-       Rows highlighted in <strong>green</strong> with <span style="background-color: var(--success-color); color: white; padding: 2px 6px; border-radius: 3px; font-weight: bold;">0.00%</span> gap 
-       represent instances where the <strong>optimal solution</strong> has been proven. These solutions cannot be improved further.
-     </p>
-   </div>
-  
-   <button onclick="exportTableToCSV('BKS_realistic_1.csv')">Download CSV</button>
-  </p>
-  
-   <p><strong>Column Descriptions:</strong></p>
-   <ul>
-    <li><strong>Instance Name:</strong> Identifier for each problem instance</li>
-    <li><strong>Tours:</strong> Number of bus tours (vehicles) required</li>
-    <li><strong>Legs:</strong> Number of bus legs </li>
-    <li><strong>Best Solution:</strong> Best known objective value (total cost)</li>
-    <li><strong>Lower Bound (BP):</strong> Lower bound computed using Branch-and-Price</li>
-    <li><strong>Gap (%):</strong> Percentage difference between solution and bound</li>
-    <li><strong>Algorithm:</strong> Method used to obtain the best solution</li>
-   </ul>
-
-   <button onclick="exportTableToCSV('BKS_realistic_1.csv')">Download CSV</button>
-   <table id="realisticInstancesTable" class="data-table responsive-table">  
-    <thead>
-        <tr style="text-align: right;">
-          <th>Instance Name</th>
+    <table id="realisticInstancesTable">
+      <thead>
+        <tr>
+          <th>Instance</th>
           <th>Tours</th>
           <th>Legs</th>
           <th>Best Solution</th>
@@ -587,362 +533,182 @@
           <td>LNS</td>
         </tr>
       </tbody>
-  </table>
+    </table>
 
-  <h3>
-   Larger Instances  [2]
-  </h3>
-  <p>
-   There are \(15\) real-world like larger instances of the BDSP. These instances are significantly more challenging, 
-   with up to 250 tours and over 2300 legs. For these instances, only heuristic solutions are available, 
-   obtained primarily using Large Neighborhood Search (LNS) algorithms.
-  </p>
-
-  <button onclick="exportTableToCSV('BKS_realistic_2.csv')">Download CSV</button>
-  <table class="data-table responsive-table">
-   <thead>
-    <tr style="text-align: right;">
-     <th>Instance Name</th>
-     <th>Tours</th>
-     <th>Legs</th>
-     <th>Best Solution</th>
-     <th>Algorithm</th>
-    </tr>
-   </thead>
-   <tbody>
-    <tr class="row-alt">
-     <td>
-      realistic_150_51
-     </td>
-     <td>
-      148
-     </td>
-     <td>
-      1371
-     </td>
-     <td>
-      251712
-     </td>
-     <td>
-      LNS
-     </td>
-    </tr>
-    <tr class="row-regular">
-     <td>
-      realistic_150_52
-     </td>
-     <td>
-      148
-     </td>
-     <td>
-      1403
-     </td>
-     <td>
-      257458
-     </td>
-     <td>
-      LNS
-     </td>
-    </tr>
-    <tr class="row-alt">
-     <td>
-      realistic_150_53
-     </td>
-     <td>
-      148
-     </td>
-     <td>
-      1383
-     </td>
-     <td>
-      257146
-     </td>
-     <td>
-      LNS
-     </td>
-    </tr>
-    <tr class="row-regular">
-     <td>
-      realistic_150_54
-     </td>
-     <td>
-      148
-     </td>
-     <td>
-      1375
-     </td>
-     <td>
-      256662
-     </td>
-     <td>
-      LNS
-     </td>
-    </tr>
-    <tr class="row-alt">
-     <td>
-      realistic_150_55
-     </td>
-     <td>
-      148
-     </td>
-     <td>
-      1376
-     </td>
-     <td>
-      254608
-     </td>
-     <td>
-      LNS
-     </td>
-    </tr>
-    <tr class="row-regular">
-     <td>
-      realistic_200_56
-     </td>
-     <td>
-      197
-     </td>
-     <td>
-      1806
-     </td>
-     <td>
-      339683
-     </td>
-     <td>
-      LNS
-     </td>
-    </tr>
-    <tr class="row-alt">
-     <td>
-      realistic_200_57
-     </td>
-     <td>
-      197
-     </td>
-     <td>
-      1840
-     </td>
-     <td>
-      341608
-     </td>
-     <td>
-      LNS
-     </td>
-    </tr>
-    <tr class="row-regular">
-     <td>
-      realistic_200_58
-     </td>
-     <td>
-      197
-     </td>
-     <td>
-      1820
-     </td>
-     <td>
-      336886
-     </td>
-     <td>
-      LNS
-     </td>
-    </tr>
-    <tr class="row-alt">
-     <td>
-      realistic_200_59
-     </td>
-     <td>
-      197
-     </td>
-     <td>
-      1814
-     </td>
-     <td>
-      338072
-     </td>
-     <td>
-      LNS
-     </td>
-    </tr>
-    <tr class="row-regular">
-     <td>
-      realistic_200_60
-     </td>
-     <td>
-      197
-     </td>
-     <td>
-      1892
-     </td>
-     <td>
-      336906
-     </td>
-     <td>
-      LNS
-     </td>
-    </tr>
-    <tr class="row-alt">
-     <td>
-      realistic_250_61
-     </td>
-     <td>
-      250
-     </td>
-     <td>
-      2323
-     </td>
-     <td>
-      427739
-     </td>
-     <td>
-      LNS
-     </td>
-    </tr>
-    <tr class="row-regular">
-     <td>
-      realistic_250_62
-     </td>
-     <td>
-      250
-     </td>
-     <td>
-      2329
-     </td>
-     <td>
-      429168
-     </td>
-     <td>
-      LNS
-     </td>
-    </tr>
-    <tr class="row-alt">
-     <td>
-      realistic_250_63
-     </td>
-     <td>
-      250
-     </td>
-     <td>
-      2280
-     </td>
-     <td>
-      427930
-     </td>
-     <td>
-      LNS
-     </td>
-    </tr>
-    <tr class="row-regular">
-     <td>
-      realistic_250_64
-     </td>
-     <td>
-      250
-     </td>
-     <td>
-      2313
-     </td>
-     <td>
-      429545
-     </td>
-     <td>
-      LNS
-     </td>
-    </tr>
-    <tr class="row-alt">
-     <td>
-      realistic_250_65
-     </td>
-     <td>
-      250
-     </td>
-     <td>
-      2339
-     </td>
-     <td>
-      426803
-     </td>
-     <td>
-      LNS
-     </td>
-    </tr>
-   </tbody>
-  </table>
-
-  <h3>
-   Diverse Instances [4]
-  </h3>
-  TBD
-  <hr/>
-  <h2>
-   References
-  </h2>
-  <dl>
-   <dd>
-    <p id="ref1">
-     [1]
-            Kletzander, L., &amp; Musliu, N. (2020, June). Solving large real-life bus driver scheduling problems with complex break constraints. In Proceedings of the International Conference on Automated Planning and Scheduling (Vol. 30, pp. 421-429).
-            DOI:
-     <a href="https://doi.org/10.1609/icaps.v30i1.6688">
-      https://doi.org/10.1609/icaps.v30i1.6688
-     </a>
-    </p>
+    <h3>Large Instances (15 instances)</h3>
     <p>
-     [2]
-            Kletzander, L., Mazzoli, T. M., &amp; Musliu, N. (2022, July).
-     <em>
-      Metaheuristic algorithms for the bus driver scheduling problem with complex break constraints.
-     </em>
-     In Proceedings of the Genetic and Evolutionary Computation Conference (pp. 232-240). 
-            DOI:
-     <a href="https://doi.org/10.1145/3512290.3528876">
-      https://doi.org/10.1145/3512290.3528876
-     </a>
+      Larger real-world instances with up to 250 tours and over 2300 legs.
+      Solutions obtained using Large Neighborhood Search (LNS).
     </p>
-    <p>
-     [3] Mazzoli, T. M., Kletzander, L., Van Hentenryck, P., &amp; Musliu, N. (2024, May).
-     <em>
-      Investigating Large Neighbourhood Search for Bus Driver Scheduling.
-     </em>
-     In Proceedings of the International Conference on Automated Planning and Scheduling 
-            (Vol. 34, pp. 360-368). 
-            DOI:
-     <a href="https://doi.org/10.1609/icaps.v34i1.31495">
-      https://doi.org/10.1609/icaps.v34i1.31495
-     </a>
-    </p>
-    <p>
-     [4]
-            Mannelli Mazzoli, T., Kletzander, L., Musliu, N., &amp; Smith-Miles, K. (2024, August). Instance Space Analysis for the Bus Driver Scheduling Problem. In Proceedings of the 13th International Conference on the Practice and Theory of Automated Timetabling-PATAT 2024 (pp. 20-35).
-            DOI:
-     <a href="https://patatconference.org/patat2024/proceedings/papers/20.pdf">
-      https://patatconference.org/patat2024/proceedings/papers/20.pdf
-     </a>
-    </p>
-   </dd>
-  </dl>
 
+    <button onclick="exportTableToCSV('BKS_realistic_2.csv')">Download CSV</button>
+
+    <table>
+      <thead>
+        <tr>
+          <th>Instance</th>
+          <th>Tours</th>
+          <th>Legs</th>
+          <th>Best Solution</th>
+          <th>Algorithm</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>realistic_150_51</td>
+          <td>148</td>
+          <td>1371</td>
+          <td>251712</td>
+          <td>LNS</td>
+        </tr>
+        <tr>
+          <td>realistic_150_52</td>
+          <td>148</td>
+          <td>1403</td>
+          <td>257458</td>
+          <td>LNS</td>
+        </tr>
+        <tr>
+          <td>realistic_150_53</td>
+          <td>148</td>
+          <td>1383</td>
+          <td>257146</td>
+          <td>LNS</td>
+        </tr>
+        <tr>
+          <td>realistic_150_54</td>
+          <td>148</td>
+          <td>1375</td>
+          <td>256662</td>
+          <td>LNS</td>
+        </tr>
+        <tr>
+          <td>realistic_150_55</td>
+          <td>148</td>
+          <td>1376</td>
+          <td>254608</td>
+          <td>LNS</td>
+        </tr>
+        <tr>
+          <td>realistic_200_56</td>
+          <td>197</td>
+          <td>1806</td>
+          <td>339683</td>
+          <td>LNS</td>
+        </tr>
+        <tr>
+          <td>realistic_200_57</td>
+          <td>197</td>
+          <td>1840</td>
+          <td>341608</td>
+          <td>LNS</td>
+        </tr>
+        <tr>
+          <td>realistic_200_58</td>
+          <td>197</td>
+          <td>1820</td>
+          <td>336886</td>
+          <td>LNS</td>
+        </tr>
+        <tr>
+          <td>realistic_200_59</td>
+          <td>197</td>
+          <td>1814</td>
+          <td>338072</td>
+          <td>LNS</td>
+        </tr>
+        <tr>
+          <td>realistic_200_60</td>
+          <td>197</td>
+          <td>1892</td>
+          <td>336906</td>
+          <td>LNS</td>
+        </tr>
+        <tr>
+          <td>realistic_250_61</td>
+          <td>250</td>
+          <td>2323</td>
+          <td>427739</td>
+          <td>LNS</td>
+        </tr>
+        <tr>
+          <td>realistic_250_62</td>
+          <td>250</td>
+          <td>2329</td>
+          <td>429168</td>
+          <td>LNS</td>
+        </tr>
+        <tr>
+          <td>realistic_250_63</td>
+          <td>250</td>
+          <td>2280</td>
+          <td>427930</td>
+          <td>LNS</td>
+        </tr>
+        <tr>
+          <td>realistic_250_64</td>
+          <td>250</td>
+          <td>2313</td>
+          <td>429545</td>
+          <td>LNS</td>
+        </tr>
+        <tr>
+          <td>realistic_250_65</td>
+          <td>250</td>
+          <td>2339</td>
+          <td>426803</td>
+          <td>LNS</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <h2>References</h2>
+    <ol>
+      <li>
+        Kletzander, L., & Musliu, N. (2020). Solving large real-life bus driver scheduling problems
+        with complex break constraints. <em>ICAPS 2020</em>.
+        <a href="https://doi.org/10.1609/icaps.v30i1.6688">DOI</a>
+      </li>
+      <li>
+        Kletzander, L., Mazzoli, T. M., & Musliu, N. (2022). Metaheuristic algorithms for the bus
+        driver scheduling problem with complex break constraints. <em>GECCO 2022</em>.
+        <a href="https://doi.org/10.1145/3512290.3528876">DOI</a>
+      </li>
+      <li>
+        Mazzoli, T. M., Kletzander, L., Van Hentenryck, P., & Musliu, N. (2024). Investigating
+        Large Neighbourhood Search for Bus Driver Scheduling. <em>ICAPS 2024</em>.
+        <a href="https://doi.org/10.1609/icaps.v34i1.31495">DOI</a>
+      </li>
+      <li>
+        Mannelli Mazzoli, T., Kletzander, L., Musliu, N., & Smith-Miles, K. (2024). Instance Space
+        Analysis for the Bus Driver Scheduling Problem. <em>PATAT 2024</em>.
+        <a href="https://patatconference.org/patat2024/proceedings/papers/20.pdf">PDF</a>
+      </li>
+    </ol>
   </main>
+
   <script>
     function exportTableToCSV(filename) {
-        const table = document.getElementById('realisticInstancesTable');
-        let csv = [];
-        const rows = table.querySelectorAll('tr');
+      const table = document.getElementById('realisticInstancesTable');
+      if (!table) return;
 
-        rows.forEach(row => {
-            const cells = row.querySelectorAll('th, td');
-            const rowData = [];
-            cells.forEach(cell => rowData.push(cell.textContent));
-            csv.push(rowData.join(','));
-        });
+      let csv = [];
+      const rows = table.querySelectorAll('tr');
 
-        const csvContent = csv.join('\n');
-        const blob = new Blob([csvContent], { type: 'text/csv' });
-        const link = document.createElement('a');
-        link.href = URL.createObjectURL(blob);
-        link.download = filename;
-        link.click();
+      rows.forEach(row => {
+        const cells = row.querySelectorAll('th, td');
+        const rowData = [];
+        cells.forEach(cell => rowData.push(cell.textContent));
+        csv.push(rowData.join(','));
+      });
+
+      const csvContent = csv.join('\n');
+      const blob = new Blob([csvContent], { type: 'text/csv' });
+      const link = document.createElement('a');
+      link.href = URL.createObjectURL(blob);
+      link.download = filename;
+      link.click();
     }
-</script>
-
- </body>
+  </script>
+</body>
 </html>
