@@ -1,13 +1,15 @@
 /* Clean and minimal CSS for academic website */
 :root {
-  --primary: #0066cc;
-  --primary-dark: #004499;
+  --primary: #A54918;
+  --primary-dark: #7a3512;
+  --primary-light: #c65e2a;
   --text: #2c3e50;
   --text-light: #6c757d;
-  --bg-light: #f8f9fa;
-  --border: #e1e8ed;
+  --bg-light: #fdf9f7;
+  --border: #f0e5df;
   --success: #28a745;
   --success-bg: #d4edda;
+  --accent: #d4763b;
 }
 
 * {
@@ -29,18 +31,23 @@ body {
   color: white;
   padding: 2rem 1.5rem;
   text-align: center;
+  position: relative;
+  border-top: 4px solid var(--primary);
+  box-shadow: 0 2px 8px rgba(165, 73, 24, 0.2);
 }
 
 .header h1 {
   margin: 0 0 0.5rem 0;
   font-size: 2rem;
   font-weight: 400;
+  color: white;
 }
 
 .header p {
   margin: 0;
   font-size: 1.1rem;
   opacity: 0.95;
+  color: white;
 }
 
 /* Navigation */
@@ -71,6 +78,7 @@ body {
 .navbar a.active {
   background: var(--primary);
   color: white;
+  border-bottom: 3px solid var(--primary-dark);
 }
 
 /* Main Content */
@@ -80,7 +88,8 @@ main {
   padding: 2.5rem;
   background: white;
   border-radius: 8px;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  box-shadow: 0 2px 8px rgba(165, 73, 24, 0.1);
+  border-top: 3px solid var(--primary);
 }
 
 h1 {
@@ -192,7 +201,7 @@ tr:nth-child(even) {
 }
 
 tr:hover {
-  background: #e3f2fd;
+  background: #fff3ed;
 }
 
 td:nth-child(n+4) {
