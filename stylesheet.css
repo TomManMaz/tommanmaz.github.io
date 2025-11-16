@@ -6,10 +6,30 @@
   --text: #2c3e50;
   --text-light: #6c757d;
   --bg-light: #fdf9f7;
+  --bg-main: #ffffff;
+  --bg-body: #ffffff;
   --border: #f0e5df;
   --success: #28a745;
   --success-bg: #d4edda;
   --accent: #d4763b;
+  --table-hover: #fff3ed;
+}
+
+/* Dark mode colors */
+[data-theme="dark"] {
+  --primary: #d4763b;
+  --primary-dark: #c65e2a;
+  --primary-light: #e89866;
+  --text: #e4e4e7;
+  --text-light: #a1a1aa;
+  --bg-light: #27272a;
+  --bg-main: #18181b;
+  --bg-body: #09090b;
+  --border: #3f3f46;
+  --success: #4ade80;
+  --success-bg: #14532d;
+  --accent: #d4763b;
+  --table-hover: #3f3f46;
 }
 
 * {
@@ -21,8 +41,10 @@ body {
   margin: 0;
   padding: 0;
   color: var(--text);
+  background-color: var(--bg-body);
   line-height: 1.6;
   font-size: 16px;
+  transition: background-color 0.3s ease, color 0.3s ease;
 }
 
 /* Accessibility - Skip Link */
@@ -70,12 +92,13 @@ body {
 
 /* Navigation */
 .navbar {
-  background: white;
+  background: var(--bg-main);
   text-align: center;
   box-shadow: 0 2px 4px rgba(0,0,0,0.1);
   position: sticky;
   top: 0;
   z-index: 100;
+  transition: background-color 0.3s ease;
 }
 
 .navbar a {
@@ -104,10 +127,11 @@ main {
   max-width: 1000px;
   margin: 2rem auto;
   padding: 2.5rem;
-  background: white;
+  background: var(--bg-main);
   border-radius: 8px;
   box-shadow: 0 2px 8px rgba(165, 73, 24, 0.1);
   border-top: 3px solid var(--primary);
+  transition: background-color 0.3s ease;
 }
 
 h1 {
@@ -219,7 +243,7 @@ tr:nth-child(even) {
 }
 
 tr:hover {
-  background: #fff3ed;
+  background: var(--table-hover);
 }
 
 td:nth-child(n+4) {
@@ -280,6 +304,42 @@ hr {
   margin: 2rem 0;
 }
 
+/* Dark Mode Toggle */
+.theme-toggle {
+  position: fixed;
+  bottom: 2rem;
+  right: 2rem;
+  background: var(--primary);
+  color: white;
+  border: none;
+  border-radius: 50%;
+  width: 56px;
+  height: 56px;
+  cursor: pointer;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+  font-size: 1.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+  z-index: 1000;
+  padding: 0;
+}
+
+.theme-toggle:hover {
+  transform: translateY(-2px) scale(1.05);
+  box-shadow: 0 6px 16px rgba(0,0,0,0.4);
+}
+
+.theme-toggle:active {
+  transform: translateY(0) scale(0.95);
+}
+
+.theme-toggle-icon {
+  font-size: 1.5rem;
+  line-height: 1;
+}
+
 /* Responsive Design */
 @media (max-width: 768px) {
   main {
@@ -314,5 +374,12 @@ hr {
   main {
     margin: 0.5rem;
     padding: 1rem;
+  }
+
+  .theme-toggle {
+    bottom: 1rem;
+    right: 1rem;
+    width: 48px;
+    height: 48px;
   }
 }

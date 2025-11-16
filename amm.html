@@ -51,7 +51,7 @@
     <h1>American Mathematical Monthly Problems</h1>
 
     <p>
-      Solutions to selected problems from the American Mathematical Monthly.
+      Solutions to selected problems from the <a href="https://www.tandfonline.com/journals/uamm20" target="_blank" rel="noopener noreferrer">American Mathematical Monthly</a>.
       If you want to comment or share solutions, contact me at
       <a href="mailto:tommaso.mazzoli@tuwien.ac.at">tommaso.mazzoli@tuwien.ac.at</a>
     </p>
@@ -140,5 +140,34 @@
       </tbody>
     </table>
   </main>
+
+  <button class="theme-toggle" id="theme-toggle" aria-label="Toggle dark mode">
+    <span class="theme-toggle-icon" id="theme-icon">🌙</span>
+  </button>
+
+  <script>
+    // Dark mode toggle functionality
+    const themeToggle = document.getElementById('theme-toggle');
+    const themeIcon = document.getElementById('theme-icon');
+    const html = document.documentElement;
+
+    // Check for saved theme preference or default to light mode
+    const currentTheme = localStorage.getItem('theme') || 'light';
+    html.setAttribute('data-theme', currentTheme);
+    updateIcon(currentTheme);
+
+    themeToggle.addEventListener('click', () => {
+      const theme = html.getAttribute('data-theme');
+      const newTheme = theme === 'dark' ? 'light' : 'dark';
+
+      html.setAttribute('data-theme', newTheme);
+      localStorage.setItem('theme', newTheme);
+      updateIcon(newTheme);
+    });
+
+    function updateIcon(theme) {
+      themeIcon.textContent = theme === 'dark' ? '☀️' : '🌙';
+    }
+  </script>
 </body>
 </html>
