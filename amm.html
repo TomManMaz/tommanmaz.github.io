@@ -45,6 +45,9 @@
     <a href="publications.html">Publications</a>
     <a href="bdsp.html">BDSP</a>
     <a class="active" href="amm.html" aria-current="page">AMM</a>
+    <a href="#" class="theme-toggle-link" id="theme-toggle" aria-label="Toggle dark mode">
+      <span id="theme-icon">🌙</span>
+    </a>
   </nav>
 
   <main id="main-content">
@@ -141,33 +144,35 @@
     </table>
   </main>
 
-  <button class="theme-toggle" id="theme-toggle" aria-label="Toggle dark mode">
-    <span class="theme-toggle-icon" id="theme-icon">🌙</span>
-  </button>
-
   <script>
     // Dark mode toggle functionality
-    const themeToggle = document.getElementById('theme-toggle');
-    const themeIcon = document.getElementById('theme-icon');
-    const html = document.documentElement;
+    document.addEventListener('DOMContentLoaded', function() {
+      const themeToggle = document.getElementById('theme-toggle');
+      const themeIcon = document.getElementById('theme-icon');
+      const htmlElement = document.documentElement;
 
-    // Check for saved theme preference or default to light mode
-    const currentTheme = localStorage.getItem('theme') || 'light';
-    html.setAttribute('data-theme', currentTheme);
-    updateIcon(currentTheme);
+      // Check for saved theme preference or default to light mode
+      const savedTheme = localStorage.getItem('theme');
+      if (savedTheme) {
+        htmlElement.setAttribute('data-theme', savedTheme);
+        updateIcon(savedTheme);
+      }
 
-    themeToggle.addEventListener('click', () => {
-      const theme = html.getAttribute('data-theme');
-      const newTheme = theme === 'dark' ? 'light' : 'dark';
+      // Toggle theme on click
+      themeToggle.addEventListener('click', function(e) {
+        e.preventDefault();
+        const currentTheme = htmlElement.getAttribute('data-theme');
+        const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
 
-      html.setAttribute('data-theme', newTheme);
-      localStorage.setItem('theme', newTheme);
-      updateIcon(newTheme);
+        htmlElement.setAttribute('data-theme', newTheme);
+        localStorage.setItem('theme', newTheme);
+        updateIcon(newTheme);
+      });
+
+      function updateIcon(theme) {
+        themeIcon.textContent = theme === 'dark' ? '☀️' : '🌙';
+      }
     });
-
-    function updateIcon(theme) {
-      themeIcon.textContent = theme === 'dark' ? '☀️' : '🌙';
-    }
   </script>
 </body>
 </html>
