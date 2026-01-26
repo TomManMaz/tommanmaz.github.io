@@ -31,6 +31,65 @@
   <link rel="apple-touch-icon" href="icon.png" />
   <link rel="stylesheet" href="stylesheet.css" />
   <script defer id="MathJax-script" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+  <style>
+    /* Additional styles for BDSP page */
+    .toc {
+      background: var(--bg-light);
+      padding: 1.5rem;
+      border-radius: 6px;
+      margin: 1.5rem 0;
+      border-left: 4px solid var(--primary);
+    }
+    .toc h3 {
+      margin-top: 0;
+      color: var(--text);
+    }
+    .toc ul {
+      margin: 0;
+      padding-left: 1.2rem;
+    }
+    .toc li {
+      margin: 0.4rem 0;
+    }
+    .info-box {
+      background: var(--bg-light);
+      padding: 1.25rem;
+      border-radius: 6px;
+      margin: 1rem 0;
+      border-left: 4px solid var(--accent);
+    }
+    .info-box p:last-child {
+      margin-bottom: 0;
+    }
+    .citation-box {
+      background: var(--bg-light);
+      padding: 1rem;
+      border-radius: 6px;
+      font-family: monospace;
+      font-size: 0.9rem;
+      overflow-x: auto;
+      white-space: pre-wrap;
+      border: 1px solid var(--border);
+    }
+    .last-updated {
+      color: var(--text-light);
+      font-size: 0.9rem;
+      font-style: italic;
+    }
+    code {
+      background: var(--bg-light);
+      padding: 0.2rem 0.4rem;
+      border-radius: 3px;
+      font-size: 0.9em;
+    }
+    pre {
+      background: var(--bg-light);
+      padding: 1rem;
+      border-radius: 6px;
+      overflow-x: auto;
+      font-size: 0.85rem;
+    }
+  </style>
 </head>
 <body>
   <a href="#main-content" class="skip-link">Skip to main content</a>
@@ -52,48 +111,240 @@
 
   <main id="main-content">
     <h1>Bus Driver Scheduling Problem</h1>
+    <p class="last-updated">Last updated: January 2026</p>
 
-    <h2>Problem Definition</h2>
+    <div class="toc">
+      <h3>Contents</h3>
+      <ul>
+        <li><a href="#problem-definition">Problem Definition</a></li>
+        <li><a href="#terminology">Terminology</a></li>
+        <li><a href="#instance-collection">Instance Collection</a></li>
+        <li><a href="#best-known-solutions">Best Known Solutions</a></li>
+        <li><a href="#how-to-cite">How to Cite</a></li>
+        <li><a href="#references">References</a></li>
+      </ul>
+    </div>
+
+    <h2 id="problem-definition">Problem Definition</h2>
     <p>
-      The Bus Driver Scheduling Problem (BDSP) is a complex combinatorial optimization problem
-      in public transportation. Given predetermined bus tours, the goal is to create driver shifts
-      that minimize total cost while satisfying operational constraints.
+      The Bus Driver Scheduling Problem (BDSP) is a combinatorial optimization problem
+      arising in public transportation planning. It has three main goals:
+    </p>
+    <ol>
+      <li><strong>Coverage:</strong> Define daily driver shifts that cover all predetermined bus tours and meet the transportation system's demand.</li>
+      <li><strong>Feasibility:</strong> Respect all requirements from collective agreements and legal regulations, ensuring driver safety through adequate rest and break times.</li>
+      <li><strong>Cost minimization:</strong> Reduce operational costs while also minimizing driver dissatisfaction (e.g., avoiding excessively long unpaid breaks).</li>
+    </ol>
+    <p>
+      The instances used here model regulations from the <em>European Regulation (EC) No 561/2006</em>
+      on driving times and the <em>Austrian Collective Agreement for employees in private omnibus providers</em>,
+      making the problem particularly constrained and challenging.
     </p>
 
-    <h2>Download Instance Collection</h2>
+    <h3>Problem Input</h3>
+    <p>The input consists of:</p>
+    <ul>
+      <li><strong>Positions and Distance Matrix:</strong> A set of positions (bus stops) \(P\) and a time distance matrix \(D = (d_{ij})\) where \(d_{ij}\) is the time for a driver to travel from position \(i\) to \(j\) when not driving a bus (passive ride time).</li>
+      <li><strong>Start/End Work Times:</strong> For each position \(p\), the time required to start or end a shift at that location.</li>
+      <li><strong>Bus Legs:</strong> A set \(L\) of bus legs, where each leg \(\ell\) is a 5-tuple:
+        \[\ell = (\text{tour}_\ell, \text{startPos}_\ell, \text{endPos}_\ell, \text{start}_\ell, \text{end}_\ell)\]
+        representing a trip of a vehicle between two stops. All times are in <strong>minutes from midnight</strong>.
+      </li>
+    </ul>
+
+    <h3>Solution</h3>
     <p>
-      The complete BDSP instance collection is available for download:
+      A solution \(S\) is a <strong>set partition</strong> of the bus legs \(L\) into shifts: \(S = \{s_1, s_2, \ldots, s_n\}\).
+      Each shift \(s_i\) represents a subset of bus legs assigned to a single driver for one day.
+      A solution is feasible if drivers have enough time to travel between consecutive legs and all regulatory constraints are satisfied.
+    </p>
+
+    <h3>Objective Function</h3>
+    <p>
+      The objective is to minimize the total cost across all shifts:
+    </p>
+    \[z(S) = \sum_{s \in S} \left( 2W'_s + T_s + \text{ride}_s + 30 \cdot \text{change}_s + 180 \cdot \text{split}_s \right)\]
+    <p>where for each shift \(s\):</p>
+    <ul>
+      <li>\(W'_s = \max\{W_s, 390\}\): Working time with a minimum of 6.5 hours (390 min) guaranteed pay</li>
+      <li>\(T_s\): Total time (span from shift start to end)</li>
+      <li>\(\text{ride}_s\): Sum of passive ride times between consecutive legs</li>
+      <li>\(\text{change}_s\): Number of tour changes (switching between different buses)</li>
+      <li>\(\text{split}_s\): Number of shift splits (unpaid breaks longer than 3 hours)</li>
+    </ul>
+
+    <h3>Key Constraints</h3>
+    <table>
+      <thead>
+        <tr><th>Constraint</th><th>Limit</th><th>Description</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>Driving Time \(D_s\)</td><td>\(\leq\) 540 min (9h)</td><td>Total time spent actively driving</td></tr>
+        <tr><td>Total Time \(T_s\)</td><td>\(\leq\) 840 min (14h)</td><td>Span from shift start to end</td></tr>
+        <tr><td>Working Time \(W_s\)</td><td>\(\leq\) 600 min (10h)</td><td>Total time minus unpaid breaks and splits</td></tr>
+        <tr><td>Max Driving Block</td><td>\(\leq\) 240 min (4h)</td><td>Maximum continuous driving before a break</td></tr>
+        <tr><td>Max Shift Splits</td><td>\(\leq\) 2</td><td>Number of unpaid breaks &gt; 3 hours</td></tr>
+      </tbody>
+    </table>
+
+    <h4>Driving Break Options</h4>
+    <p>Before accumulating 4 hours of driving, drivers must complete one of these break patterns:</p>
+    <ul>
+      <li>One break of at least <strong>30 minutes</strong>, or</li>
+      <li>Two breaks of at least <strong>20 minutes</strong> each, or</li>
+      <li>Three breaks of at least <strong>15 minutes</strong> each</li>
+    </ul>
+
+    <h4>Rest Break Requirements</h4>
+    <p>Based on working time \(W_s\):</p>
+    <ul>
+      <li>\(W_s < 300\) min (5h): No rest break required</li>
+      <li>\(300 \leq W_s \leq 540\) min: At least one 30-minute break</li>
+      <li>\(W_s > 540\) min (9h): At least one 45-minute break</li>
+    </ul>
+
+    <div class="info-box">
+      <p>
+        For the complete formal specification, see
+        <a href="https://doi.org/10.1609/icaps.v30i1.6688">Kletzander & Musliu (2020)</a>.
+      </p>
+    </div>
+
+    <h2 id="terminology">Terminology</h2>
+    <dl>
+      <dt>Position</dt>
+      <dd>A bus stop or location where drivers can start/end work or change between buses. Positions are connected by a distance matrix representing passive travel times.</dd>
+
+      <dt>Tour (Bus Tour)</dt>
+      <dd>A sequence of legs assigned to a single vehicle (bus) for one day. Each tour has a unique ID. Legs within a tour do not overlap in time.</dd>
+
+      <dt>Leg (Bus Leg)</dt>
+      <dd>The atomic unit of work: a trip of a vehicle between two positions at specific times. Defined as a 5-tuple \((\text{tour}, \text{startPos}, \text{endPos}, \text{start}, \text{end})\). Legs cannot be split between drivers.</dd>
+
+      <dt>Shift</dt>
+      <dd>A subset of bus legs assigned to one driver for one day. The work scheduled for a single driver. The solution to BDSP is a set of shifts that partition all legs.</dd>
+
+      <dt>Passive Ride</dt>
+      <dd>Time spent by a driver traveling between positions without actively driving a bus. Occurs when consecutive legs in a shift start/end at different positions.</dd>
+
+      <dt>Shift Split</dt>
+      <dd>An unpaid break longer than 3 hours (180 minutes) between consecutive legs. Splits reset the driving time counter. A shift may contain at most 2 splits.</dd>
+
+      <dt>Driving Time \(D_s\)</dt>
+      <dd>The sum of leg durations in a shift: \(D_s = \sum_{\ell \in s} (\text{end}_\ell - \text{start}_\ell)\). Maximum: 9 hours.</dd>
+
+      <dt>Total Time \(T_s\)</dt>
+      <dd>The span from shift start (including start work time) to shift end (including end work time). Maximum: 14 hours.</dd>
+
+      <dt>Working Time \(W_s\)</dt>
+      <dd>Total time minus shift splits and unpaid rest breaks: \(W_s = T_s - \text{splitTime}_s - \min\{\text{unpaid}_s, \text{upmax}_s\}\). Maximum: 10 hours.</dd>
+
+      <dt>BP (Branch-and-Price)</dt>
+      <dd>An exact optimization algorithm combining branch-and-bound with column generation. Provides optimal solutions for small-medium instances and valid lower bounds.</dd>
+
+      <dt>LNS (Large Neighborhood Search)</dt>
+      <dd>A metaheuristic that iteratively destroys and repairs parts of a solution. Finds high-quality solutions for large instances but does not guarantee optimality.</dd>
+
+      <dt>Lower Bound</dt>
+      <dd>A proven minimum value for the optimal solution cost, computed via linear programming relaxation in Branch-and-Price.</dd>
+
+      <dt>Gap</dt>
+      <dd>The relative difference between the best known solution and the lower bound:
+        \[\text{Gap} = \frac{\text{Best Solution} - \text{Lower Bound}}{\text{Lower Bound}} \times 100\%\]
+        A gap of 0% indicates a proven optimal solution.
+      </dd>
+    </dl>
+
+    <h2 id="instance-collection">Instance Collection</h2>
+
+    <h3>Download</h3>
+    <p>
+      The original real-world instances cannot be publicly shared due to agreements with bus companies.
+      Instead, an instance generator was developed to create realistic instances following similar distributions.
     </p>
     <table>
       <thead>
         <tr>
-          <th>File</th>
+          <th>Source</th>
           <th>Description</th>
-          <th>Size</th>
         </tr>
       </thead>
       <tbody>
         <tr>
-          <td><a href="/downloads/collection.tar.gz">collection.tar.gz</a></td>
-          <td>Complete collection of 285 BDSP instances</td>
-          <td>80 MB</td>
+          <td><a href="https://cdlab-artis.dbai.tuwien.ac.at/papers/sa-bds/">DBAI Repository</a></td>
+          <td>50 real-world-like instances (realistic_10_1 to realistic_100_50)</td>
+        </tr>
+        <tr>
+          <td><a href="/downloads/collection.tar.gz">Extended Collection</a></td>
+          <td>Additional 15 large instances (realistic_150_51 to realistic_250_65)</td>
         </tr>
       </tbody>
     </table>
 
-    <h2>Instance Sets</h2>
+    <h3>Instance Naming Convention</h3>
+    <p>
+      Instances follow the pattern: <code>realistic_[SIZE]_[ID]</code>
+    </p>
+    <ul>
+      <li><code>SIZE</code>: Approximate number of tours (10, 20, 30, ..., 250)</li>
+      <li><code>ID</code>: Unique instance identifier (1-65)</li>
+    </ul>
+    <p>
+      Example: <code>realistic_50_23</code> is instance #23, containing approximately 50 tours.
+    </p>
 
-    <h3>Real-world Instances (50 instances)</h3>
+    <h3>Instance Structure</h3>
     <p>
-      Instances range from 8 tours with 73 legs to 98 tours with 924 legs, derived from actual
-      bus transportation networks. Lower bounds are computed using Branch-and-Price (BP).
+      Each instance defines bus legs as 5-tuples following the formal specification:
+    </p>
+    <table>
+      <thead>
+        <tr>
+          <th>Field</th>
+          <th>Description</th>
+          <th>Example</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td><code>tour</code></td><td>Vehicle/bus ID</td><td>1</td></tr>
+        <tr><td><code>startPos</code></td><td>Starting position</td><td>0</td></tr>
+        <tr><td><code>endPos</code></td><td>Ending position</td><td>1</td></tr>
+        <tr><td><code>start</code></td><td>Departure time (minutes from midnight)</td><td>360 (= 06:00)</td></tr>
+        <tr><td><code>end</code></td><td>Arrival time (minutes from midnight)</td><td>395 (= 06:35)</td></tr>
+      </tbody>
+    </table>
+    <p>
+      Example from the formal specification (two bus tours with 6 legs):
+    </p>
+    <pre>
+tour  startPos  endPos  start  end
+  1        0       1    360   395
+  1        1       2    410   455
+  1        2       1    460   502
+  1        1       0    508   540
+  2        0       3    360   400
+  2        3       0    415   500</pre>
+    <p>
+      The first vehicle (tour 1) starts at 06:00 at position 0, travels between positions 1 and 2 with waiting times in between, then returns to position 0.
+    </p>
+
+    <h2 id="best-known-solutions">Best Known Solutions</h2>
+
+    <h3>Computational Setup</h3>
+    <div class="info-box">
+      <p><strong>Hardware:</strong> Intel Xeon E5-2650 v4 @ 2.2GHz</p>
+      <p><strong>Time limit:</strong> 3600 seconds per instance for metaheuristics; Branch-and-Price ran until optimality or memory limit</p>
+      <p><strong>Software:</strong> Custom implementations in Python 3.10.14, executed with PyPy 7.3.17. Branch and Price was implemented in Java using OpenJDK 23.0.1, and Gurobi 12.00 for the master problem.
+
+    <h3>Real-world-like Instances (50 instances)</h3>
+    <p>
+      Generated instances following distributions from actual Austrian bus networks.
+      Sizes range from 8 tours (73 legs) to 98 tours (924 legs).
+      Lower bounds are computed using Branch-and-Price (BP).
     </p>
     <p>
-      The table shows the gap between best known solutions and lower bounds:
-      \[\text{GAP} = \frac{\text{solution} - \text{bound}}{\text{bound}} \times 100\%\]
-    </p>
-    <p>
-      Rows highlighted in green with 0.00% gap represent proven optimal solutions.
+      Rows highlighted in <span style="background: var(--success-bg); padding: 2px 6px; border-radius: 3px;">green</span>
+      with 0.00% gap represent <strong>proven optimal solutions</strong>.
     </p>
 
     <button onclick="exportTableToCSV('BKS_realistic_1.csv', 'realisticInstancesTable')">Download CSV</button>
@@ -169,10 +420,10 @@
           <td>realistic_20_7</td>
           <td>17</td>
           <td>166</td>
-          <td>30610</td>
+          <td>30609</td>
           <td>30587.67</td>
           <td>0.07</td>
-          <td>BP</td>
+          <td>LNS</td>
         </tr>
         <tr class="optimal-solution">
           <td>realistic_20_8</td>
@@ -232,10 +483,10 @@
           <td>realistic_30_14</td>
           <td>29</td>
           <td>256</td>
-          <td>48802</td>
+          <td>48760</td>
           <td>48444.75</td>
-          <td>0.73</td>
-          <td>BP</td>
+          <td>0.65</td>
+          <td>LNS</td>
         </tr>
         <tr>
           <td>realistic_30_15</td>
@@ -268,10 +519,10 @@
           <td>realistic_40_18</td>
           <td>39</td>
           <td>346</td>
-          <td>67424</td>
+          <td>67390</td>
           <td>67059.64</td>
-          <td>0.54</td>
-          <td>BP</td>
+          <td>0.49</td>
+          <td>LNS</td>
         </tr>
         <tr>
           <td>realistic_40_19</td>
@@ -286,7 +537,7 @@
           <td>realistic_40_20</td>
           <td>39</td>
           <td>363</td>
-          <td>66923</td>
+          <td>66918</td>
           <td>66519.74</td>
           <td>0.60</td>
           <td>LNS</td>
@@ -295,10 +546,10 @@
           <td>realistic_50_21</td>
           <td>50</td>
           <td>437</td>
-          <td>83148</td>
+          <td>83031</td>
           <td>82618.88</td>
-          <td>0.64</td>
-          <td>BP</td>
+          <td>0.50</td>
+          <td>LNS</td>
         </tr>
         <tr>
           <td>realistic_50_22</td>
@@ -331,10 +582,10 @@
           <td>realistic_50_25</td>
           <td>50</td>
           <td>458</td>
-          <td>84498</td>
+          <td>84474</td>
           <td>84274.42</td>
-          <td>0.26</td>
-          <td>BP</td>
+          <td>0.24</td>
+          <td>LNS</td>
         </tr>
         <tr>
           <td>realistic_60_26</td>
@@ -403,19 +654,19 @@
           <td>realistic_70_33</td>
           <td>70</td>
           <td>643</td>
-          <td>119073</td>
+          <td>118969</td>
           <td>92676.61</td>
-          <td>22.17</td>
+          <td>22.06</td>
           <td>LNS</td>
         </tr>
         <tr>
           <td>realistic_70_34</td>
           <td>70</td>
           <td>636</td>
-          <td>118983</td>
+          <td>118890</td>
           <td>117298.42</td>
-          <td>1.42</td>
-          <td>BP</td>
+          <td>1.36</td>
+          <td>LNS</td>
         </tr>
         <tr>
           <td>realistic_70_35</td>
@@ -439,10 +690,10 @@
           <td>realistic_80_37</td>
           <td>79</td>
           <td>739</td>
-          <td>134813</td>
+          <td>134407</td>
           <td>84899.52</td>
-          <td>37.02</td>
-          <td>BP</td>
+          <td>36.82</td>
+          <td>LNS</td>
         </tr>
         <tr>
           <td>realistic_80_38</td>
@@ -493,72 +744,72 @@
           <td>realistic_90_43</td>
           <td>88</td>
           <td>826</td>
-          <td>151170</td>
+          <td>150734</td>
           <td>94474.61</td>
-          <td>37.50</td>
+          <td>37.38</td>
           <td>LNS</td>
         </tr>
         <tr>
           <td>realistic_90_44</td>
           <td>88</td>
           <td>849</td>
-          <td>149956</td>
+          <td>149280</td>
           <td>82276.30</td>
-          <td>45.13</td>
-          <td>BP</td>
+          <td>44.91</td>
+          <td>LNS</td>
         </tr>
         <tr>
           <td>realistic_90_45</td>
           <td>88</td>
           <td>832</td>
-          <td>151325</td>
+          <td>151019</td>
           <td>122065.95</td>
-          <td>19.34</td>
-          <td>BP</td>
+          <td>19.09</td>
+          <td>LNS</td>
         </tr>
         <tr>
           <td>realistic_100_46</td>
           <td>98</td>
           <td>924</td>
-          <td>165821</td>
+          <td>165306</td>
           <td>80858.12</td>
-          <td>51.24</td>
+          <td>51.11</td>
           <td>LNS</td>
         </tr>
         <tr>
           <td>realistic_100_47</td>
           <td>98</td>
           <td>860</td>
-          <td>165268</td>
+          <td>165156</td>
           <td>108262.39</td>
-          <td>34.49</td>
-          <td>BP</td>
+          <td>34.39</td>
+          <td>LNS</td>
         </tr>
         <tr>
           <td>realistic_100_48</td>
           <td>98</td>
           <td>906</td>
-          <td>167760</td>
+          <td>167088</td>
           <td>108025.40</td>
-          <td>35.61</td>
+          <td>35.38</td>
           <td>LNS</td>
         </tr>
         <tr>
           <td>realistic_100_49</td>
           <td>98</td>
           <td>924</td>
-          <td>168925</td>
+          <td>168343</td>
           <td>117095.14</td>
-          <td>30.68</td>
+          <td>30.44</td>
           <td>LNS</td>
         </tr>
         <tr>
           <td>realistic_100_50</td>
           <td>98</td>
           <td>876</td>
-          <td>165554</td>
+          <td>165362</td>
           <td>100052.18</td>
-          <td>39.57</td>
+          <td>39.37</td>
           <td>LNS</td>
         </tr>
       </tbody>
@@ -566,9 +817,16 @@
 
     <h3>Large Instances (15 instances)</h3>
     <p>
-      Larger real-world instances with up to 250 tours and over 2300 legs.
+      Additional generated instances for larger cities, ranging from 148 tours (1371 legs) to 250 tours (2339 legs).
+      Instances of this size occur in practice when larger Austrian cities are considered in their entirety.
       Solutions obtained using Large Neighborhood Search (LNS).
     </p>
+    <div class="info-box">
+      <p>
+        <strong>Note:</strong> Lower bounds are not available for these instances because
+        Branch-and-Price exceeds memory limits before computing meaningful bounds at this scale.
+      </p>
+    </div>
 
     <button onclick="exportTableToCSV('BKS_realistic_2.csv', 'largeInstancesTable')">Download CSV</button>
 
@@ -587,111 +845,144 @@
           <td>realistic_150_51</td>
           <td>148</td>
           <td>1371</td>
-          <td>251712</td>
+          <td>250995</td>
           <td>LNS</td>
         </tr>
         <tr>
           <td>realistic_150_52</td>
           <td>148</td>
           <td>1403</td>
-          <td>257458</td>
+          <td>256639</td>
           <td>LNS</td>
         </tr>
         <tr>
           <td>realistic_150_53</td>
           <td>148</td>
           <td>1383</td>
-          <td>257146</td>
+          <td>255561</td>
           <td>LNS</td>
         </tr>
         <tr>
           <td>realistic_150_54</td>
           <td>148</td>
           <td>1375</td>
-          <td>256662</td>
+          <td>255651</td>
           <td>LNS</td>
         </tr>
         <tr>
           <td>realistic_150_55</td>
           <td>148</td>
           <td>1376</td>
-          <td>254608</td>
+          <td>254183</td>
           <td>LNS</td>
         </tr>
         <tr>
           <td>realistic_200_56</td>
           <td>197</td>
           <td>1806</td>
-          <td>339683</td>
+          <td>338978</td>
           <td>LNS</td>
         </tr>
         <tr>
           <td>realistic_200_57</td>
           <td>197</td>
           <td>1840</td>
-          <td>341608</td>
+          <td>339573</td>
           <td>LNS</td>
         </tr>
         <tr>
           <td>realistic_200_58</td>
           <td>197</td>
           <td>1820</td>
-          <td>336886</td>
+          <td>335566</td>
           <td>LNS</td>
         </tr>
         <tr>
           <td>realistic_200_59</td>
           <td>197</td>
           <td>1814</td>
-          <td>338072</td>
+          <td>337170</td>
           <td>LNS</td>
         </tr>
         <tr>
           <td>realistic_200_60</td>
           <td>197</td>
           <td>1892</td>
-          <td>336906</td>
+          <td>336135</td>
           <td>LNS</td>
         </tr>
         <tr>
           <td>realistic_250_61</td>
           <td>250</td>
           <td>2323</td>
-          <td>427739</td>
+          <td>426271</td>
           <td>LNS</td>
         </tr>
         <tr>
           <td>realistic_250_62</td>
           <td>250</td>
           <td>2329</td>
-          <td>429168</td>
+          <td>428230</td>
           <td>LNS</td>
         </tr>
         <tr>
           <td>realistic_250_63</td>
           <td>250</td>
           <td>2280</td>
-          <td>427930</td>
+          <td>426670</td>
           <td>LNS</td>
         </tr>
         <tr>
           <td>realistic_250_64</td>
           <td>250</td>
           <td>2313</td>
-          <td>429545</td>
+          <td>428012</td>
           <td>LNS</td>
         </tr>
         <tr>
           <td>realistic_250_65</td>
           <td>250</td>
           <td>2339</td>
-          <td>426803</td>
+          <td>424652</td>
           <td>LNS</td>
         </tr>
       </tbody>
     </table>
 
-    <h2>References</h2>
+    <h2 id="how-to-cite">How to Cite</h2>
+
+    <h3>Citing the Instance Collection</h3>
+    <p>
+      If you use these benchmark instances in your research, please cite:
+    </p>
+    <div class="citation-box">@inproceedings{kletzander2020solving,
+  title={Solving Large Real-Life Bus Driver Scheduling Problems with Complex Break Constraints},
+  author={Kletzander, Lucas and Musliu, Nysret},
+  booktitle={Proceedings of the International Conference on Automated Planning and Scheduling},
+  volume={30},
+  pages={109--118},
+  year={2020}
+}</div>
+
+    <h3>Citing the Best Known Solutions</h3>
+    <p>
+      If you compare against the best known solutions reported here, please cite:
+    </p>
+    <div class="citation-box">@article{kletzander2025integrating,
+  title={Integrating Column Generation and Large Neighborhood Search for Bus Driver Scheduling with Complex Break Constraints},
+  author={Kletzander, Lucas and Mannelli Mazzoli, Tommaso and Musliu, Nysret and Van Hentenryck, Pascal},
+  journal={Journal of Artificial Intelligence Research},
+  year={2025}
+}</div>
+
+    <h3>Reporting New Best Solutions</h3>
+    <p>
+      If you find improved solutions, please contact
+      <a href="mailto:tommaso.mannelli@tuwien.ac.at">tommaso.mannelli@tuwien.ac.at</a>
+      to have them included in this table.
+    </p>
+
+    <h2 id="references">References</h2>
     <ol>
       <li>
         Kletzander, L., & Musliu, N. (2020). Solving large real-life bus driver scheduling problems
@@ -712,6 +1003,11 @@
         Mannelli Mazzoli, T., Kletzander, L., Musliu, N., & Smith-Miles, K. (2024). Instance Space
         Analysis for the Bus Driver Scheduling Problem. <em>PATAT 2024</em>.
         <a href="https://patatconference.org/patat2024/proceedings/papers/20.pdf">PDF</a>
+      </li>
+      <li>
+        Kletzander, L., Mannelli Mazzoli, T., Musliu, N., & Van Hentenryck, P. (2025). Integrating
+        Column Generation and Large Neighborhood Search for Bus Driver Scheduling with Complex
+        Break Constraints. <em>Journal of Artificial Intelligence Research (JAIR)</em>.
       </li>
     </ol>
   </main>
