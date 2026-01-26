@@ -3,25 +3,54 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Bus Driver Scheduling Problem</title>
-  <link rel="shortcut icon" href="favicon.ico" type="image/x-icon" />
+  <meta name="description" content="Bus Driver Scheduling Problem (BDSP) research, instances, and benchmark results. Download 285 BDSP instances and view best known solutions." />
+  <meta name="keywords" content="BDSP, bus driver scheduling, combinatorial optimization, benchmark instances, column generation, LNS" />
+  <meta name="author" content="Tommaso Mannelli Mazzoli" />
+
+  <!-- Open Graph / Facebook -->
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://tommanmaz.github.io/bdsp.html" />
+  <meta property="og:title" content="Bus Driver Scheduling Problem - Tommaso Mannelli Mazzoli" />
+  <meta property="og:description" content="BDSP research, instances, and benchmark results. Download 285 instances and view best known solutions." />
+  <meta property="og:image" content="https://tommanmaz.github.io/icon.png" />
+
+  <!-- Twitter -->
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:url" content="https://tommanmaz.github.io/bdsp.html" />
+  <meta name="twitter:title" content="Bus Driver Scheduling Problem - Tommaso Mannelli Mazzoli" />
+  <meta name="twitter:description" content="BDSP research, instances, and benchmark results. Download 285 instances and view best known solutions." />
+  <meta name="twitter:image" content="https://tommanmaz.github.io/icon.png" />
+
+  <!-- Security -->
+  <meta http-equiv="X-Content-Type-Options" content="nosniff" />
+  <meta http-equiv="X-Frame-Options" content="SAMEORIGIN" />
+  <meta name="referrer" content="no-referrer-when-downgrade" />
+
+  <title>Bus Driver Scheduling Problem - Tommaso Mannelli Mazzoli</title>
+  <link rel="icon" type="image/png" href="icon.png" />
+  <link rel="apple-touch-icon" href="icon.png" />
   <link rel="stylesheet" href="stylesheet.css" />
-  <script async id="MathJax-script" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+  <script defer id="MathJax-script" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
 </head>
 <body>
+  <a href="#main-content" class="skip-link">Skip to main content</a>
+
   <header class="header">
     <h1>Tommaso Mannelli Mazzoli</h1>
     <p>TU Wien, Vienna, Austria</p>
   </header>
 
-  <nav class="navbar">
+  <nav class="navbar" role="navigation" aria-label="Main navigation">
     <a href="index.html">Home</a>
     <a href="publications.html">Publications</a>
-    <a class="active" href="bdsp.html">BDSP</a>
+    <a class="active" href="bdsp.html" aria-current="page">BDSP</a>
     <a href="amm.html">AMM</a>
+    <a href="#" class="theme-toggle-link" id="theme-toggle" aria-label="Toggle dark mode">
+      <span id="theme-icon">🌙</span>
+    </a>
   </nav>
 
-  <main>
+  <main id="main-content">
     <h1>Bus Driver Scheduling Problem</h1>
 
     <h2>Problem Definition</h2>
@@ -67,7 +96,7 @@
       Rows highlighted in green with 0.00% gap represent proven optimal solutions.
     </p>
 
-    <button onclick="exportTableToCSV('BKS_realistic_1.csv')">Download CSV</button>
+    <button onclick="exportTableToCSV('BKS_realistic_1.csv', 'realisticInstancesTable')">Download CSV</button>
 
     <table id="realisticInstancesTable">
       <thead>
@@ -541,9 +570,9 @@
       Solutions obtained using Large Neighborhood Search (LNS).
     </p>
 
-    <button onclick="exportTableToCSV('BKS_realistic_2.csv')">Download CSV</button>
+    <button onclick="exportTableToCSV('BKS_realistic_2.csv', 'largeInstancesTable')">Download CSV</button>
 
-    <table>
+    <table id="largeInstancesTable">
       <thead>
         <tr>
           <th>Instance</th>
@@ -688,8 +717,38 @@
   </main>
 
   <script>
-    function exportTableToCSV(filename) {
-      const table = document.getElementById('realisticInstancesTable');
+    // Dark mode toggle functionality
+    document.addEventListener('DOMContentLoaded', function() {
+      const themeToggle = document.getElementById('theme-toggle');
+      const themeIcon = document.getElementById('theme-icon');
+      const htmlElement = document.documentElement;
+
+      // Check for saved theme preference or default to light mode
+      const savedTheme = localStorage.getItem('theme');
+      if (savedTheme) {
+        htmlElement.setAttribute('data-theme', savedTheme);
+        updateIcon(savedTheme);
+      }
+
+      // Toggle theme on click
+      themeToggle.addEventListener('click', function(e) {
+        e.preventDefault();
+        const currentTheme = htmlElement.getAttribute('data-theme');
+        const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+
+        htmlElement.setAttribute('data-theme', newTheme);
+        localStorage.setItem('theme', newTheme);
+        updateIcon(newTheme);
+      });
+
+      function updateIcon(theme) {
+        themeIcon.textContent = theme === 'dark' ? '☀️' : '🌙';
+      }
+    });
+
+    // CSV export functionality
+    function exportTableToCSV(filename, tableId) {
+      const table = document.getElementById(tableId);
       if (!table) return;
 
       let csv = [];

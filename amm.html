@@ -3,30 +3,58 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>AMM Problems</title>
+  <meta name="description" content="Solutions to American Mathematical Monthly problems by Tommaso Mannelli Mazzoli. Challenging mathematical problems and detailed solutions." />
+  <meta name="keywords" content="American Mathematical Monthly, AMM, mathematics, problem solving, integrals, mathematical analysis" />
+  <meta name="author" content="Tommaso Mannelli Mazzoli" />
+
+  <!-- Open Graph / Facebook -->
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://tommanmaz.github.io/amm.html" />
+  <meta property="og:title" content="American Mathematical Monthly Problems - Tommaso Mannelli Mazzoli" />
+  <meta property="og:description" content="Solutions to challenging American Mathematical Monthly problems." />
+  <meta property="og:image" content="https://tommanmaz.github.io/icon.png" />
+
+  <!-- Twitter -->
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:url" content="https://tommanmaz.github.io/amm.html" />
+  <meta name="twitter:title" content="American Mathematical Monthly Problems - Tommaso Mannelli Mazzoli" />
+  <meta name="twitter:description" content="Solutions to challenging American Mathematical Monthly problems." />
+  <meta name="twitter:image" content="https://tommanmaz.github.io/icon.png" />
+
+  <!-- Security -->
+  <meta http-equiv="X-Content-Type-Options" content="nosniff" />
+  <meta http-equiv="X-Frame-Options" content="SAMEORIGIN" />
+  <meta name="referrer" content="no-referrer-when-downgrade" />
+
+  <title>American Mathematical Monthly Problems - Tommaso Mannelli Mazzoli</title>
+  <link rel="icon" type="image/png" href="icon.png" />
+  <link rel="apple-touch-icon" href="icon.png" />
   <link rel="stylesheet" href="stylesheet.css" />
-  <link rel="shortcut icon" href="favicon.ico" type="image/x-icon" />
-  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
-  <script async id="MathJax-script" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+  <script defer id="MathJax-script" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
 </head>
 <body>
+  <a href="#main-content" class="skip-link">Skip to main content</a>
+
   <header class="header">
     <h1>Tommaso Mannelli Mazzoli</h1>
     <p>TU Wien, Vienna, Austria</p>
   </header>
 
-  <nav class="navbar">
+  <nav class="navbar" role="navigation" aria-label="Main navigation">
     <a href="index.html">Home</a>
     <a href="publications.html">Publications</a>
     <a href="bdsp.html">BDSP</a>
-    <a class="active" href="amm.html">AMM</a>
+    <a class="active" href="amm.html" aria-current="page">AMM</a>
+    <a href="#" class="theme-toggle-link" id="theme-toggle" aria-label="Toggle dark mode">
+      <span id="theme-icon">🌙</span>
+    </a>
   </nav>
 
-  <main>
+  <main id="main-content">
     <h1>American Mathematical Monthly Problems</h1>
 
     <p>
-      Solutions to selected problems from the American Mathematical Monthly.
+      Solutions to selected problems from the <a href="https://www.tandfonline.com/journals/uamm20" target="_blank" rel="noopener noreferrer">American Mathematical Monthly</a>.
       If you want to comment or share solutions, contact me at
       <a href="mailto:tommaso.mazzoli@tuwien.ac.at">tommaso.mazzoli@tuwien.ac.at</a>
     </p>
@@ -115,5 +143,36 @@
       </tbody>
     </table>
   </main>
+
+  <script>
+    // Dark mode toggle functionality
+    document.addEventListener('DOMContentLoaded', function() {
+      const themeToggle = document.getElementById('theme-toggle');
+      const themeIcon = document.getElementById('theme-icon');
+      const htmlElement = document.documentElement;
+
+      // Check for saved theme preference or default to light mode
+      const savedTheme = localStorage.getItem('theme');
+      if (savedTheme) {
+        htmlElement.setAttribute('data-theme', savedTheme);
+        updateIcon(savedTheme);
+      }
+
+      // Toggle theme on click
+      themeToggle.addEventListener('click', function(e) {
+        e.preventDefault();
+        const currentTheme = htmlElement.getAttribute('data-theme');
+        const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+
+        htmlElement.setAttribute('data-theme', newTheme);
+        localStorage.setItem('theme', newTheme);
+        updateIcon(newTheme);
+      });
+
+      function updateIcon(theme) {
+        themeIcon.textContent = theme === 'dark' ? '☀️' : '🌙';
+      }
+    });
+  </script>
 </body>
 </html>

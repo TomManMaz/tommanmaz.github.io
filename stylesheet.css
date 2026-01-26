@@ -6,10 +6,30 @@
   --text: #2c3e50;
   --text-light: #6c757d;
   --bg-light: #fdf9f7;
+  --bg-main: #ffffff;
+  --bg-body: #ffffff;
   --border: #f0e5df;
   --success: #28a745;
   --success-bg: #d4edda;
   --accent: #d4763b;
+  --table-hover: #fff3ed;
+}
+
+/* Dark mode colors */
+[data-theme="dark"] {
+  --primary: #d4763b;
+  --primary-dark: #c65e2a;
+  --primary-light: #e89866;
+  --text: #e4e4e7;
+  --text-light: #a1a1aa;
+  --bg-light: #27272a;
+  --bg-main: #18181b;
+  --bg-body: #09090b;
+  --border: #3f3f46;
+  --success: #4ade80;
+  --success-bg: #14532d;
+  --accent: #d4763b;
+  --table-hover: #3f3f46;
 }
 
 * {
@@ -21,8 +41,28 @@ body {
   margin: 0;
   padding: 0;
   color: var(--text);
+  background-color: var(--bg-body);
   line-height: 1.6;
   font-size: 16px;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+/* Accessibility - Skip Link */
+.skip-link {
+  position: absolute;
+  top: -40px;
+  left: 0;
+  background: var(--primary);
+  color: white;
+  padding: 8px 16px;
+  text-decoration: none;
+  font-weight: 600;
+  z-index: 1000;
+  border-radius: 0 0 4px 0;
+}
+
+.skip-link:focus {
+  top: 0;
 }
 
 /* Header */
@@ -52,12 +92,13 @@ body {
 
 /* Navigation */
 .navbar {
-  background: white;
+  background: var(--bg-main);
   text-align: center;
   box-shadow: 0 2px 4px rgba(0,0,0,0.1);
   position: sticky;
   top: 0;
   z-index: 100;
+  transition: background-color 0.3s ease;
 }
 
 .navbar a {
@@ -86,10 +127,11 @@ main {
   max-width: 1000px;
   margin: 2rem auto;
   padding: 2.5rem;
-  background: white;
+  background: var(--bg-main);
   border-radius: 8px;
   box-shadow: 0 2px 8px rgba(165, 73, 24, 0.1);
   border-top: 3px solid var(--primary);
+  transition: background-color 0.3s ease;
 }
 
 h1 {
@@ -201,7 +243,7 @@ tr:nth-child(even) {
 }
 
 tr:hover {
-  background: #fff3ed;
+  background: var(--table-hover);
 }
 
 td:nth-child(n+4) {
@@ -260,6 +302,34 @@ hr {
   height: 1px;
   background: var(--border);
   margin: 2rem 0;
+}
+
+/* Dark Mode Toggle in Navbar */
+.theme-toggle-link {
+  display: inline-block;
+  color: var(--text);
+  text-decoration: none;
+  padding: 1rem 1.5rem;
+  font-weight: 500;
+  border-bottom: 3px solid transparent;
+  transition: all 0.2s;
+  cursor: pointer;
+  font-size: 1.2rem;
+}
+
+.theme-toggle-link:hover {
+  color: var(--primary);
+  background: var(--bg-light);
+  text-decoration: none;
+}
+
+.theme-toggle-link span {
+  display: inline-block;
+  transition: transform 0.3s ease;
+}
+
+.theme-toggle-link:hover span {
+  transform: rotate(20deg);
 }
 
 /* Responsive Design */
