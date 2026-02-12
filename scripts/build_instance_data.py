@@ -28,6 +28,13 @@ sys.path.insert(0, str(INSTANCE_GENERATOR_DIR))
 
 from classes.instance import Instance
 
+# Add bdsp-validator to path for solution validation
+VALIDATOR_DIR = Path(__file__).resolve().parent.parent / "bdsp-validator"
+sys.path.insert(0, str(VALIDATOR_DIR))
+
+from data.instance import Instance as ValidatorInstance
+from data.solution import Solution as ValidatorSolution
+
 # ---------------------------------------------------------------------------
 # Configuration
 # ---------------------------------------------------------------------------
@@ -38,6 +45,8 @@ RESULTS_DIR = Path.home() / "laboratorio" / "bdsp" / "data" / "jair" / "final_FI
 BKS_CSV_1 = REPO_ROOT / "BKS_realistic_1.csv"
 BKS_CSV_2 = REPO_ROOT / "BKS_realistic_2.csv"
 PATAT_CSV = REPO_ROOT / "metadata_paper.csv"
+SOLUTIONS_DIR = REPO_ROOT / "sols"
+DOWNLOADS_INSTANCES_DIR = REPO_ROOT / "downloads" / "instances"
 OUTPUT_FILE = REPO_ROOT / "data" / "instances.json"
 
 # Instance sizes (for reference)
@@ -432,6 +441,60 @@ def process_instance(instance_name, bks_data, patat_data):
     return entry
 
 
+# ---------------------------------------------------------------------------
+# Solution breakdown via validator
+# ---------------------------------------------------------------------------
+
+def compute_solution_breakdown(instance_name: str) -> dict | None:
+    """Validate the BKS solution and return per-employee breakdown.
+
+    Uses the bdsp-validator's Instance/Solution classes to load and evaluate.
+    Returns None if no solution file exists.
+    """
+    sol_file = SOLUTIONS_DIR / f"{instance_name}.csv"
+    if not sol_file.exists():
+        return None
+
+    # The validator needs the instance JSON from downloads/instances/
+    inst_file = DOWNLOADS_INSTANCES_DIR / f"{instance_name}.json"
+    if not inst_file.exists():
+        # Fall back to the main instance JSON dir
+        inst_file = get_json_path(instance_name)
+    if not inst_file.exists():
+        print(f"  WARNING: No instance JSON for validation of {instance_name}")
+        return None
+
+    try:
+        v_instance = ValidatorInstance.from_json(str(inst_file))
+        v_solution = ValidatorSolution.from_file(v_instance, sol_file)
+        v_solution.evaluate()
+
+        employees = []
+        for e in v_solution.employees:
+            employees.append({
+                "employee": e.name,
+                "feasible": e.state.feasible,
+                "objective": int(e.objective),
+                "work_time_paid": int(e.state.actual_work_time),
+                "total_time": int(e.state.total_time),
+                "ride": int(e.state.ride),
+                "vehicle_changes": int(e.state.change),
+                "split_shifts": int(e.state.split),
+                "drive_time": int(e.state.drive_time),
+                "num_legs": len(e.legs),
+            })
+
+        return {
+            "total_objective": int(v_solution.value),
+            "feasible": v_solution.feasible,
+            "num_employees": len(v_solution.employees),
+            "employees": employees,
+        }
+    except Exception as e:
+        print(f"  WARNING: Validator failed for {instance_name}: {e}")
+        return None
+
+
 def build():
     print("Reading BKS CSVs...")
     bks_data = read_bks_csvs()
@@ -446,8 +509,16 @@ def build():
     print(f"Total unique instances: {len(all_instance_names)}")
 
     instances = []
+    breakdown_count = 0
     for instance_name in all_instance_names:
         entry = process_instance(instance_name, bks_data, patat_data)
+
+        # Compute solution breakdown for instances with BKS solutions
+        breakdown = compute_solution_breakdown(instance_name)
+        if breakdown is not None:
+            entry["solution_breakdown"] = breakdown
+            breakdown_count += 1
+
         instances.append(entry)
 
     # Sort by source, then size, then trailing ID
@@ -481,6 +552,7 @@ def build():
         s = i.get("source", "unknown")
         sources[s] = sources.get(s, 0) + 1
     print(f"  Optimal: {optimal}, Open: {len(instances) - optimal}")
+    print(f"  Solution breakdowns: {breakdown_count}")
     print(f"  Sources: {sources}")
 
 

@@ -120,6 +120,45 @@
       font-weight: 600;
     }
 
+    /* Solution breakdown */
+    .breakdown-summary {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      flex-wrap: wrap;
+      margin-bottom: 0.5rem;
+      font-size: 0.85rem;
+    }
+    .obj-formula {
+      font-family: monospace;
+      font-size: 0.82rem;
+      background: var(--bg-light);
+      padding: 0.4rem 0.7rem;
+      border-radius: 3px;
+      margin-bottom: 0.75rem;
+      border-left: 2px solid var(--border);
+    }
+    .obj-formula .formula-note {
+      margin-left: 1rem;
+      color: var(--text-light);
+      font-size: 0.75rem;
+    }
+    .breakdown-table .feasible-icon {
+      color: var(--success);
+      text-align: center;
+    }
+    .breakdown-table .infeasible-icon {
+      color: #dc3545;
+      text-align: center;
+      font-weight: bold;
+    }
+    .infeasible-row {
+      background: #fff3cd !important;
+    }
+    [data-theme="dark"] .infeasible-row {
+      background: #433500 !important;
+    }
+
     /* Features */
     .features-toggle {
       cursor: pointer;

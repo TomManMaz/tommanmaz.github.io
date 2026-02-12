@@ -88,6 +88,12 @@
     html += '<h2>Algorithm Comparison</h2>';
     html += renderAlgorithmTable(inst);
 
+    // Solution breakdown (realistic instances with BKS solutions)
+    if (inst.solution_breakdown) {
+      html += '<h2>Solution Breakdown</h2>';
+      html += renderSolutionBreakdown(inst.solution_breakdown);
+    }
+
     // Features section
     html += '<h2>';
     html += '<span class="features-toggle" onclick="toggleFeatures()">Instance Features &#9660;</span>';
@@ -105,6 +111,7 @@
     }
     html += '<a class="download-btn" href="downloads/collection.tar.gz">Full Archive</a>';
     html += '<a class="download-btn" href="docs/bdsp_problem_formulation.pdf">Problem Formulation (PDF)</a>';
+    html += '<a class="download-btn" href="bdsp-validator/">Validator (Python)</a>';
     html += '</div>';
 
     // Nav between instances
@@ -184,6 +191,58 @@
         html += '<td>' + (gap != null ? formatNum(gap, 2) : '\u2014') + '</td>';
         html += '</tr>';
       });
+    }
+
+    html += '</tbody></table></div>';
+    return html;
+  }
+
+  // ---------------------------------------------------------------------------
+  // Solution breakdown
+  // ---------------------------------------------------------------------------
+
+  function renderSolutionBreakdown(breakdown) {
+    var html = '';
+
+    // Summary
+    html += '<div class="breakdown-summary">';
+    html += '<span><strong>Employees:</strong> ' + breakdown.num_employees + '</span>';
+    html += '<span><strong>Total objective:</strong> ' + formatNum(breakdown.total_objective) + '</span>';
+    var feasClass = breakdown.feasible ? 'badge-optimal' : 'badge-open';
+    var feasText = breakdown.feasible ? 'Feasible' : 'Infeasible';
+    html += '<span class="status-badge ' + feasClass + '">' + feasText + '</span>';
+    html += '</div>';
+
+    // Objective formula
+    html += '<div class="obj-formula">';
+    html += 'Obj<sub>e</sub> = 2 &middot; W\u2032 + T + ride + 30 &middot; changes + 180 &middot; splits';
+    html += '<span class="formula-note">where W\u2032 = max(work_time, 390)</span>';
+    html += '</div>';
+
+    // Table
+    html += '<div style="overflow-x:auto;">';
+    html += '<table class="algo-table breakdown-table">';
+    html += '<thead><tr>';
+    html += '<th>Employee</th><th>Obj</th><th>W\u2032</th><th>T</th><th>Ride</th><th>Changes</th><th>Splits</th><th>Drive</th><th>Legs</th><th>Feasible</th>';
+    html += '</tr></thead><tbody>';
+
+    var emps = breakdown.employees || [];
+    for (var i = 0; i < emps.length; i++) {
+      var e = emps[i];
+      var rowClass = e.feasible ? '' : ' class="infeasible-row"';
+      html += '<tr' + rowClass + '>';
+      html += '<td>' + escapeHtml(e.employee) + '</td>';
+      html += '<td>' + formatNum(e.objective) + '</td>';
+      html += '<td>' + formatNum(e.work_time_paid) + '</td>';
+      html += '<td>' + formatNum(e.total_time) + '</td>';
+      html += '<td>' + formatNum(e.ride) + '</td>';
+      html += '<td>' + e.vehicle_changes + '</td>';
+      html += '<td>' + e.split_shifts + '</td>';
+      html += '<td>' + formatNum(e.drive_time) + '</td>';
+      html += '<td>' + e.num_legs + '</td>';
+      var fIcon = e.feasible ? '\u2713' : '\u2717';
+      html += '<td class="' + (e.feasible ? 'feasible-icon' : 'infeasible-icon') + '">' + fIcon + '</td>';
+      html += '</tr>';
     }
 
     html += '</tbody></table></div>';

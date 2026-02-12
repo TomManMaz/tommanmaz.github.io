@@ -20,9 +20,10 @@ The website is a **static Jekyll site on GitHub Pages** (plain HTML, CSS, JS —
 - `js/bdsp_instance.js` — instance detail page rendering
 - `BKS_realistic_1.csv` / `BKS_realistic_2.csv` — old algorithm benchmark results (realistic only)
 - `metadata_paper.csv` — PATAT 2024 paper metadata (284 instances, 12 source types)
-- `sols/` — solution files (binary assignment matrices)
+- `sols/` — solution files (binary assignment matrices, 65 realistic instances)
 - `downloads/collection.tar.gz` — instance archive (Git LFS, 84.7 MB)
-- `scripts/build_instance_data.py` — offline data pipeline
+- `scripts/build_instance_data.py` — offline data pipeline (features + validation)
+- `bdsp-validator/` — Python solution validator (publishable, linked from website)
 
 ---
 
@@ -33,6 +34,7 @@ The website is a **static Jekyll site on GitHub Pages** (plain HTML, CSS, JS —
 - **Downloads**: Both individual instance downloads AND the full archive.
 - **Instance detail pages** focus on algorithm solutions — clicking an instance shows all algorithm results.
 - **284 instances across 12 source types**: breakMax(20), distanceAvailability(19), distanceVariation(20), gridSpread(20), legMax(20), legMin(20), legPeriodMax(20), legRegularity(20), morningPeak(20), numStations(20), realistic(65), shortLeg(20).
+- **Solution breakdown** pre-computed via `bdsp-validator/` for all 65 realistic instances; shown on detail pages.
 
 ---
 
@@ -65,6 +67,13 @@ The website is a **static Jekyll site on GitHub Pages** (plain HTML, CSS, JS —
 - `Instance.from_json()` loads a BDSP instance from JSON
 - `get_features()` extracts 42 features per instance
 
+### 6. Solution validator
+**Location**: `bdsp-validator/` (in repo, publishable)
+- Validates solutions: checks leg assignment, employee constraints, objective computation
+- `Validator.get_breakdown()` returns per-employee objective details
+- Used by `build_instance_data.py` to pre-compute `solution_breakdown` for all 65 realistic instances
+- Requires: `sortedcontainers`
+
 ---
 
 ## Phase 1: Data Preparation — DONE
@@ -83,10 +92,11 @@ conda run -n instance python scripts/build_instance_data.py
 4. Scans `final_FINAL/` for JAIR algorithm results (realistic only, ~4850 runs)
 5. Merges PATAT CMSA/LNS as old_algorithms for non-realistic instances
 6. Computes BKS (best across all old + new algorithms), gap, status (optimal/open)
-7. Sorts by source, then size, then trailing ID
-8. Outputs `data/instances.json` AND `data/instances.js` (inline JS for file:// compatibility)
+7. **Validates BKS solutions** via `bdsp-validator/` and stores per-employee `solution_breakdown` (65 realistic instances)
+8. Sorts by source, then size, then trailing ID
+9. Outputs `data/instances.json` AND `data/instances.js` (inline JS for file:// compatibility)
 
-**Output**: 284 instances, 9 optimal, 275 open. 12 source types.
+**Output**: 284 instances, 9 optimal, 275 open. 12 source types. 65 solution breakdowns.
 
 **Instance JSON path resolution**:
 - Realistic: `/path/to/json/<name>.json`
@@ -157,9 +167,39 @@ Single dynamic page: `bdsp_instance.html?instance=realistic_10_1`
    - "LNS Variants (JAIR 2025)" section for realistic instances with full stats
    - "Previous Algorithms" / "PATAT 2024 Results" section for old/PATAT results
    - Best rows highlighted in green
-4. **Instance Features**: Collapsible section with 42 features grouped by category
-5. **Download Links**: Instance JSON, Best Solution CSV, Full Archive, Problem Formulation PDF
-6. **Navigation**: Prev/Next instance links
+4. **Solution Breakdown** (realistic instances only):
+   - Summary: num employees, total objective, feasibility status
+   - Objective formula: `Obj = 2*W' + T + ride + 30*changes + 180*splits`
+   - Per-employee table: Obj, W', T, Ride, Changes, Splits, Drive, Legs, Feasible
+5. **Instance Features**: Collapsible section with 42 features grouped by category
+6. **Download Links**: Instance JSON, Best Solution CSV, Full Archive, Problem Formulation PDF, Validator (Python)
+7. **Navigation**: Prev/Next instance links
+
+---
+
+## Phase 4: Solution Validator — DONE
+
+### `bdsp-validator/` directory (publishable)
+
+Cleaned-up Python validator linked from the website. Users can download and use it to validate their own solutions.
+
+**Contents**:
+- `validator.py` — main script (CLI: file mode, folder mode)
+- `data/` — Instance, Solution, Employee, BusLeg classes
+- `utils/logging.py` — logger config
+- `README.md` — usage docs, objective formula, I/O format
+- `.gitignore` — prevents __pycache__ from being committed
+
+**Objective formula**:
+```
+Obj_e = 2 * max(work_time, 390) + total_time + ride + 30 * changes + 180 * splits
+```
+
+**Hard constraints** (penalty = 1000x violation):
+- Max driving: 540 min, Max working: 600 min, Max total: 840 min
+- Driving rest rules, Rest break rules
+
+**Integration with build pipeline**: `build_instance_data.py` imports `ValidatorInstance` and `ValidatorSolution` from `bdsp-validator/data/` to compute `solution_breakdown` for all 65 realistic instances.
 
 ---
 
@@ -169,21 +209,26 @@ Single dynamic page: `bdsp_instance.html?instance=realistic_10_1`
 tommanmaz.github.io/
 ├── bdsp.html                     # Main BDSP page with collection table
 ├── bdsp_instance.html            # Instance detail template page (dynamic)
+├── bdsp-validator/               # Solution validator (publishable)
+│   ├── validator.py              # Main validator script
+│   ├── data/                     # Instance, Solution, Employee, BusLeg classes
+│   ├── utils/                    # Logger
+│   └── README.md                 # Usage docs
 ├── data/
-│   ├── instances.json            # All instance data (284 instances)
+│   ├── instances.json            # All instance data (284 instances, incl. solution_breakdown)
 │   └── instances.js              # Inline JS version for file:// compatibility
 ├── scripts/
-│   └── build_instance_data.py    # Offline data pipeline
+│   └── build_instance_data.py    # Offline data pipeline (features + validation)
 ├── js/
 │   ├── bdsp_collection.js        # Collection table (sorting, filtering, search, source filter)
-│   └── bdsp_instance.js          # Detail page rendering
+│   └── bdsp_instance.js          # Detail page rendering (incl. solution breakdown)
 ├── metadata_paper.csv            # PATAT 2024 paper metadata (284 instances)
 ├── BKS_realistic_1.csv           # Old algorithm results (50 realistic)
 ├── BKS_realistic_2.csv           # Old algorithm results (15 realistic)
 ├── downloads/
 │   ├── collection.tar.gz         # Full archive (Git LFS)
 │   └── instances/                # Individual instance JSON files for download
-├── sols/                         # Best known solution files
+├── sols/                         # Best known solution files (65 realistic)
 ```
 
 ---
@@ -194,7 +239,7 @@ tommanmaz.github.io/
 ```bash
 conda run -n instance python scripts/build_instance_data.py
 ```
-Reads from all four data sources, outputs `data/instances.json` + `data/instances.js`. Re-runnable.
+Reads from all data sources, validates solutions via bdsp-validator, outputs `data/instances.json` + `data/instances.js`. Re-runnable.
 
 ### Adding a new algorithm
 1. Add experimental results to `final_FINAL/` directory (follow `algo_NAME/SEED/summary.csv` pattern)
