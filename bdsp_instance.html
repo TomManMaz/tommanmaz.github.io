@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="description" content="BDSP instance details - algorithm comparison and features" />
+  <meta name="author" content="Tommaso Mannelli Mazzoli" />
+
+  <!-- Security -->
+  <meta http-equiv="X-Content-Type-Options" content="nosniff" />
+  <meta http-equiv="X-Frame-Options" content="SAMEORIGIN" />
+  <meta name="referrer" content="no-referrer-when-downgrade" />
+
+  <title id="page-title">Instance Details - BDSP</title>
+  <link rel="icon" type="image/png" href="icon.png" />
+  <link rel="apple-touch-icon" href="icon.png" />
+  <link rel="stylesheet" href="stylesheet.css" />
+  <style>
+    /* Instance detail page styles */
+    .instance-header {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      flex-wrap: wrap;
+      margin-bottom: 1.5rem;
+    }
+    .instance-header h1 {
+      margin: 0;
+    }
+    .status-badge {
+      display: inline-block;
+      padding: 0.25rem 0.75rem;
+      border-radius: 4px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      text-transform: capitalize;
+    }
+    .badge-optimal {
+      background: var(--success-bg);
+      color: var(--success);
+    }
+    .badge-open {
+      background: #fff3cd;
+      color: #856404;
+    }
+    [data-theme="dark"] .badge-open {
+      background: #433500;
+      color: #ffc107;
+    }
+    .back-link {
+      display: inline-block;
+      margin-bottom: 1rem;
+      font-size: 0.9rem;
+    }
+    .summary-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 1rem;
+      margin: 1.5rem 0;
+    }
+    .summary-card {
+      background: var(--bg-light);
+      padding: 1rem;
+      border-radius: 6px;
+      border-left: 3px solid var(--primary);
+    }
+    .summary-card .label {
+      font-size: 0.8rem;
+      color: var(--text-light);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 0.25rem;
+    }
+    .summary-card .value {
+      font-size: 1.3rem;
+      font-weight: 600;
+      font-family: monospace;
+      color: var(--text);
+    }
+    .summary-card .value.optimal {
+      color: var(--success);
+    }
+
+    /* Algorithm table */
+    .algo-table td:nth-child(n+2) {
+      text-align: right;
+      font-family: monospace;
+    }
+    .algo-table tr.best-row {
+      background: var(--success-bg) !important;
+      border-left: 4px solid var(--success);
+    }
+    .algo-table tr.best-row td {
+      color: #155724;
+    }
+    [data-theme="dark"] .algo-table tr.best-row td {
+      color: #4ade80;
+    }
+    .algo-section-label {
+      font-size: 0.75rem;
+      color: var(--text-light);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      padding: 0.5rem 1rem;
+      background: var(--bg-light);
+      border-bottom: 1px solid var(--border);
+      font-weight: 600;
+    }
+
+    /* Features */
+    .features-toggle {
+      cursor: pointer;
+      user-select: none;
+      color: var(--primary);
+      font-weight: 500;
+    }
+    .features-toggle:hover {
+      text-decoration: underline;
+    }
+    .features-group {
+      margin-bottom: 1.5rem;
+    }
+    .features-group h4 {
+      margin: 1rem 0 0.5rem 0;
+      color: var(--primary);
+      font-size: 1rem;
+    }
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+      gap: 0.5rem;
+    }
+    .feature-item {
+      display: flex;
+      justify-content: space-between;
+      padding: 0.35rem 0.5rem;
+      background: var(--bg-light);
+      border-radius: 4px;
+      font-size: 0.85rem;
+    }
+    .feature-item .fname {
+      color: var(--text-light);
+    }
+    .feature-item .fval {
+      font-family: monospace;
+      font-weight: 500;
+    }
+
+    /* Downloads */
+    .download-links {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      margin: 1rem 0;
+    }
+    .download-btn {
+      display: inline-block;
+      padding: 0.5rem 1rem;
+      background: var(--primary);
+      color: white;
+      border-radius: 6px;
+      text-decoration: none;
+      font-size: 0.85rem;
+      font-weight: 500;
+      transition: background 0.2s;
+    }
+    .download-btn:hover {
+      background: var(--primary-dark);
+      text-decoration: none;
+      color: white;
+    }
+
+    /* Nav between instances */
+    .instance-nav {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 2rem;
+      padding-top: 1rem;
+      border-top: 1px solid var(--border);
+    }
+    .instance-nav a {
+      font-size: 0.9rem;
+    }
+  </style>
+</head>
+<body>
+  <a href="#main-content" class="skip-link">Skip to main content</a>
+
+  <header class="header">
+    <h1>Tommaso Mannelli Mazzoli</h1>
+    <p>TU Wien, Vienna, Austria</p>
+  </header>
+
+  <nav class="navbar" role="navigation" aria-label="Main navigation">
+    <a href="index.html">Home</a>
+    <a href="publications.html">Publications</a>
+    <a class="active" href="bdsp.html" aria-current="page">BDSP</a>
+    <a href="amm.html">AMM</a>
+    <a href="#" class="theme-toggle-link" id="theme-toggle" aria-label="Toggle dark mode">
+      <span id="theme-icon">&#127769;</span>
+    </a>
+  </nav>
+
+  <main id="main-content">
+    <a href="bdsp.html#best-known-solutions" class="back-link">&larr; Back to collection</a>
+    <div id="instance-content">
+      <p>Loading instance data...</p>
+    </div>
+  </main>
+
+  <script>
+    // Dark mode toggle
+    document.addEventListener('DOMContentLoaded', function() {
+      const themeToggle = document.getElementById('theme-toggle');
+      const themeIcon = document.getElementById('theme-icon');
+      const htmlElement = document.documentElement;
+      const savedTheme = localStorage.getItem('theme');
+      if (savedTheme) {
+        htmlElement.setAttribute('data-theme', savedTheme);
+        updateIcon(savedTheme);
+      }
+      themeToggle.addEventListener('click', function(e) {
+        e.preventDefault();
+        const currentTheme = htmlElement.getAttribute('data-theme');
+        const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+        htmlElement.setAttribute('data-theme', newTheme);
+        localStorage.setItem('theme', newTheme);
+        updateIcon(newTheme);
+      });
+      function updateIcon(theme) {
+        themeIcon.textContent = theme === 'dark' ? '\u2600\uFE0F' : '\uD83C\uDF19';
+      }
+    });
+  </script>
+  <script src="data/instances.js"></script>
+  <script src="js/bdsp_instance.js"></script>
+</body>
+</html>
