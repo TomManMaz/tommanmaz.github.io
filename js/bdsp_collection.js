@@ -10,7 +10,7 @@
   let allInstances = [];
   let sortColumn = 'id';
   let sortAscending = true;
-  let filters = { status: 'all', search: '' };
+  let filters = { status: 'all', source: 'all', search: '' };
 
   // ---------------------------------------------------------------------------
   // Data loading
@@ -47,6 +47,7 @@
   function getFilteredInstances() {
     return allInstances.filter(function (inst) {
       if (filters.status !== 'all' && inst.status !== filters.status) return false;
+      if (filters.source !== 'all' && (inst.source || 'unknown') !== filters.source) return false;
       if (filters.search) {
         var q = filters.search.toLowerCase();
         if (inst.name.toLowerCase().indexOf(q) === -1) return false;
@@ -77,6 +78,7 @@
     switch (col) {
       case 'id': return getInstanceId(inst.name);
       case 'name': return inst.name;
+      case 'source': return inst.source || '';
       case 'status': return inst.status;
       case 'size': return inst.size;
       case 'tours': return inst.tours;
@@ -144,6 +146,22 @@
     html += '    <button class="filter-btn' + (filters.status === 'optimal' ? ' active' : '') + '" data-status="optimal">Optimal (' + optCount + ')</button>';
     html += '    <button class="filter-btn' + (filters.status === 'open' ? ' active' : '') + '" data-status="open">Open (' + openCount + ')</button>';
     html += '  </div>';
+    // Source filter dropdown
+    var sources = [];
+    allInstances.forEach(function (i) {
+      var s = i.source || 'unknown';
+      if (sources.indexOf(s) === -1) sources.push(s);
+    });
+    sources.sort();
+    html += '  <div class="collection-source-filter">';
+    html += '    <select id="source-filter">';
+    html += '      <option value="all"' + (filters.source === 'all' ? ' selected' : '') + '>All sources (' + allInstances.length + ')</option>';
+    sources.forEach(function (s) {
+      var cnt = allInstances.filter(function (i) { return (i.source || 'unknown') === s; }).length;
+      html += '      <option value="' + escapeHtml(s) + '"' + (filters.source === s ? ' selected' : '') + '>' + escapeHtml(s) + ' (' + cnt + ')</option>';
+    });
+    html += '    </select>';
+    html += '  </div>';
     html += '</div>';
 
     // Build table
@@ -153,6 +171,7 @@
 
     var columns = [
       { key: 'id', label: 'Instance' },
+      { key: 'source', label: 'Source' },
       { key: 'status', label: 'Status' },
       { key: 'size', label: 'Size' },
       { key: 'tours', label: 'Tours' },
@@ -183,6 +202,9 @@
 
       // Instance name (link)
       html += '<td><a href="bdsp_instance.html?instance=' + encodeURIComponent(inst.name) + '">' + escapeHtml(inst.name) + '</a></td>';
+
+      // Source
+      html += '<td>' + escapeHtml(inst.source || '—') + '</td>';
 
       // Status badge
       var badgeClass = inst.status === 'optimal' ? 'badge-optimal' : 'badge-open';
@@ -268,6 +290,15 @@
         render();
       });
     });
+
+    // Source filter
+    var sourceSelect = document.getElementById('source-filter');
+    if (sourceSelect) {
+      sourceSelect.addEventListener('change', function () {
+        filters.source = this.value;
+        render();
+      });
+    }
   }
 
   // ---------------------------------------------------------------------------
@@ -278,10 +309,11 @@
     var filtered = getFilteredInstances();
     var sorted = sortInstances(filtered);
 
-    var rows = [['Instance', 'Status', 'Size', 'Tours', 'Legs', 'BKS', 'Lower Bound', 'Gap (%)', 'Best Algorithm']];
+    var rows = [['Instance', 'Source', 'Status', 'Size', 'Tours', 'Legs', 'BKS', 'Lower Bound', 'Gap (%)', 'Best Algorithm']];
     sorted.forEach(function (inst) {
       rows.push([
         inst.name,
+        inst.source || '',
         inst.status,
         inst.size,
         inst.tours,

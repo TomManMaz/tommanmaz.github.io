@@ -2,10 +2,11 @@
 """
 Build data/instances.json for the BDSP website.
 
-Reads from three sources:
+Reads from four sources:
 1. Instance JSON files → features (via instance-generator's Instance class)
-2. Algorithm results from final_FINAL/ → per-algorithm stats
-3. BKS CSV files → old algorithm results + lower bounds
+2. Algorithm results from final_FINAL/ → per-algorithm stats (JAIR)
+3. BKS CSV files → old algorithm results + lower bounds (realistic only)
+4. metadata_paper.csv → PATAT 2024 instances (284 total, 12 source types)
 
 Usage:
     python scripts/build_instance_data.py
@@ -36,6 +37,7 @@ INSTANCE_JSON_DIR = Path.home() / "busdriverschedulingproblem" / "files" / "inst
 RESULTS_DIR = Path.home() / "laboratorio" / "bdsp" / "data" / "jair" / "final_FINAL"
 BKS_CSV_1 = REPO_ROOT / "BKS_realistic_1.csv"
 BKS_CSV_2 = REPO_ROOT / "BKS_realistic_2.csv"
+PATAT_CSV = REPO_ROOT / "metadata_paper.csv"
 OUTPUT_FILE = REPO_ROOT / "data" / "instances.json"
 
 # Instance sizes (for reference)
@@ -158,6 +160,116 @@ def read_bks_csvs() -> dict:
 
 
 # ---------------------------------------------------------------------------
+# Read PATAT metadata CSV (284 instances, 12 source types)
+# ---------------------------------------------------------------------------
+
+# Mapping from CSV feature column names to our internal feature keys
+PATAT_FEATURE_MAP = {
+    "feature_n_tours": "n_tours",
+    "feature_n_legs": "n_legs",
+    "feature_n_position_used": "n_position_used",
+    "feature_drive_min": "drive_min",
+    "feature_drive_max": "drive_max",
+    "feature_drive_mean": "drive_mean",
+    "feature_drive_median": "drive_median",
+    "feature_drive_std": "drive_std",
+    "feature_drive_first_quantile": "drive_first_quantile",
+    "feature_drive_third_quartile": "drive_third_quartile",
+    "feature_diff_min": "diff_min",
+    "feature_diff_max": "diff_max",
+    "feature_diff_mean": "diff_mean",
+    "feature_diff_median": "diff_median",
+    "feature_diff_std": "diff_std",
+    "feature_diff_first_quantile": "diff_first_quantile",
+    "feature_diff_third_quartile": "diff_third_quartile",
+    "feature_max_active_buses": "max_active_buses",
+    "feature_average_distance": "average_distance",
+    "feature_huge": "huge",
+    "feature_large": "large",
+    "feature_medium": "medium",
+    "feature_small": "small",
+    "feature_tiny": "tiny",
+    "feature_max_num_legs_per_tour": "num_legs_per_tour_max",
+    "feature_min_num_legs_per_tour": "num_legs_per_tour_min",
+    "feature_mean_num_legs_per_tour": "num_legs_per_tour_mean",
+    "feature_median_num_legs_per_tour": "num_legs_per_tour_median",
+    "feature_std_num_legs_per_tour": "num_legs_per_tour_std",
+    "feature_1st_quantile_num_legs_per_tour": "num_legs_per_tour_q1",
+    "feature_3rd_quantile_num_legs_per_tour": "num_legs_per_tour_q3",
+    "feature_max_total_time_per_tour": "total_time_per_tour_max",
+    "feature_min_total_time_per_tour": "total_time_per_tour_min",
+    "feature_mean_total_time_per_tour": "total_time_per_tour_mean",
+    "feature_median_total_time_per_tour": "total_time_per_tour_median",
+    "feature_std_total_time_per_tour": "total_time_per_tour_std",
+    "feature_1st_quantile_total_time_per_tour": "total_time_per_tour_q1",
+    "feature_3rd_quantile_total_time_per_tour": "total_time_per_tour_q3",
+    "feature_max_number_breaks_per_tour": "number_breaks_per_tour_max",
+    "feature_min_number_breaks_per_tour": "number_breaks_per_tour_min",
+    "feature_mean_number_breaks_per_tour": "number_breaks_per_tour_mean",
+    "feature_median_number_breaks_per_tour": "number_breaks_per_tour_median",
+    "feature_std_number_breaks_per_tour": "number_breaks_per_tour_std",
+    "feature_1st_quantile_number_breaks_per_tour": "number_breaks_per_tour_q1",
+    "feature_3rd_quantile_number_breaks_per_tour": "number_breaks_per_tour_q3",
+    "feature_max_number_of_proper_breaks_per_tour": "number_proper_breaks_per_tour_max",
+    "feature_min_number_of_proper_breaks_per_tour": "number_proper_breaks_per_tour_min",
+    "feature_mean_number_of_proper_breaks_per_tour": "number_proper_breaks_per_tour_mean",
+    "feature_median_number_of_proper_breaks_per_tour": "number_proper_breaks_per_tour_median",
+    "feature_std_number_of_proper_breaks_per_tour": "number_proper_breaks_per_tour_std",
+    "feature_1st_quantile_number_of_proper_breaks_per_tour": "number_proper_breaks_per_tour_q1",
+    "feature_3rd_quantile_number_of_proper_breaks_per_tour": "number_proper_breaks_per_tour_q3",
+    "feature_max_proportion_of_large_legs_per_tour": "proportion_large_legs_per_tour_max",
+    "feature_min_proportion_of_large_legs_per_tour": "proportion_large_legs_per_tour_min",
+    "feature_mean_proportion_of_large_legs_per_tour": "proportion_large_legs_per_tour_mean",
+    "feature_median_proportion_of_large_legs_per_tour": "proportion_large_legs_per_tour_median",
+    "feature_std_proportion_of_large_legs_per_tour": "proportion_large_legs_per_tour_std",
+    "feature_1st_quantile_proportion_of_large_legs_per_tour": "proportion_large_legs_per_tour_q1",
+    "feature_3rd_quantile_proportion_of_large_legs_per_tour": "proportion_large_legs_per_tour_q3",
+}
+
+
+def read_patat_csv() -> dict:
+    """Read metadata_paper.csv (PATAT 2024 instances).
+
+    Returns dict keyed by instance name with source, features, and algo results.
+    """
+    data = {}
+    if not PATAT_CSV.exists():
+        print(f"WARNING: {PATAT_CSV} not found, skipping PATAT instances")
+        return data
+
+    with open(PATAT_CSV, "r") as f:
+        reader = csv.DictReader(f)
+        for row in reader:
+            name = row["Instances"]
+            source = row["Source"]
+
+            # Extract features
+            features = {}
+            for csv_col, feat_key in PATAT_FEATURE_MAP.items():
+                if csv_col in row and row[csv_col]:
+                    val = float(row[csv_col])
+                    # Integer features
+                    if feat_key in ("n_tours", "n_legs", "n_position_used", "max_active_buses"):
+                        val = int(val)
+                    features[feat_key] = val
+
+            # Extract algorithm results (CMSA, LNS from PATAT)
+            patat_algorithms = {}
+            for algo in ["CMSA", "LNS"]:
+                col = f"algo_{algo}"
+                if col in row and row[col]:
+                    patat_algorithms[algo] = float(row[col])
+
+            data[name] = {
+                "source": source,
+                "features": features,
+                "patat_algorithms": patat_algorithms,
+            }
+
+    return data
+
+
+# ---------------------------------------------------------------------------
 # Read algorithm results from final_FINAL
 # ---------------------------------------------------------------------------
 
@@ -222,81 +334,131 @@ def read_algorithm_results(instance_name: str) -> dict:
 # Main build
 # ---------------------------------------------------------------------------
 
+def get_json_path(instance_name: str) -> Path:
+    """Get the JSON file path for an instance, handling the extreme_ prefix."""
+    if instance_name.startswith("realistic_"):
+        return INSTANCE_JSON_DIR / f"{instance_name}.json"
+    else:
+        return INSTANCE_JSON_DIR / f"extreme_{instance_name}.json"
+
+
+def process_instance(instance_name, bks_data, patat_data):
+    """Process a single instance and return its entry dict."""
+    print(f"Processing {instance_name}...")
+
+    entry = {"name": instance_name}
+
+    # Parse size and source from name
+    parts = instance_name.split("_")
+    entry["size"] = int(parts[1])
+    entry["source"] = parts[0]  # e.g. "realistic", "breakMax", etc.
+
+    # Override source from PATAT CSV if available (more reliable)
+    if instance_name in patat_data:
+        entry["source"] = patat_data[instance_name]["source"]
+
+    # Read instance JSON and extract features
+    json_path = get_json_path(instance_name)
+    if json_path.exists():
+        try:
+            inst = Instance.from_json(str(json_path))
+            entry["features"] = get_features(inst)
+            entry["stations"] = len(inst.distance_matrix)
+        except Exception as e:
+            print(f"  WARNING: Failed to load instance JSON: {e}")
+            # Fall back to PATAT CSV features
+            if instance_name in patat_data:
+                entry["features"] = patat_data[instance_name]["features"]
+            else:
+                entry["features"] = {}
+            entry["stations"] = entry["size"]
+    else:
+        print(f"  WARNING: {json_path} not found")
+        if instance_name in patat_data:
+            entry["features"] = patat_data[instance_name]["features"]
+        else:
+            entry["features"] = {}
+        entry["stations"] = entry["size"]
+
+    # Add BKS data (tours, legs, old algorithms, bound) — realistic only
+    if instance_name in bks_data:
+        bks = bks_data[instance_name]
+        entry["tours"] = bks["tours"]
+        entry["legs"] = bks["legs"]
+        entry["old_algorithms"] = bks["old_algorithms"]
+        entry["lower_bound"] = bks["bound"]
+    else:
+        entry["tours"] = entry["features"].get("n_tours", 0)
+        entry["legs"] = entry["features"].get("n_legs", 0)
+        entry["old_algorithms"] = {}
+        entry["lower_bound"] = None
+
+    # Read new algorithm results from final_FINAL (JAIR experiments)
+    entry["algorithms"] = read_algorithm_results(instance_name)
+
+    # Add PATAT algorithm results (CMSA, LNS) as old_algorithms if not already present
+    if instance_name in patat_data:
+        for algo, val in patat_data[instance_name]["patat_algorithms"].items():
+            if algo not in entry["old_algorithms"]:
+                entry["old_algorithms"][algo] = val
+
+    # Compute BKS across all algorithms (old + new)
+    all_best_values = []
+    for algo, val in entry["old_algorithms"].items():
+        all_best_values.append((algo, val))
+    for algo, stats in entry["algorithms"].items():
+        all_best_values.append((algo, stats["best_value"]))
+
+    if all_best_values:
+        best_algo, best_val = min(all_best_values, key=lambda x: x[1])
+        entry["bks"] = best_val
+        entry["best_algorithm"] = best_algo
+    else:
+        entry["bks"] = None
+        entry["best_algorithm"] = None
+
+    # Compute gap
+    if entry["bks"] is not None and entry["lower_bound"] is not None and entry["bks"] > 0:
+        entry["gap_pct"] = round((entry["bks"] - entry["lower_bound"]) / entry["bks"] * 100, 2)
+    else:
+        entry["gap_pct"] = None
+
+    # Status
+    if entry["gap_pct"] is not None and entry["gap_pct"] == 0.0:
+        entry["status"] = "optimal"
+    else:
+        entry["status"] = "open"
+
+    return entry
+
+
 def build():
     print("Reading BKS CSVs...")
     bks_data = read_bks_csvs()
 
+    print("Reading PATAT CSV...")
+    patat_data = read_patat_csv()
+
+    # Collect all unique instance names: REALISTIC_INSTANCES + PATAT CSV
+    all_instance_names = list(dict.fromkeys(
+        REALISTIC_INSTANCES + list(patat_data.keys())
+    ))
+    print(f"Total unique instances: {len(all_instance_names)}")
+
     instances = []
-    for instance_name in REALISTIC_INSTANCES:
-        print(f"Processing {instance_name}...")
-
-        entry = {"name": instance_name}
-
-        # Parse size from name
-        parts = instance_name.split("_")
-        entry["size"] = int(parts[1])
-
-        # Read instance JSON and extract features
-        json_path = INSTANCE_JSON_DIR / f"{instance_name}.json"
-        if json_path.exists():
-            try:
-                inst = Instance.from_json(str(json_path))
-                entry["features"] = get_features(inst)
-                entry["stations"] = len(inst.distance_matrix)
-            except Exception as e:
-                print(f"  WARNING: Failed to load instance JSON: {e}")
-                entry["features"] = {}
-                entry["stations"] = entry["size"]
-        else:
-            print(f"  WARNING: {json_path} not found")
-            entry["features"] = {}
-            entry["stations"] = entry["size"]
-
-        # Add BKS data (tours, legs, old algorithms, bound)
-        if instance_name in bks_data:
-            bks = bks_data[instance_name]
-            entry["tours"] = bks["tours"]
-            entry["legs"] = bks["legs"]
-            entry["old_algorithms"] = bks["old_algorithms"]
-            entry["lower_bound"] = bks["bound"]
-        else:
-            # Fall back to features if available
-            entry["tours"] = entry["features"].get("n_tours", 0)
-            entry["legs"] = entry["features"].get("n_legs", 0)
-            entry["old_algorithms"] = {}
-            entry["lower_bound"] = None
-
-        # Read new algorithm results from final_FINAL
-        entry["algorithms"] = read_algorithm_results(instance_name)
-
-        # Compute BKS across all algorithms (old + new)
-        all_best_values = []
-        for algo, val in entry["old_algorithms"].items():
-            all_best_values.append((algo, val))
-        for algo, stats in entry["algorithms"].items():
-            all_best_values.append((algo, stats["best_value"]))
-
-        if all_best_values:
-            best_algo, best_val = min(all_best_values, key=lambda x: x[1])
-            entry["bks"] = best_val
-            entry["best_algorithm"] = best_algo
-        else:
-            entry["bks"] = None
-            entry["best_algorithm"] = None
-
-        # Compute gap
-        if entry["bks"] is not None and entry["lower_bound"] is not None and entry["bks"] > 0:
-            entry["gap_pct"] = round((entry["bks"] - entry["lower_bound"]) / entry["bks"] * 100, 2)
-        else:
-            entry["gap_pct"] = None
-
-        # Status
-        if entry["gap_pct"] is not None and entry["gap_pct"] == 0.0:
-            entry["status"] = "optimal"
-        else:
-            entry["status"] = "open"
-
+    for instance_name in all_instance_names:
+        entry = process_instance(instance_name, bks_data, patat_data)
         instances.append(entry)
+
+    # Sort by source, then size, then trailing ID
+    def sort_key(inst):
+        parts = inst["name"].split("_")
+        source = inst.get("source", parts[0])
+        size = inst["size"]
+        trail = int(parts[-1]) if parts[-1].isdigit() else 0
+        return (source, size, trail)
+
+    instances.sort(key=sort_key)
 
     # Write output
     OUTPUT_FILE.parent.mkdir(parents=True, exist_ok=True)
@@ -314,7 +476,12 @@ def build():
 
     # Summary
     optimal = sum(1 for i in instances if i["status"] == "optimal")
+    sources = {}
+    for i in instances:
+        s = i.get("source", "unknown")
+        sources[s] = sources.get(s, 0) + 1
     print(f"  Optimal: {optimal}, Open: {len(instances) - optimal}")
+    print(f"  Sources: {sources}")
 
 
 if __name__ == "__main__":

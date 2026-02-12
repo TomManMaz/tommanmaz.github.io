@@ -73,6 +73,7 @@
 
     // Summary cards
     html += '<div class="summary-grid">';
+    html += summaryCard('Source', inst.source || 'unknown');
     html += summaryCard('Size', inst.size);
     html += summaryCard('Tours', inst.tours);
     html += summaryCard('Legs', inst.legs);
@@ -162,11 +163,12 @@
       });
     }
 
-    // Old algorithms
+    // Old algorithms (BKS tables + PATAT)
     var oldAlgos = inst.old_algorithms || {};
     var oldKeys = Object.keys(oldAlgos);
     if (oldKeys.length > 0) {
-      html += '<tr><td colspan="9" class="algo-section-label">Previous Algorithms</td></tr>';
+      var oldLabel = inst.source === 'realistic' ? 'Previous Algorithms' : 'PATAT 2024 Results';
+      html += '<tr><td colspan="9" class="algo-section-label">' + oldLabel + '</td></tr>';
       oldKeys.forEach(function (key) {
         var val = oldAlgos[key];
         var isBest = bks != null && val === bks;
