@@ -1,26 +1,28 @@
 /**
- * BDSP Collection Table
- * Loads instance data from data/instances.json and renders a sortable,
- * filterable, searchable table. Replaces the old static BKS tables.
+ * BDSP Collection Tables
+ * Renders two separate tables: Realistic instances (JAIR) and
+ * Synthetic instances (PATAT 2024). Each is sortable and searchable.
  */
 
 (function () {
   'use strict';
 
-  let allInstances = [];
-  let sortColumn = 'id';
-  let sortAscending = true;
-  let filters = { status: 'all', source: 'all', search: '' };
+  var allInstances = [];
+
+  // Per-table state keyed by table id
+  var tableState = {
+    realistic: { sortColumn: 'id', sortAscending: true, search: '', status: 'all' },
+    patat:     { sortColumn: 'id', sortAscending: true, search: '', source: 'all' }
+  };
 
   // ---------------------------------------------------------------------------
   // Data loading
   // ---------------------------------------------------------------------------
 
   function loadData() {
-    const container = document.getElementById('collection-table-container');
+    var container = document.getElementById('collection-table-container');
     if (!container) return;
 
-    // Try inline data first (set by data/instances.js), fall back to fetch
     if (window.BDSP_INSTANCES) {
       allInstances = window.BDSP_INSTANCES;
       render();
@@ -41,24 +43,13 @@
   }
 
   // ---------------------------------------------------------------------------
-  // Filtering
+  // Helpers
   // ---------------------------------------------------------------------------
 
-  function getFilteredInstances() {
-    return allInstances.filter(function (inst) {
-      if (filters.status !== 'all' && inst.status !== filters.status) return false;
-      if (filters.source !== 'all' && (inst.source || 'unknown') !== filters.source) return false;
-      if (filters.search) {
-        var q = filters.search.toLowerCase();
-        if (inst.name.toLowerCase().indexOf(q) === -1) return false;
-      }
-      return true;
-    });
+  function getInstanceId(name) {
+    var parts = name.split('_');
+    return parseInt(parts[parts.length - 1], 10) || 0;
   }
-
-  // ---------------------------------------------------------------------------
-  // Sorting
-  // ---------------------------------------------------------------------------
 
   function compareValues(a, b) {
     if (a == null && b == null) return 0;
@@ -66,12 +57,6 @@
     if (b == null) return -1;
     if (typeof a === 'string') return a.localeCompare(b);
     return a - b;
-  }
-
-  function getInstanceId(name) {
-    // Extract trailing number: realistic_10_1 -> 1, realistic_250_65 -> 65
-    var parts = name.split('_');
-    return parseInt(parts[parts.length - 1], 10) || 0;
   }
 
   function getSortValue(inst, col) {
@@ -91,9 +76,9 @@
     }
   }
 
-  function sortInstances(instances) {
-    var col = sortColumn;
-    var asc = sortAscending;
+  function sortInstances(instances, state) {
+    var col = state.sortColumn;
+    var asc = state.sortAscending;
     return instances.slice().sort(function (a, b) {
       var va = getSortValue(a, col);
       var vb = getSortValue(b, col);
@@ -102,76 +87,94 @@
     });
   }
 
-  // ---------------------------------------------------------------------------
-  // Formatting
-  // ---------------------------------------------------------------------------
-
   function formatNumber(val) {
-    if (val == null) return '—';
+    if (val == null) return '\u2014';
     return val.toLocaleString('en-US');
   }
 
   function formatGap(val) {
-    if (val == null) return '—';
+    if (val == null) return '\u2014';
     return val.toFixed(2);
   }
 
   function formatBound(val) {
-    if (val == null) return '—';
+    if (val == null) return '\u2014';
     if (Number.isInteger(val)) return val.toLocaleString('en-US');
     return val.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
   }
 
+  function escapeHtml(str) {
+    if (!str) return '';
+    return str.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+  }
+
   // ---------------------------------------------------------------------------
-  // Rendering
+  // Render
   // ---------------------------------------------------------------------------
 
   function render() {
     var container = document.getElementById('collection-table-container');
     if (!container) return;
 
-    var filtered = getFilteredInstances();
-    var sorted = sortInstances(filtered);
+    var realistic = allInstances.filter(function (i) { return i.source === 'realistic'; });
+    var patat = allInstances.filter(function (i) { return i.source !== 'realistic'; });
 
-    // Build controls
     var html = '';
+
+    // --- Realistic table ---
+    html += '<h3>Realistic Instances (' + realistic.length + ')</h3>';
+    html += renderRealisticTable(realistic);
+
+    // --- PATAT table ---
+    html += '<h3 style="margin-top:2.5rem;">Synthetic Instances \u2014 PATAT 2024 (' + patat.length + ')</h3>';
+    html += renderPatatTable(patat);
+
+    // Summary
+    html += '<p class="collection-summary">';
+    html += 'Total: ' + allInstances.length + ' instances (' + realistic.length + ' realistic, ' + patat.length + ' synthetic).';
+    html += '</p>';
+
+    container.innerHTML = html;
+    bindEvents();
+  }
+
+  // ---------------------------------------------------------------------------
+  // Realistic table
+  // ---------------------------------------------------------------------------
+
+  function renderRealisticTable(instances) {
+    var state = tableState.realistic;
+
+    // Filter
+    var filtered = instances.filter(function (inst) {
+      if (state.status !== 'all' && inst.status !== state.status) return false;
+      if (state.search) {
+        if (inst.name.toLowerCase().indexOf(state.search.toLowerCase()) === -1) return false;
+      }
+      return true;
+    });
+
+    var sorted = sortInstances(filtered, state);
+
+    var html = '';
+
+    // Controls
     html += '<div class="collection-controls">';
     html += '  <div class="collection-search">';
-    html += '    <input type="text" id="collection-search" placeholder="Search instances..." value="' + escapeHtml(filters.search) + '">';
+    html += '    <input type="text" class="table-search" data-table="realistic" placeholder="Search..." value="' + escapeHtml(state.search) + '">';
     html += '  </div>';
     html += '  <div class="collection-filters">';
-    html += '    <button class="filter-btn' + (filters.status === 'all' ? ' active' : '') + '" data-status="all">All (' + allInstances.length + ')</button>';
-    var optCount = allInstances.filter(function (i) { return i.status === 'optimal'; }).length;
-    var openCount = allInstances.filter(function (i) { return i.status === 'open'; }).length;
-    html += '    <button class="filter-btn' + (filters.status === 'optimal' ? ' active' : '') + '" data-status="optimal">Optimal (' + optCount + ')</button>';
-    html += '    <button class="filter-btn' + (filters.status === 'open' ? ' active' : '') + '" data-status="open">Open (' + openCount + ')</button>';
-    html += '  </div>';
-    // Source filter dropdown
-    var sources = [];
-    allInstances.forEach(function (i) {
-      var s = i.source || 'unknown';
-      if (sources.indexOf(s) === -1) sources.push(s);
-    });
-    sources.sort();
-    html += '  <div class="collection-source-filter">';
-    html += '    <select id="source-filter">';
-    html += '      <option value="all"' + (filters.source === 'all' ? ' selected' : '') + '>All sources (' + allInstances.length + ')</option>';
-    sources.forEach(function (s) {
-      var cnt = allInstances.filter(function (i) { return (i.source || 'unknown') === s; }).length;
-      html += '      <option value="' + escapeHtml(s) + '"' + (filters.source === s ? ' selected' : '') + '>' + escapeHtml(s) + ' (' + cnt + ')</option>';
-    });
-    html += '    </select>';
+    var optCount = instances.filter(function (i) { return i.status === 'optimal'; }).length;
+    var openCount = instances.filter(function (i) { return i.status === 'open'; }).length;
+    html += '    <button class="filter-btn' + (state.status === 'all' ? ' active' : '') + '" data-table="realistic" data-status="all">All (' + instances.length + ')</button>';
+    html += '    <button class="filter-btn' + (state.status === 'optimal' ? ' active' : '') + '" data-table="realistic" data-status="optimal">Optimal (' + optCount + ')</button>';
+    html += '    <button class="filter-btn' + (state.status === 'open' ? ' active' : '') + '" data-table="realistic" data-status="open">Open (' + openCount + ')</button>';
     html += '  </div>';
     html += '</div>';
 
-    // Build table
-    html += '<div class="collection-table-wrapper">';
-    html += '<table class="collection-table" id="collectionTable">';
-    html += '<thead><tr>';
-
+    // Table
     var columns = [
       { key: 'id', label: 'Instance' },
-      { key: 'source', label: 'Source' },
       { key: 'status', label: 'Status' },
       { key: 'size', label: 'Size' },
       { key: 'tours', label: 'Tours' },
@@ -182,69 +185,134 @@
       { key: 'best_algorithm', label: 'Best Algorithm' }
     ];
 
+    html += '<div class="collection-table-wrapper">';
+    html += '<table class="collection-table">';
+    html += '<thead><tr>';
     columns.forEach(function (col) {
       var arrow = '';
-      if (sortColumn === col.key) {
-        arrow = sortAscending ? ' \u25B2' : ' \u25BC';
+      if (state.sortColumn === col.key) {
+        arrow = state.sortAscending ? ' \u25B2' : ' \u25BC';
       }
-      html += '<th class="sortable" data-sort="' + col.key + '">' + col.label + arrow + '</th>';
+      html += '<th class="sortable" data-table="realistic" data-sort="' + col.key + '">' + col.label + arrow + '</th>';
     });
-
     html += '</tr></thead><tbody>';
 
     if (sorted.length === 0) {
-      html += '<tr><td colspan="' + columns.length + '" style="text-align:center;">No instances match the current filters.</td></tr>';
+      html += '<tr><td colspan="' + columns.length + '" style="text-align:center;">No instances match.</td></tr>';
     }
 
     sorted.forEach(function (inst) {
       var rowClass = inst.status === 'optimal' ? ' class="optimal-solution"' : '';
       html += '<tr' + rowClass + '>';
-
-      // Instance name (link)
       html += '<td><a href="bdsp_instance.html?instance=' + encodeURIComponent(inst.name) + '">' + escapeHtml(inst.name) + '</a></td>';
 
-      // Source
-      html += '<td>' + escapeHtml(inst.source || '—') + '</td>';
-
-      // Status badge
       var badgeClass = inst.status === 'optimal' ? 'badge-optimal' : 'badge-open';
       html += '<td><span class="status-badge ' + badgeClass + '">' + inst.status + '</span></td>';
 
-      // Size, Tours, Legs
-      html += '<td>' + inst.size + '</td>';
-      html += '<td>' + inst.tours + '</td>';
-      html += '<td>' + inst.legs + '</td>';
+      html += '<td class="num">' + inst.size + '</td>';
+      html += '<td class="num">' + inst.tours + '</td>';
+      html += '<td class="num">' + inst.legs + '</td>';
+      html += '<td class="num">' + formatNumber(inst.bks) + '</td>';
+      html += '<td class="num">' + formatBound(inst.lower_bound) + '</td>';
 
-      // BKS
-      html += '<td>' + formatNumber(inst.bks) + '</td>';
-
-      // Lower Bound
-      html += '<td>' + formatBound(inst.lower_bound) + '</td>';
-
-      // Gap
       if (inst.gap_pct != null && inst.gap_pct === 0) {
-        html += '<td><span class="gap-optimal">0.00</span></td>';
+        html += '<td class="num"><span class="gap-optimal">0.00</span></td>';
       } else {
-        html += '<td>' + formatGap(inst.gap_pct) + '</td>';
+        html += '<td class="num">' + formatGap(inst.gap_pct) + '</td>';
       }
 
-      // Best Algorithm
-      html += '<td>' + escapeHtml(inst.best_algorithm || '—') + '</td>';
-
+      html += '<td>' + escapeHtml(inst.best_algorithm || '\u2014') + '</td>';
       html += '</tr>';
     });
 
     html += '</tbody></table></div>';
+    return html;
+  }
 
-    // Summary
-    html += '<p class="collection-summary">';
-    html += 'Showing ' + sorted.length + ' of ' + allInstances.length + ' instances.';
-    html += '</p>';
+  // ---------------------------------------------------------------------------
+  // PATAT table
+  // ---------------------------------------------------------------------------
 
-    container.innerHTML = html;
+  function renderPatatTable(instances) {
+    var state = tableState.patat;
 
-    // Bind events
-    bindEvents();
+    // Filter
+    var filtered = instances.filter(function (inst) {
+      if (state.source !== 'all' && (inst.source || 'unknown') !== state.source) return false;
+      if (state.search) {
+        if (inst.name.toLowerCase().indexOf(state.search.toLowerCase()) === -1) return false;
+      }
+      return true;
+    });
+
+    var sorted = sortInstances(filtered, state);
+
+    var html = '';
+
+    // Controls
+    html += '<div class="collection-controls">';
+    html += '  <div class="collection-search">';
+    html += '    <input type="text" class="table-search" data-table="patat" placeholder="Search..." value="' + escapeHtml(state.search) + '">';
+    html += '  </div>';
+    // Source filter dropdown
+    var sources = [];
+    instances.forEach(function (i) {
+      var s = i.source || 'unknown';
+      if (sources.indexOf(s) === -1) sources.push(s);
+    });
+    sources.sort();
+    html += '  <div class="collection-source-filter">';
+    html += '    <select class="source-filter" data-table="patat">';
+    html += '      <option value="all"' + (state.source === 'all' ? ' selected' : '') + '>All types (' + instances.length + ')</option>';
+    sources.forEach(function (s) {
+      var cnt = instances.filter(function (i) { return (i.source || 'unknown') === s; }).length;
+      html += '      <option value="' + escapeHtml(s) + '"' + (state.source === s ? ' selected' : '') + '>' + escapeHtml(s) + ' (' + cnt + ')</option>';
+    });
+    html += '    </select>';
+    html += '  </div>';
+    html += '</div>';
+
+    // Table — no Lower Bound / Gap columns, add Source column
+    var columns = [
+      { key: 'id', label: 'Instance' },
+      { key: 'source', label: 'Source' },
+      { key: 'size', label: 'Size' },
+      { key: 'tours', label: 'Tours' },
+      { key: 'legs', label: 'Legs' },
+      { key: 'bks', label: 'BKS' },
+      { key: 'best_algorithm', label: 'Best Algorithm' }
+    ];
+
+    html += '<div class="collection-table-wrapper">';
+    html += '<table class="collection-table">';
+    html += '<thead><tr>';
+    columns.forEach(function (col) {
+      var arrow = '';
+      if (state.sortColumn === col.key) {
+        arrow = state.sortAscending ? ' \u25B2' : ' \u25BC';
+      }
+      html += '<th class="sortable" data-table="patat" data-sort="' + col.key + '">' + col.label + arrow + '</th>';
+    });
+    html += '</tr></thead><tbody>';
+
+    if (sorted.length === 0) {
+      html += '<tr><td colspan="' + columns.length + '" style="text-align:center;">No instances match.</td></tr>';
+    }
+
+    sorted.forEach(function (inst) {
+      html += '<tr>';
+      html += '<td><a href="bdsp_instance.html?instance=' + encodeURIComponent(inst.name) + '">' + escapeHtml(inst.name) + '</a></td>';
+      html += '<td>' + escapeHtml(inst.source || '\u2014') + '</td>';
+      html += '<td class="num">' + inst.size + '</td>';
+      html += '<td class="num">' + inst.tours + '</td>';
+      html += '<td class="num">' + inst.legs + '</td>';
+      html += '<td class="num">' + formatNumber(inst.bks) + '</td>';
+      html += '<td>' + escapeHtml(inst.best_algorithm || '\u2014') + '</td>';
+      html += '</tr>';
+    });
+
+    html += '</tbody></table></div>';
+    return html;
   }
 
   // ---------------------------------------------------------------------------
@@ -253,52 +321,53 @@
 
   function bindEvents() {
     // Sort headers
-    var headers = document.querySelectorAll('.collection-table .sortable');
-    headers.forEach(function (th) {
+    document.querySelectorAll('.collection-table .sortable').forEach(function (th) {
       th.addEventListener('click', function () {
+        var tbl = this.getAttribute('data-table');
         var col = this.getAttribute('data-sort');
-        if (sortColumn === col) {
-          sortAscending = !sortAscending;
+        var state = tableState[tbl];
+        if (state.sortColumn === col) {
+          state.sortAscending = !state.sortAscending;
         } else {
-          sortColumn = col;
-          sortAscending = true;
+          state.sortColumn = col;
+          state.sortAscending = true;
         }
         render();
       });
     });
 
-    // Search
-    var searchInput = document.getElementById('collection-search');
-    if (searchInput) {
-      searchInput.addEventListener('input', function () {
-        filters.search = this.value;
+    // Search inputs
+    document.querySelectorAll('.table-search').forEach(function (input) {
+      input.addEventListener('input', function () {
+        var tbl = this.getAttribute('data-table');
+        tableState[tbl].search = this.value;
         render();
-        // Restore focus and cursor position
-        var input = document.getElementById('collection-search');
-        if (input) {
-          input.focus();
-          input.setSelectionRange(input.value.length, input.value.length);
+        // Restore focus
+        var el = document.querySelector('.table-search[data-table="' + tbl + '"]');
+        if (el) {
+          el.focus();
+          el.setSelectionRange(el.value.length, el.value.length);
         }
       });
-    }
+    });
 
-    // Filter buttons
-    var filterBtns = document.querySelectorAll('.filter-btn');
-    filterBtns.forEach(function (btn) {
+    // Status filter buttons (realistic)
+    document.querySelectorAll('.filter-btn').forEach(function (btn) {
       btn.addEventListener('click', function () {
-        filters.status = this.getAttribute('data-status');
+        var tbl = this.getAttribute('data-table');
+        tableState[tbl].status = this.getAttribute('data-status');
         render();
       });
     });
 
-    // Source filter
-    var sourceSelect = document.getElementById('source-filter');
-    if (sourceSelect) {
-      sourceSelect.addEventListener('change', function () {
-        filters.source = this.value;
+    // Source filter dropdown (patat)
+    document.querySelectorAll('.source-filter').forEach(function (sel) {
+      sel.addEventListener('change', function () {
+        var tbl = this.getAttribute('data-table');
+        tableState[tbl].source = this.value;
         render();
       });
-    }
+    });
   }
 
   // ---------------------------------------------------------------------------
@@ -306,11 +375,8 @@
   // ---------------------------------------------------------------------------
 
   window.exportCollectionCSV = function () {
-    var filtered = getFilteredInstances();
-    var sorted = sortInstances(filtered);
-
     var rows = [['Instance', 'Source', 'Status', 'Size', 'Tours', 'Legs', 'BKS', 'Lower Bound', 'Gap (%)', 'Best Algorithm']];
-    sorted.forEach(function (inst) {
+    allInstances.forEach(function (inst) {
       rows.push([
         inst.name,
         inst.source || '',
@@ -332,15 +398,6 @@
     link.download = 'bdsp_instances.csv';
     link.click();
   };
-
-  // ---------------------------------------------------------------------------
-  // Utility
-  // ---------------------------------------------------------------------------
-
-  function escapeHtml(str) {
-    if (!str) return '';
-    return str.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
-  }
 
   // ---------------------------------------------------------------------------
   // Init
