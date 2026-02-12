@@ -260,6 +260,9 @@ td:nth-child(n+4) {
 .optimal-solution td {
   color: #155724;
 }
+[data-theme="dark"] .optimal-solution td {
+  color: #86efac;
+}
 
 .gap-optimal {
   background: var(--success) !important;
