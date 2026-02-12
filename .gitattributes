@@ -1,5 +1,1 @@
 downloads/*.tar.gz filter=lfs diff=lfs merge=lfs -text
-downloads/instances/*.json filter=lfs diff=lfs merge=lfs -text
-sols/*.csv filter=lfs diff=lfs merge=lfs -text
-downloads/instances/*.json !text !filter !merge !diff
-sols/*.csv !text !filter !merge !diff
