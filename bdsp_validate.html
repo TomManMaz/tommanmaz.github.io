@@ -242,11 +242,10 @@
         Everything runs client-side — no data is sent to any server.
       </p>
       <p>
-        <strong>Solution CSV format:</strong> a binary matrix where row&nbsp;<em>i</em> represents employee&nbsp;<em>i</em>
+        <strong>Solution file format</strong> (<code>.csv</code> or <code>.sol</code>): a binary matrix where row&nbsp;<em>i</em> represents employee&nbsp;<em>i</em>
         and column&nbsp;<em>j</em> is&nbsp;<code>1</code> if leg&nbsp;<em>j</em> is assigned to that employee,
         <code>0</code> otherwise. Legs are ordered by start time (matching the instance JSON).
-        All-zero rows are skipped. This is the same format produced by the
-        <a href="bdsp-validator/">Python validator</a>.
+        All-zero rows are skipped.
       </p>
       <p>
         <strong>Objective formula:</strong>
@@ -269,7 +268,7 @@
 
         <div class="form-field">
           <label for="solution-upload">Solution CSV</label>
-          <input type="file" id="solution-upload" accept=".csv" />
+          <input type="file" id="solution-upload" accept=".csv,.sol,text/plain" />
           <span id="solution-status" class="validator-status"></span>
         </div>
       </div>
