@@ -111,7 +111,8 @@
     }
     html += '<a class="download-btn" href="downloads/collection.tar.gz">Full Archive</a>';
     html += '<a class="download-btn" href="docs/bdsp_problem_formulation.pdf">Problem Formulation (PDF)</a>';
-    html += '<a class="download-btn" href="bdsp-validator/">Validator (Python)</a>';
+    html += '<a class="download-btn" href="https://github.com/TomManMaz/bdsp-validator">Validator (GitHub)</a>';
+    html += '<a class="download-btn" href="bdsp_validate.html">Validate online</a>';
     html += '</div>';
 
     // Nav between instances
