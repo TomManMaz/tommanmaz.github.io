@@ -15,6 +15,10 @@
   <link rel="icon" type="image/png" href="icon.png" />
   <link rel="apple-touch-icon" href="icon.png" />
   <link rel="stylesheet" href="stylesheet.css" />
+  <script>
+    MathJax = { tex: { inlineMath: [['\\(', '\\)']], displayMath: [['\\[', '\\]']] } };
+  </script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js" async></script>
   <style>
     main {
       max-width: 1300px;
@@ -149,10 +153,9 @@
     [data-theme="dark"] .leg-coverage-warn { color: #ffc107; }
 
     .obj-formula {
-      font-family: monospace;
-      font-size: 0.82rem;
+      font-size: 0.85rem;
       background: var(--bg-light);
-      padding: 0.4rem 0.7rem;
+      padding: 0.1rem 0.7rem 0.4rem;
       border-radius: 3px;
       margin-bottom: 0.75rem;
       border-left: 2px solid var(--border);
@@ -161,7 +164,7 @@
       display: block;
       margin-top: 0.2rem;
       color: var(--text-light);
-      font-size: 0.75rem;
+      font-size: 0.78rem;
     }
 
     .algo-table {
@@ -261,9 +264,8 @@
       </p>
       <p>
         <strong>Objective formula:</strong>
-        Obj<sub>e</sub> = 2&thinsp;&middot;&thinsp;W&prime; + T + ride + 30&thinsp;&middot;&thinsp;changes + 180&thinsp;&middot;&thinsp;splits,
-        where W&prime;&thinsp;=&thinsp;max(work_time,&thinsp;390).
-        Infeasible employees incur additional 1000&times; hard-constraint penalties.
+        \[ O_e = 2W' + T + \text{ride} + 30\cdot\text{changes} + 180\cdot\text{splits}, \quad W' = \max(\text{work\_time},\; 390) \]
+        Infeasible employees incur additional \(1000\times\) hard-constraint penalties.
       </p>
     </div>
 

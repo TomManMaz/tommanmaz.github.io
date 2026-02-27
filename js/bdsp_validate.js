@@ -572,8 +572,8 @@
 
     // Objective formula
     html += '<div class="obj-formula">';
-    html += 'Obj<sub>e</sub> = 2 &middot; W\u2032 + T + ride + 30 &middot; changes + 180 &middot; splits';
-    html += '<span class="formula-note">where W\u2032 = max(work_time, 390); infeasible employees additionally incur 1000&times; hard-constraint penalties</span>';
+    html += '\\[ O_e = 2W\' + T + \\text{ride} + 30\\cdot\\text{changes} + 180\\cdot\\text{splits}, \\quad W\' = \\max(\\text{work\\_time},\\; 390) \\]';
+    html += '<span class="formula-note">Infeasible employees additionally incur \\(1000\\times\\) hard-constraint penalties.</span>';
     html += '</div>';
 
     // Per-employee breakdown table
@@ -628,6 +628,9 @@
     }
 
     container.innerHTML = html;
+    if (window.MathJax && MathJax.typesetPromise) {
+      MathJax.typesetPromise([container]).catch(function (err) { console.error(err); });
+    }
     resultsSection.style.display = 'block';
     resultsSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
   }
