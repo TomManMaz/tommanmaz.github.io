@@ -628,11 +628,14 @@
     }
 
     container.innerHTML = html;
-    if (window.MathJax && MathJax.typesetPromise) {
-      MathJax.typesetPromise([container]).catch(function (err) { console.error(err); });
-    }
     resultsSection.style.display = 'block';
-    resultsSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    if (window.MathJax && MathJax.typesetPromise) {
+      MathJax.typesetPromise([container]).then(function () {
+        resultsSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }).catch(function (err) { console.error(err); });
+    } else {
+      resultsSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
   }
 
   // ---------------------------------------------------------------------------
