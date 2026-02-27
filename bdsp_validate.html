@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="description" content="Validate your BDSP solution online — client-side objective computation and per-employee breakdown." />
+  <meta name="author" content="Tommaso Mannelli Mazzoli" />
+
+  <!-- Security -->
+  <meta http-equiv="X-Content-Type-Options" content="nosniff" />
+  <meta http-equiv="X-Frame-Options" content="SAMEORIGIN" />
+  <meta name="referrer" content="no-referrer-when-downgrade" />
+
+  <title>Validate a BDSP Solution</title>
+  <link rel="icon" type="image/png" href="icon.png" />
+  <link rel="apple-touch-icon" href="icon.png" />
+  <link rel="stylesheet" href="stylesheet.css" />
+  <style>
+    main {
+      max-width: 1300px;
+    }
+
+    /* Info box */
+    .info-box {
+      background: var(--bg-light);
+      border-left: 3px solid var(--border);
+      padding: 0.75rem 1rem;
+      border-radius: 3px;
+      margin-bottom: 1.5rem;
+      font-size: 0.85rem;
+    }
+    .info-box p {
+      margin: 0.25rem 0;
+    }
+    .info-box code {
+      background: var(--border);
+      padding: 0.1rem 0.3rem;
+      border-radius: 2px;
+      font-size: 0.82rem;
+    }
+
+    /* Input section */
+    .validator-form {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+      margin-bottom: 2rem;
+    }
+    .form-row {
+      display: flex;
+      align-items: flex-start;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+    .form-field {
+      display: flex;
+      flex-direction: column;
+      gap: 0.3rem;
+    }
+    .form-field label {
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: var(--text);
+    }
+    .form-field select {
+      padding: 0.35rem 0.5rem;
+      border: 1px solid var(--border);
+      border-radius: 3px;
+      background: var(--bg);
+      color: var(--text);
+      font-size: 0.85rem;
+      min-width: 240px;
+    }
+    .form-field input[type="file"] {
+      font-size: 0.85rem;
+      color: var(--text);
+    }
+
+    /* Status messages */
+    .validator-status {
+      font-size: 0.82rem;
+      padding: 0.2rem 0;
+      min-height: 1.2em;
+    }
+    .status-ok { color: var(--success); }
+    .status-error { color: #dc3545; }
+    .status-loading { color: var(--text-light); font-style: italic; }
+
+    /* Validate button */
+    .validate-btn {
+      padding: 0.45rem 1.2rem;
+      background: var(--text);
+      color: var(--bg);
+      border: none;
+      border-radius: 3px;
+      font-size: 0.88rem;
+      font-weight: 600;
+      cursor: pointer;
+      align-self: flex-start;
+    }
+    .validate-btn:hover:not(:disabled) {
+      opacity: 0.85;
+    }
+    .validate-btn:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+
+    /* Results section */
+    #results-section {
+      margin-top: 1.5rem;
+    }
+
+    /* Reuse breakdown styles from bdsp_instance.html */
+    .breakdown-summary {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      flex-wrap: wrap;
+      margin-bottom: 0.5rem;
+      font-size: 0.85rem;
+    }
+    .status-badge {
+      display: inline-block;
+      padding: 0.1rem 0.5rem;
+      border-radius: 2px;
+      font-size: 0.75rem;
+      font-weight: 500;
+      text-transform: capitalize;
+    }
+    .badge-optimal {
+      background: var(--success-bg);
+      color: var(--success);
+    }
+    .badge-open {
+      background: #fff3cd;
+      color: #856404;
+    }
+    [data-theme="dark"] .badge-open {
+      background: #433500;
+      color: #ffc107;
+    }
+    .leg-coverage {
+      font-size: 0.82rem;
+      font-weight: 500;
+    }
+    .leg-coverage-ok { color: var(--success); }
+    .leg-coverage-warn { color: #856404; }
+    [data-theme="dark"] .leg-coverage-warn { color: #ffc107; }
+
+    .obj-formula {
+      font-family: monospace;
+      font-size: 0.82rem;
+      background: var(--bg-light);
+      padding: 0.4rem 0.7rem;
+      border-radius: 3px;
+      margin-bottom: 0.75rem;
+      border-left: 2px solid var(--border);
+    }
+    .obj-formula .formula-note {
+      display: block;
+      margin-top: 0.2rem;
+      color: var(--text-light);
+      font-size: 0.75rem;
+    }
+
+    .algo-table {
+      font-size: 0.8rem;
+      width: 100%;
+      border-collapse: collapse;
+    }
+    .algo-table th,
+    .algo-table td {
+      padding: 0.35rem 0.5rem;
+      border-bottom: 1px solid var(--border);
+      text-align: left;
+    }
+    .algo-table thead th {
+      background: var(--bg-light);
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.3px;
+      color: var(--text-light);
+    }
+    .algo-table td:nth-child(n+2) {
+      text-align: right;
+      font-family: monospace;
+      font-size: 0.78rem;
+    }
+    .breakdown-table .feasible-icon {
+      color: var(--success);
+      text-align: center;
+    }
+    .breakdown-table .infeasible-icon {
+      color: #dc3545;
+      text-align: center;
+      font-weight: bold;
+    }
+    .infeasible-row {
+      background: #fff3cd !important;
+    }
+    [data-theme="dark"] .infeasible-row {
+      background: #433500 !important;
+    }
+
+    .leg-coverage-detail {
+      margin-top: 0.75rem;
+      font-size: 0.8rem;
+      color: var(--text-light);
+    }
+    .leg-coverage-detail p {
+      margin: 0.25rem 0;
+    }
+  </style>
+</head>
+<body>
+  <a href="#main-content" class="skip-link">Skip to main content</a>
+
+  <header class="header">
+    <h1>Tommaso Mannelli Mazzoli</h1>
+    <p>TU Wien, Vienna, Austria</p>
+  </header>
+
+  <nav class="navbar" role="navigation" aria-label="Main navigation">
+    <a href="index.html">Home</a>
+    <a href="publications.html">Publications</a>
+    <a class="active" href="bdsp.html" aria-current="page">BDSP</a>
+    <a href="amm.html">AMM</a>
+    <a href="#" class="theme-toggle-link" id="theme-toggle" aria-label="Toggle dark mode">
+      <span id="theme-icon">&#127769;</span>
+    </a>
+  </nav>
+
+  <main id="main-content">
+    <a href="bdsp.html#best-known-solutions" class="back-link">&larr; Back to collection</a>
+
+    <h1>Validate a BDSP Solution</h1>
+
+    <div class="info-box">
+      <p>
+        Select an instance, upload your solution CSV, and click <strong>Validate</strong>.
+        Everything runs client-side — no data is sent to any server.
+      </p>
+      <p>
+        <strong>Solution CSV format:</strong> a binary matrix where row&nbsp;<em>i</em> represents employee&nbsp;<em>i</em>
+        and column&nbsp;<em>j</em> is&nbsp;<code>1</code> if leg&nbsp;<em>j</em> is assigned to that employee,
+        <code>0</code> otherwise. Legs are ordered by start time (matching the instance JSON).
+        All-zero rows are skipped. This is the same format produced by the
+        <a href="bdsp-validator/">Python validator</a>.
+      </p>
+      <p>
+        <strong>Objective formula:</strong>
+        Obj<sub>e</sub> = 2&thinsp;&middot;&thinsp;W&prime; + T + ride + 30&thinsp;&middot;&thinsp;changes + 180&thinsp;&middot;&thinsp;splits,
+        where W&prime;&thinsp;=&thinsp;max(work_time,&thinsp;390).
+        Infeasible employees incur additional 1000&times; hard-constraint penalties.
+      </p>
+    </div>
+
+    <h2>Input</h2>
+    <div class="validator-form">
+      <div class="form-row">
+        <div class="form-field">
+          <label for="instance-select">Instance</label>
+          <select id="instance-select">
+            <option value="">— select an instance —</option>
+          </select>
+          <span id="instance-status" class="validator-status"></span>
+        </div>
+
+        <div class="form-field">
+          <label for="solution-upload">Solution CSV</label>
+          <input type="file" id="solution-upload" accept=".csv" />
+          <span id="solution-status" class="validator-status"></span>
+        </div>
+      </div>
+
+      <button class="validate-btn" id="validate-btn">Validate</button>
+    </div>
+
+    <div id="results-section" style="display:none;">
+      <h2>Results</h2>
+      <div id="results-content"></div>
+    </div>
+  </main>
+
+  <script>
+    // Dark mode toggle
+    document.addEventListener('DOMContentLoaded', function () {
+      var themeToggle = document.getElementById('theme-toggle');
+      var themeIcon = document.getElementById('theme-icon');
+      var htmlElement = document.documentElement;
+      var savedTheme = localStorage.getItem('theme');
+      if (savedTheme) {
+        htmlElement.setAttribute('data-theme', savedTheme);
+        updateIcon(savedTheme);
+      }
+      themeToggle.addEventListener('click', function (e) {
+        e.preventDefault();
+        var currentTheme = htmlElement.getAttribute('data-theme');
+        var newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+        htmlElement.setAttribute('data-theme', newTheme);
+        localStorage.setItem('theme', newTheme);
+        updateIcon(newTheme);
+      });
+      function updateIcon(theme) {
+        themeIcon.textContent = theme === 'dark' ? '\u2600\uFE0F' : '\uD83C\uDF19';
+      }
+    });
+  </script>
+  <script src="data/instances.js"></script>
+  <script src="js/bdsp_validate.js"></script>
+</body>
+</html>
