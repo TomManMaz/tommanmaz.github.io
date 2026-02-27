@@ -11,6 +11,7 @@
   // ---------------------------------------------------------------------------
 
   var currentInstance = null; // parsed instance object
+  var currentBKS = null;      // BKS metadata from BDSP_INSTANCES
 
   // ---------------------------------------------------------------------------
   // Utility
@@ -96,7 +97,15 @@
 
     if (!name) {
       showStatus('instance-status', '', '');
+      currentBKS = null;
       return;
+    }
+
+    // Look up metadata from the pre-loaded collection
+    var data = window.BDSP_INSTANCES || [];
+    currentBKS = null;
+    for (var i = 0; i < data.length; i++) {
+      if (data[i].name === name) { currentBKS = data[i]; break; }
     }
 
     showStatus('instance-status', 'Loading instance\u2026', 'status-loading');
@@ -110,12 +119,13 @@
       .then(function (json) {
         try {
           currentInstance = parseInstance(json, name);
-          showStatus(
-            'instance-status',
-            'Loaded: ' + currentInstance.legs.length + ' legs, ' +
-              currentInstance.numTours + ' tours',
-            'status-ok'
-          );
+          var statusMsg = 'Loaded: ' + currentInstance.legs.length + ' legs, ' +
+            currentInstance.numTours + ' tours';
+          if (currentBKS && currentBKS.bks != null) {
+            statusMsg += ' \u2014 BKS: ' + currentBKS.bks.toLocaleString('en-US');
+            if (currentBKS.status === 'optimal') statusMsg += ' (optimal)';
+          }
+          showStatus('instance-status', statusMsg, 'status-ok');
         } catch (e) {
           showStatus('instance-status', 'Parse error: ' + e.message, 'status-error');
           currentInstance = null;
@@ -531,6 +541,21 @@
     var feasClass = allFeasible ? 'badge-optimal' : 'badge-open';
     var feasText = allFeasible ? 'Feasible' : 'Infeasible';
     html += '<span class="status-badge ' + feasClass + '">' + feasText + '</span>';
+
+    // BKS comparison
+    if (currentBKS && currentBKS.bks != null && allFeasible) {
+      var bksVal = currentBKS.bks;
+      var gap = (totalObjective - bksVal) / bksVal * 100;
+      if (totalObjective < bksVal) {
+        html += '<span class="bks-ref bks-new-best">\u2605 New best! Gap to BKS (' +
+          formatNum(bksVal) + '): ' + gap.toFixed(2) + '%</span>';
+      } else {
+        html += '<span class="bks-ref">Gap to BKS (' + formatNum(bksVal) + '): ' +
+          (gap >= 0 ? '+' : '') + gap.toFixed(2) + '%</span>';
+      }
+    } else if (currentBKS && currentBKS.bks != null) {
+      html += '<span class="bks-ref">BKS: ' + formatNum(currentBKS.bks) + '</span>';
+    }
 
     // Leg coverage
     if (legCheck.unassigned.length === 0 && legCheck.duplicates.length === 0) {
