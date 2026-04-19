@@ -645,10 +645,12 @@
   function onValidate() {
     var fileInput = document.getElementById('solution-upload');
     var validateBtn = document.getElementById('validate-btn');
-    var solutionStatus = document.getElementById('solution-status');
+
+    // Clear previous validation status
+    showStatus('validate-status', '', '');
 
     if (!currentInstance) {
-      showStatus('solution-status', 'Please select and load an instance first.', 'status-error');
+      showStatus('validate-status', 'Please select and load an instance first.', 'status-error');
       return;
     }
 
@@ -659,32 +661,36 @@
     }
 
     validateBtn.disabled = true;
-    showStatus('solution-status', 'Validating\u2026', 'status-loading');
+    showStatus('validate-status', 'Validating\u2026', 'status-loading');
     document.getElementById('results-section').style.display = 'none';
 
-    var reader = new FileReader();
-    reader.onload = function (e) {
-      try {
-        var employees = parseSolution(e.target.result, currentInstance);
-        if (!employees.length) {
-          showStatus('solution-status', 'No employees found in CSV (all rows were empty).', 'status-error');
-          validateBtn.disabled = false;
-          return;
+    // Yield to the browser so the loading text actually paints before
+    // the (synchronous) evaluation kicks in.
+    setTimeout(function () {
+      var reader = new FileReader();
+      reader.onload = function (e) {
+        try {
+          var employees = parseSolution(e.target.result, currentInstance);
+          if (!employees.length) {
+            showStatus('validate-status', 'No employees found in CSV (all rows were empty).', 'status-error');
+            validateBtn.disabled = false;
+            return;
+          }
+          var legCheck = validateLegs(currentInstance, employees);
+          renderResults(currentInstance, employees, legCheck);
+          showStatus('validate-status', 'Validation complete \u2014 ' + employees.length + ' employee(s).', 'status-ok');
+        } catch (err) {
+          showStatus('validate-status', 'Error: ' + err.message, 'status-error');
+          document.getElementById('results-section').style.display = 'none';
         }
-        var legCheck = validateLegs(currentInstance, employees);
-        renderResults(currentInstance, employees, legCheck);
-        showStatus('solution-status', 'Validation complete — ' + employees.length + ' employee(s).', 'status-ok');
-      } catch (err) {
-        showStatus('solution-status', 'Error: ' + err.message, 'status-error');
-        document.getElementById('results-section').style.display = 'none';
-      }
-      validateBtn.disabled = false;
-    };
-    reader.onerror = function () {
-      showStatus('solution-status', 'Failed to read file.', 'status-error');
-      validateBtn.disabled = false;
-    };
-    reader.readAsText(file);
+        validateBtn.disabled = false;
+      };
+      reader.onerror = function () {
+        showStatus('validate-status', 'Failed to read file.', 'status-error');
+        validateBtn.disabled = false;
+      };
+      reader.readAsText(file);
+    }, 0);
   }
 
   // ---------------------------------------------------------------------------

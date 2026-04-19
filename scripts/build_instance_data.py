@@ -42,9 +42,9 @@ from data.solution import Solution as ValidatorSolution
 REPO_ROOT = Path(__file__).resolve().parent.parent
 INSTANCE_JSON_DIR = Path.home() / "busdriverschedulingproblem" / "files" / "instances" / "json"
 RESULTS_DIR = Path.home() / "laboratorio" / "bdsp" / "data" / "jair" / "final_FINAL"
-BKS_CSV_1 = REPO_ROOT / "BKS_realistic_1.csv"
-BKS_CSV_2 = REPO_ROOT / "BKS_realistic_2.csv"
-PATAT_CSV = REPO_ROOT / "metadata_paper.csv"
+BKS_CSV_1 = REPO_ROOT / "scripts" / "data" / "BKS_realistic_1.csv"
+BKS_CSV_2 = REPO_ROOT / "scripts" / "data" / "BKS_realistic_2.csv"
+PATAT_CSV = REPO_ROOT / "scripts" / "data" / "metadata_paper.csv"
 SOLUTIONS_DIR = REPO_ROOT / "sols"
 DOWNLOADS_INSTANCES_DIR = REPO_ROOT / "downloads" / "instances"
 OUTPUT_FILE = REPO_ROOT / "data" / "instances.json"

@@ -6,7 +6,6 @@
   <meta name="description" content="Validate your BDSP solution online — client-side objective computation and per-employee breakdown." />
   <meta name="author" content="Tommaso Mannelli Mazzoli" />
 
-  <!-- Security -->
   <meta http-equiv="X-Content-Type-Options" content="nosniff" />
   <meta http-equiv="X-Frame-Options" content="SAMEORIGIN" />
   <meta name="referrer" content="no-referrer-when-downgrade" />
@@ -15,218 +14,8 @@
   <link rel="icon" type="image/png" href="icon.png" />
   <link rel="apple-touch-icon" href="icon.png" />
   <link rel="stylesheet" href="stylesheet.css" />
-  <script>
-    MathJax = { tex: { inlineMath: [['\\(', '\\)']], displayMath: [['\\[', '\\]']] } };
-  </script>
-  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js" async></script>
-  <style>
-    main {
-      max-width: 1300px;
-    }
-
-    /* Info box */
-    .info-box {
-      background: var(--bg-light);
-      border-left: 3px solid var(--border);
-      padding: 0.75rem 1rem;
-      border-radius: 3px;
-      margin-bottom: 1.5rem;
-      font-size: 0.85rem;
-    }
-    .info-box p {
-      margin: 0.25rem 0;
-    }
-    .info-box code {
-      background: var(--border);
-      padding: 0.1rem 0.3rem;
-      border-radius: 2px;
-      font-size: 0.82rem;
-    }
-
-    /* Input section */
-    .validator-form {
-      display: flex;
-      flex-direction: column;
-      gap: 1rem;
-      margin-bottom: 2rem;
-    }
-    .form-row {
-      display: flex;
-      align-items: flex-start;
-      gap: 1rem;
-      flex-wrap: wrap;
-    }
-    .form-field {
-      display: flex;
-      flex-direction: column;
-      gap: 0.3rem;
-    }
-    .form-field label {
-      font-size: 0.85rem;
-      font-weight: 600;
-      color: var(--text);
-    }
-    .form-field select {
-      padding: 0.35rem 0.5rem;
-      border: 1px solid var(--border);
-      border-radius: 3px;
-      background: var(--bg);
-      color: var(--text);
-      font-size: 0.85rem;
-      min-width: 240px;
-    }
-    .form-field input[type="file"] {
-      font-size: 0.85rem;
-      color: var(--text);
-    }
-
-    /* Status messages */
-    .validator-status {
-      font-size: 0.82rem;
-      padding: 0.2rem 0;
-      min-height: 1.2em;
-    }
-    .status-ok { color: var(--success); }
-    .status-error { color: #dc3545; }
-    .status-loading { color: var(--text-light); font-style: italic; }
-
-    /* Validate button */
-    .validate-btn {
-      padding: 0.45rem 1.2rem;
-      background: var(--accent);
-      color: #fff;
-      border: none;
-      border-radius: 3px;
-      font-size: 0.88rem;
-      font-weight: 600;
-      cursor: pointer;
-      align-self: flex-start;
-    }
-    .validate-btn:hover:not(:disabled) {
-      opacity: 0.85;
-    }
-    .validate-btn:disabled {
-      opacity: 0.5;
-      cursor: not-allowed;
-    }
-
-    /* Results section */
-    #results-section {
-      margin-top: 1.5rem;
-    }
-
-    /* Reuse breakdown styles from bdsp_instance.html */
-    .breakdown-summary {
-      display: flex;
-      align-items: center;
-      gap: 1rem;
-      flex-wrap: wrap;
-      margin-bottom: 0.5rem;
-      font-size: 0.85rem;
-    }
-    .status-badge {
-      display: inline-block;
-      padding: 0.1rem 0.5rem;
-      border-radius: 2px;
-      font-size: 0.75rem;
-      font-weight: 500;
-      text-transform: capitalize;
-    }
-    .badge-optimal {
-      background: var(--success-bg);
-      color: var(--success);
-    }
-    .badge-open {
-      background: #fff3cd;
-      color: #856404;
-    }
-    [data-theme="dark"] .badge-open {
-      background: #433500;
-      color: #ffc107;
-    }
-    .leg-coverage {
-      font-size: 0.82rem;
-      font-weight: 500;
-    }
-    .leg-coverage-ok { color: var(--success); }
-    .leg-coverage-warn { color: #856404; }
-    [data-theme="dark"] .leg-coverage-warn { color: #ffc107; }
-
-    .obj-formula {
-      font-size: 0.85rem;
-      background: var(--bg-light);
-      padding: 0.1rem 0.7rem 0.4rem;
-      border-radius: 3px;
-      margin-bottom: 0.75rem;
-      border-left: 2px solid var(--border);
-    }
-    .obj-formula .formula-note {
-      display: block;
-      margin-top: 0.2rem;
-      color: var(--text-light);
-      font-size: 0.78rem;
-    }
-
-    .algo-table {
-      font-size: 0.8rem;
-      width: 100%;
-      border-collapse: collapse;
-    }
-    .algo-table th,
-    .algo-table td {
-      padding: 0.35rem 0.5rem;
-      border-bottom: 1px solid var(--border);
-      text-align: left;
-    }
-    .algo-table thead th {
-      background: var(--bg-light);
-      font-size: 0.75rem;
-      text-transform: uppercase;
-      letter-spacing: 0.3px;
-      color: var(--text-light);
-    }
-    .algo-table td:nth-child(n+2),
-    .algo-table th:nth-child(n+2) {
-      text-align: right;
-    }
-    .algo-table td:nth-child(n+2) {
-      font-family: monospace;
-      font-size: 0.78rem;
-    }
-    .breakdown-table .feasible-icon {
-      color: var(--success);
-      text-align: center;
-    }
-    .breakdown-table .infeasible-icon {
-      color: #dc3545;
-      text-align: center;
-      font-weight: bold;
-    }
-    .infeasible-row {
-      background: #fff3cd !important;
-    }
-    [data-theme="dark"] .infeasible-row {
-      background: #433500 !important;
-    }
-
-    .bks-ref {
-      font-size: 0.82rem;
-      font-weight: 500;
-      color: var(--text-light);
-    }
-    .bks-new-best {
-      color: var(--success);
-    }
-
-    .leg-coverage-detail {
-      margin-top: 0.75rem;
-      font-size: 0.8rem;
-      color: var(--text-light);
-    }
-    .leg-coverage-detail p {
-      margin: 0.25rem 0;
-    }
-  </style>
+  <script defer id="MathJax-script" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+  <script defer src="js/theme-toggle.js"></script>
 </head>
 <body>
   <a href="#main-content" class="skip-link">Skip to main content</a>
@@ -246,7 +35,7 @@
     </a>
   </nav>
 
-  <main id="main-content">
+  <main id="main-content" class="wide">
     <a href="bdsp.html#best-known-solutions" class="back-link">&larr; Back to collection</a>
 
     <h1>Validate a BDSP Solution</h1>
@@ -254,7 +43,7 @@
     <div class="info-box">
       <p>
         Select an instance, upload your solution CSV, and click <strong>Validate</strong>.
-        Everything runs client-side — no data is sent to any server.
+        Everything runs client-side &mdash; no data is sent to any server.
       </p>
       <p>
         <strong>Solution file format</strong> (<code>.csv</code> or <code>.sol</code>): a binary matrix where row&nbsp;<em>i</em> represents employee&nbsp;<em>i</em>
@@ -275,7 +64,7 @@
         <div class="form-field">
           <label for="instance-select">Instance</label>
           <select id="instance-select">
-            <option value="">— select an instance —</option>
+            <option value="">&mdash; select an instance &mdash;</option>
           </select>
           <span id="instance-status" class="validator-status"></span>
         </div>
@@ -288,6 +77,7 @@
       </div>
 
       <button class="validate-btn" id="validate-btn">Validate</button>
+      <span id="validate-status" class="validator-status"></span>
     </div>
 
     <div id="results-section" style="display:none;">
@@ -296,30 +86,14 @@
     </div>
   </main>
 
-  <script>
-    // Dark mode toggle
-    document.addEventListener('DOMContentLoaded', function () {
-      var themeToggle = document.getElementById('theme-toggle');
-      var themeIcon = document.getElementById('theme-icon');
-      var htmlElement = document.documentElement;
-      var savedTheme = localStorage.getItem('theme');
-      if (savedTheme) {
-        htmlElement.setAttribute('data-theme', savedTheme);
-        updateIcon(savedTheme);
-      }
-      themeToggle.addEventListener('click', function (e) {
-        e.preventDefault();
-        var currentTheme = htmlElement.getAttribute('data-theme');
-        var newTheme = currentTheme === 'dark' ? 'light' : 'dark';
-        htmlElement.setAttribute('data-theme', newTheme);
-        localStorage.setItem('theme', newTheme);
-        updateIcon(newTheme);
-      });
-      function updateIcon(theme) {
-        themeIcon.textContent = theme === 'dark' ? '\u2600\uFE0F' : '\uD83C\uDF19';
-      }
-    });
-  </script>
+  <footer class="site-footer">
+    <p>
+      <a href="mailto:tommaso.mazzoli@tuwien.ac.at">tommaso.mazzoli@tuwien.ac.at</a>
+      <span class="sep">&middot;</span>
+      <a href="https://github.com/TomManMaz/tommanmaz.github.io" target="_blank" rel="noopener">Source on GitHub</a>
+    </p>
+  </footer>
+
   <script src="data/instances.js"></script>
   <script src="js/bdsp_validate.js"></script>
 </body>

@@ -1,0 +1,19 @@
+# OS / editor
+.DS_Store
+Thumbs.db
+*~
+.~lock.*
+
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+venv/
+
+# LaTeX build artifacts (CV)
+docs/cv-build/*.aux
+docs/cv-build/*.log
+docs/cv-build/*.out
+docs/cv-build/*.toc
+docs/cv-build/*.synctex.gz

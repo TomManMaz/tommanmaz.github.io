@@ -9,10 +9,11 @@
 
   var allInstances = [];
 
-  // Per-table state keyed by table id
+  // Per-table state keyed by table id. `filtered` holds the
+  // most recent filtered+sorted view, used by CSV export.
   var tableState = {
-    realistic: { sortColumn: 'id', sortAscending: true, search: '', status: 'all' },
-    patat:     { sortColumn: 'id', sortAscending: true, search: '', source: 'all' }
+    realistic: { sortColumn: 'id', sortAscending: true, search: '', status: 'all', filtered: [] },
+    patat:     { sortColumn: 'id', sortAscending: true, search: '', source: 'all', filtered: [] }
   };
 
   // ---------------------------------------------------------------------------
@@ -94,7 +95,7 @@
 
   function formatGap(val) {
     if (val == null) return '\u2014';
-    return val.toFixed(2);
+    return val.toFixed(1);
   }
 
   function formatBound(val) {
@@ -155,6 +156,7 @@
     });
 
     var sorted = sortInstances(filtered, state);
+    state.filtered = sorted;
 
     var html = '';
 
@@ -189,11 +191,11 @@
     html += '<table class="collection-table">';
     html += '<thead><tr>';
     columns.forEach(function (col) {
-      var arrow = '';
+      var sortCls = '';
       if (state.sortColumn === col.key) {
-        arrow = state.sortAscending ? ' \u25B2' : ' \u25BC';
+        sortCls = state.sortAscending ? ' sort-asc' : ' sort-desc';
       }
-      html += '<th class="sortable" data-table="realistic" data-sort="' + col.key + '">' + col.label + arrow + '</th>';
+      html += '<th class="sortable' + sortCls + '" data-table="realistic" data-sort="' + col.key + '">' + col.label + '</th>';
     });
     html += '</tr></thead><tbody>';
 
@@ -216,7 +218,7 @@
       html += '<td class="num">' + formatBound(inst.lower_bound) + '</td>';
 
       if (inst.gap_pct != null && inst.gap_pct === 0) {
-        html += '<td class="num"><span class="gap-optimal">0.00</span></td>';
+        html += '<td class="num"><span class="gap-optimal">' + formatGap(0) + '</span></td>';
       } else {
         html += '<td class="num">' + formatGap(inst.gap_pct) + '</td>';
       }
@@ -246,6 +248,7 @@
     });
 
     var sorted = sortInstances(filtered, state);
+    state.filtered = sorted;
 
     var html = '';
 
@@ -287,11 +290,11 @@
     html += '<table class="collection-table">';
     html += '<thead><tr>';
     columns.forEach(function (col) {
-      var arrow = '';
+      var sortCls = '';
       if (state.sortColumn === col.key) {
-        arrow = state.sortAscending ? ' \u25B2' : ' \u25BC';
+        sortCls = state.sortAscending ? ' sort-asc' : ' sort-desc';
       }
-      html += '<th class="sortable" data-table="patat" data-sort="' + col.key + '">' + col.label + arrow + '</th>';
+      html += '<th class="sortable' + sortCls + '" data-table="patat" data-sort="' + col.key + '">' + col.label + '</th>';
     });
     html += '</tr></thead><tbody>';
 
@@ -376,7 +379,9 @@
 
   window.exportCollectionCSV = function () {
     var rows = [['Instance', 'Source', 'Status', 'Size', 'Tours', 'Legs', 'BKS', 'Lower Bound', 'Gap (%)', 'Best Algorithm']];
-    allInstances.forEach(function (inst) {
+    var visible = (tableState.realistic.filtered || []).concat(tableState.patat.filtered || []);
+    if (!visible.length) visible = allInstances; // fallback before first render
+    visible.forEach(function (inst) {
       rows.push([
         inst.name,
         inst.source || '',

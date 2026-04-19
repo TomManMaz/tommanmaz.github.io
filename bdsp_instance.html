@@ -3,238 +3,19 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <meta name="description" content="BDSP instance details - algorithm comparison and features" />
+  <meta name="description" content="BDSP instance details — algorithm comparison, solution breakdown, and 42 instance features." />
   <meta name="author" content="Tommaso Mannelli Mazzoli" />
 
-  <!-- Security -->
   <meta http-equiv="X-Content-Type-Options" content="nosniff" />
   <meta http-equiv="X-Frame-Options" content="SAMEORIGIN" />
   <meta name="referrer" content="no-referrer-when-downgrade" />
 
-  <title id="page-title">Instance Details - BDSP</title>
+  <title id="page-title">Instance Details — BDSP</title>
   <link rel="icon" type="image/png" href="icon.png" />
   <link rel="apple-touch-icon" href="icon.png" />
   <link rel="stylesheet" href="stylesheet.css" />
-  <style>
-    /* Wider layout for instance detail page */
-    main {
-      max-width: 1300px;
-    }
-
-    /* Instance detail page styles */
-    .instance-header {
-      display: flex;
-      align-items: center;
-      gap: 0.75rem;
-      flex-wrap: wrap;
-      margin-bottom: 1rem;
-    }
-    .instance-header h1 {
-      margin: 0;
-      font-size: 1.4rem;
-    }
-    .status-badge {
-      display: inline-block;
-      padding: 0.1rem 0.5rem;
-      border-radius: 2px;
-      font-size: 0.75rem;
-      font-weight: 500;
-      text-transform: capitalize;
-    }
-    .badge-optimal {
-      background: var(--success-bg);
-      color: var(--success);
-    }
-    .badge-open {
-      background: #fff3cd;
-      color: #856404;
-    }
-    [data-theme="dark"] .badge-open {
-      background: #433500;
-      color: #ffc107;
-    }
-    .back-link {
-      display: inline-block;
-      margin-bottom: 0.75rem;
-      font-size: 0.85rem;
-    }
-    .summary-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
-      gap: 0.6rem;
-      margin: 1rem 0;
-    }
-    .summary-card {
-      background: var(--bg-light);
-      padding: 0.6rem 0.8rem;
-      border-radius: 3px;
-      border-left: 2px solid var(--border);
-    }
-    .summary-card .label {
-      font-size: 0.7rem;
-      color: var(--text-light);
-      text-transform: uppercase;
-      letter-spacing: 0.3px;
-      margin-bottom: 0.15rem;
-    }
-    .summary-card .value {
-      font-size: 1.05rem;
-      font-weight: 600;
-      font-family: monospace;
-      color: var(--text);
-    }
-    .summary-card .value.optimal {
-      color: var(--success);
-    }
-
-    /* Algorithm table */
-    .algo-table {
-      font-size: 0.8rem;
-    }
-    .algo-table th,
-    .algo-table td {
-      padding: 0.35rem 0.5rem;
-    }
-    .algo-table td:nth-child(n+2) {
-      text-align: right;
-      font-family: monospace;
-      font-size: 0.78rem;
-    }
-    .algo-table tr.best-row {
-      background: var(--success-bg) !important;
-    }
-    .algo-table tr.best-row td {
-      color: #155724;
-    }
-    [data-theme="dark"] .algo-table tr.best-row td {
-      color: #4ade80;
-    }
-    .algo-section-label {
-      font-size: 0.7rem;
-      color: var(--text-light);
-      text-transform: uppercase;
-      letter-spacing: 0.3px;
-      padding: 0.4rem 0.5rem;
-      background: var(--bg-light);
-      border-bottom: 1px solid var(--border);
-      font-weight: 600;
-    }
-
-    /* Solution breakdown */
-    .breakdown-summary {
-      display: flex;
-      align-items: center;
-      gap: 1rem;
-      flex-wrap: wrap;
-      margin-bottom: 0.5rem;
-      font-size: 0.85rem;
-    }
-    .obj-formula {
-      font-family: monospace;
-      font-size: 0.82rem;
-      background: var(--bg-light);
-      padding: 0.4rem 0.7rem;
-      border-radius: 3px;
-      margin-bottom: 0.75rem;
-      border-left: 2px solid var(--border);
-    }
-    .obj-formula .formula-note {
-      margin-left: 1rem;
-      color: var(--text-light);
-      font-size: 0.75rem;
-    }
-    .breakdown-table .feasible-icon {
-      color: var(--success);
-      text-align: center;
-    }
-    .breakdown-table .infeasible-icon {
-      color: #dc3545;
-      text-align: center;
-      font-weight: bold;
-    }
-    .infeasible-row {
-      background: #fff3cd !important;
-    }
-    [data-theme="dark"] .infeasible-row {
-      background: #433500 !important;
-    }
-
-    /* Features */
-    .features-toggle {
-      cursor: pointer;
-      user-select: none;
-      color: var(--text-light);
-      font-weight: 500;
-      font-size: 0.95rem;
-    }
-    .features-toggle:hover {
-      text-decoration: underline;
-    }
-    .features-group {
-      margin-bottom: 1rem;
-    }
-    .features-group h4 {
-      margin: 0.75rem 0 0.35rem 0;
-      color: var(--text);
-      font-size: 0.9rem;
-    }
-    .features-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-      gap: 0.35rem;
-    }
-    .feature-item {
-      display: flex;
-      justify-content: space-between;
-      padding: 0.25rem 0.4rem;
-      background: var(--bg-light);
-      border-radius: 2px;
-      font-size: 0.78rem;
-    }
-    .feature-item .fname {
-      color: var(--text-light);
-    }
-    .feature-item .fval {
-      font-family: monospace;
-      font-weight: 500;
-    }
-
-    /* Downloads */
-    .download-links {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 0.4rem;
-      margin: 0.75rem 0;
-    }
-    .download-btn {
-      display: inline-block;
-      padding: 0.35rem 0.75rem;
-      background: var(--bg-light);
-      color: var(--text);
-      border: 1px solid var(--border);
-      border-radius: 3px;
-      text-decoration: none;
-      font-size: 0.8rem;
-      font-weight: 500;
-    }
-    .download-btn:hover {
-      background: var(--border);
-      text-decoration: none;
-      color: var(--text);
-    }
-
-    /* Nav between instances */
-    .instance-nav {
-      display: flex;
-      justify-content: space-between;
-      margin-top: 1.5rem;
-      padding-top: 0.75rem;
-      border-top: 1px solid var(--border);
-    }
-    .instance-nav a {
-      font-size: 0.85rem;
-    }
-  </style>
+  <script defer id="MathJax-script" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+  <script defer src="js/theme-toggle.js"></script>
 </head>
 <body>
   <a href="#main-content" class="skip-link">Skip to main content</a>
@@ -254,37 +35,21 @@
     </a>
   </nav>
 
-  <main id="main-content">
+  <main id="main-content" class="wide">
     <a href="bdsp.html#best-known-solutions" class="back-link">&larr; Back to collection</a>
     <div id="instance-content">
-      <p>Loading instance data...</p>
+      <p>Loading instance data&hellip;</p>
     </div>
   </main>
 
-  <script>
-    // Dark mode toggle
-    document.addEventListener('DOMContentLoaded', function() {
-      const themeToggle = document.getElementById('theme-toggle');
-      const themeIcon = document.getElementById('theme-icon');
-      const htmlElement = document.documentElement;
-      const savedTheme = localStorage.getItem('theme');
-      if (savedTheme) {
-        htmlElement.setAttribute('data-theme', savedTheme);
-        updateIcon(savedTheme);
-      }
-      themeToggle.addEventListener('click', function(e) {
-        e.preventDefault();
-        const currentTheme = htmlElement.getAttribute('data-theme');
-        const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
-        htmlElement.setAttribute('data-theme', newTheme);
-        localStorage.setItem('theme', newTheme);
-        updateIcon(newTheme);
-      });
-      function updateIcon(theme) {
-        themeIcon.textContent = theme === 'dark' ? '\u2600\uFE0F' : '\uD83C\uDF19';
-      }
-    });
-  </script>
+  <footer class="site-footer">
+    <p>
+      <a href="mailto:tommaso.mazzoli@tuwien.ac.at">tommaso.mazzoli@tuwien.ac.at</a>
+      <span class="sep">&middot;</span>
+      <a href="https://github.com/TomManMaz/tommanmaz.github.io" target="_blank" rel="noopener">Source on GitHub</a>
+    </p>
+  </footer>
+
   <script src="data/instances.js"></script>
   <script src="js/bdsp_instance.js"></script>
 </body>

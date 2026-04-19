@@ -102,8 +102,11 @@
     html += renderFeatures(inst.features || {});
     html += '</div>';
 
-    // Downloads
+    // Downloads — split visually into Files and Tools
     html += '<h2>Downloads</h2>';
+
+    html += '<div class="download-section">';
+    html += '<div class="download-section-label">Files</div>';
     html += '<div class="download-links">';
     html += '<a class="download-btn" href="downloads/instances/' + encodeURIComponent(inst.name) + '.json" download>Instance JSON</a>';
     if (inst.source === 'realistic') {
@@ -111,8 +114,15 @@
     }
     html += '<a class="download-btn" href="downloads/collection.tar.gz">Full Archive</a>';
     html += '<a class="download-btn" href="docs/bdsp_problem_formulation.pdf">Problem Formulation (PDF)</a>';
+    html += '</div>';
+    html += '</div>';
+
+    html += '<div class="download-section">';
+    html += '<div class="download-section-label">Tools</div>';
+    html += '<div class="download-links">';
     html += '<a class="download-btn" href="https://github.com/TomManMaz/bdsp-validator">Validator (GitHub)</a>';
-    html += '<a class="download-btn" href="bdsp_validate.html">Validate online</a>';
+    html += '<a class="download-btn" href="bdsp_validate.html?instance=' + encodeURIComponent(inst.name) + '">Validate online</a>';
+    html += '</div>';
     html += '</div>';
 
     // Nav between instances
@@ -138,22 +148,18 @@
   // ---------------------------------------------------------------------------
 
   function renderAlgorithmTable(inst) {
-    var html = '';
-    html += '<div style="overflow-x:auto;">';
-    html += '<table class="algo-table">';
-    html += '<thead><tr>';
-    html += '<th>Algorithm</th><th>Best</th><th>Mean</th><th>Std</th><th>Median</th><th>Worst</th><th>Runs</th><th>Best Time (s)</th><th>Gap to BKS (%)</th>';
-    html += '</tr></thead><tbody>';
-
     var bks = inst.bks;
+    var html = '';
 
     // New algorithms (from JAIR experiments)
-    var algoKeys = Object.keys(inst.algorithms || {});
-    // Sort alphabetically
-    algoKeys.sort();
-
+    var algoKeys = Object.keys(inst.algorithms || {}).sort();
     if (algoKeys.length > 0) {
-      html += '<tr><td colspan="9" class="algo-section-label">LNS Variants (JAIR 2025)</td></tr>';
+      html += '<div style="overflow-x:auto;">';
+      html += '<table class="algo-table">';
+      html += '<caption>LNS Variants (JAIR 2025)</caption>';
+      html += '<thead><tr>';
+      html += '<th>Algorithm</th><th>Best</th><th>Mean</th><th>Std</th><th>Median</th><th>Worst</th><th>Runs</th><th>Best Time (s)</th><th>Gap to BKS (%)</th>';
+      html += '</tr></thead><tbody>';
       algoKeys.forEach(function (key) {
         var a = inst.algorithms[key];
         var isBest = bks != null && a.best_value === bks;
@@ -171,6 +177,7 @@
         html += '<td>' + (gap != null ? formatNum(gap, 2) : '\u2014') + '</td>';
         html += '</tr>';
       });
+      html += '</tbody></table></div>';
     }
 
     // Old algorithms (BKS tables + PATAT)
@@ -178,7 +185,12 @@
     var oldKeys = Object.keys(oldAlgos);
     if (oldKeys.length > 0) {
       var oldLabel = inst.source === 'realistic' ? 'Previous Algorithms' : 'PATAT 2024 Results';
-      html += '<tr><td colspan="9" class="algo-section-label">' + oldLabel + '</td></tr>';
+      html += '<div style="overflow-x:auto;">';
+      html += '<table class="algo-table">';
+      html += '<caption>' + oldLabel + '</caption>';
+      html += '<thead><tr>';
+      html += '<th>Algorithm</th><th>Best</th><th>Gap to BKS (%)</th>';
+      html += '</tr></thead><tbody>';
       oldKeys.forEach(function (key) {
         var val = oldAlgos[key];
         var isBest = bks != null && val === bks;
@@ -187,14 +199,15 @@
         html += '<tr' + rowClass + '>';
         html += '<td>' + escapeHtml(key) + '</td>';
         html += '<td>' + formatNum(val) + '</td>';
-        html += '<td colspan="5">\u2014</td>';
-        html += '<td>\u2014</td>';
         html += '<td>' + (gap != null ? formatNum(gap, 2) : '\u2014') + '</td>';
         html += '</tr>';
       });
+      html += '</tbody></table></div>';
     }
 
-    html += '</tbody></table></div>';
+    if (!html) {
+      html = '<p>No algorithm results available for this instance.</p>';
+    }
     return html;
   }
 
