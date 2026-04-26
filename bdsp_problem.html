@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="description" content="Formal definition of the Bus Driver Scheduling Problem: input, solution structure, objective function, constraints, terminology, and instance file format." />
+  <meta name="keywords" content="BDSP, bus driver scheduling, problem definition, constraints, formulation" />
+  <meta name="author" content="Tommaso Mannelli Mazzoli" />
+
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://tommanmaz.github.io/bdsp_problem.html" />
+  <meta property="og:title" content="BDSP Problem Reference &mdash; Tommaso Mannelli Mazzoli" />
+  <meta property="og:description" content="Formal definition of the Bus Driver Scheduling Problem." />
+  <meta property="og:image" content="https://tommanmaz.github.io/icon.png" />
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="BDSP Problem Reference &mdash; Tommaso Mannelli Mazzoli" />
+  <meta name="twitter:description" content="Formal definition of the Bus Driver Scheduling Problem." />
+  <meta name="twitter:image" content="https://tommanmaz.github.io/icon.png" />
+
+  <meta http-equiv="X-Content-Type-Options" content="nosniff" />
+  <meta http-equiv="X-Frame-Options" content="SAMEORIGIN" />
+  <meta name="referrer" content="no-referrer-when-downgrade" />
+
+  <title>BDSP Problem Reference &mdash; Tommaso Mannelli Mazzoli</title>
+  <link rel="icon" type="image/png" href="icon.png" />
+  <link rel="apple-touch-icon" href="icon.png" />
+  <link rel="stylesheet" href="stylesheet.css" />
+  <script defer id="MathJax-script" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+  <script defer src="js/theme-toggle.js"></script>
+</head>
+<body>
+  <a href="#main-content" class="skip-link">Skip to main content</a>
+
+  <header class="header">
+    <h1>Tommaso Mannelli Mazzoli</h1>
+    <p>TU Wien, Vienna, Austria</p>
+  </header>
+
+  <nav class="navbar" role="navigation" aria-label="Main navigation">
+    <a href="index.html">Home</a>
+    <a href="publications.html">Publications</a>
+    <a class="active" href="bdsp.html" aria-current="page">BDSP</a>
+    <a href="amm.html">AMM</a>
+    <a href="#" class="theme-toggle-link" id="theme-toggle" aria-label="Toggle dark mode">
+      <span id="theme-icon">&#127769;</span>
+    </a>
+  </nav>
+
+  <main id="main-content">
+    <a href="bdsp.html" class="back-link">&larr; BDSP overview</a>
+    <h1>Problem Reference</h1>
+
+    <div class="toc">
+      <h3>Contents</h3>
+      <ul>
+        <li><a href="#problem-definition">Problem Definition</a></li>
+        <li><a href="#objective">Objective Function</a></li>
+        <li><a href="#constraints">Key Constraints</a></li>
+        <li><a href="#terminology">Terminology</a></li>
+        <li><a href="#naming">Instance Naming Convention</a></li>
+        <li><a href="#structure">Instance Structure</a></li>
+        <li><a href="#references">References</a></li>
+      </ul>
+    </div>
+
+    <h2 id="problem-definition">Problem Definition</h2>
+    <p>
+      The Bus Driver Scheduling Problem (BDSP) is a combinatorial optimization problem
+      arising in public transportation planning. It has three main goals:
+    </p>
+    <ol>
+      <li><strong>Coverage:</strong> Define daily driver shifts that cover all predetermined bus tours and meet the transportation system's demand.</li>
+      <li><strong>Feasibility:</strong> Respect all requirements from collective agreements and legal regulations, ensuring driver safety through adequate rest and break times.</li>
+      <li><strong>Cost minimization:</strong> Reduce operational costs while also minimizing driver dissatisfaction (e.g., avoiding excessively long unpaid breaks).</li>
+    </ol>
+    <p>
+      The instances used here model regulations from the <em>European Regulation (EC) No 561/2006</em>
+      on driving times and the <em>Austrian Collective Agreement for employees in private omnibus providers</em>,
+      making the problem particularly constrained and challenging.
+    </p>
+
+    <h3>Problem Input</h3>
+    <p>The input consists of:</p>
+    <ul>
+      <li><strong>Positions and Distance Matrix:</strong> A set of positions (bus stops) \(P\) and a time distance matrix \(D = (d_{ij})\) where \(d_{ij}\) is the time for a driver to travel from position \(i\) to \(j\) when not driving a bus (passive ride time).</li>
+      <li><strong>Start/End Work Times:</strong> For each position \(p\), the time required to start or end a shift at that location.</li>
+      <li><strong>Bus Legs:</strong> A set \(L\) of bus legs, where each leg \(\ell\) is a 5-tuple:
+        \[\ell = (\text{tour}_\ell, \text{startPos}_\ell, \text{endPos}_\ell, \text{start}_\ell, \text{end}_\ell)\]
+        representing a trip of a vehicle between two stops. All times are in <strong>minutes from midnight</strong>.
+      </li>
+    </ul>
+
+    <h3>Solution</h3>
+    <p>
+      A solution \(S\) is a <strong>set partition</strong> of the bus legs \(L\) into shifts: \(S = \{s_1, s_2, \ldots, s_n\}\).
+      Each shift \(s_i\) represents a subset of bus legs assigned to a single driver for one day.
+      A solution is feasible if drivers have enough time to travel between consecutive legs and all regulatory constraints are satisfied.
+    </p>
+
+    <h2 id="objective">Objective Function</h2>
+    <p>
+      The objective is to minimize the total cost across all shifts:
+    </p>
+    \[z(S) = \sum_{s \in S} \left( 2W'_s + T_s + \text{ride}_s + 30 \cdot \text{change}_s + 180 \cdot \text{split}_s \right)\]
+    <p>where for each shift \(s\):</p>
+    <ul>
+      <li>\(W'_s = \max\{W_s, 390\}\): Working time with a minimum of 6.5 hours (390 min) guaranteed pay</li>
+      <li>\(T_s\): Total time (span from shift start to end)</li>
+      <li>\(\text{ride}_s\): Sum of passive ride times between consecutive legs</li>
+      <li>\(\text{change}_s\): Number of tour changes (switching between different buses)</li>
+      <li>\(\text{split}_s\): Number of shift splits (unpaid breaks longer than 3 hours)</li>
+    </ul>
+
+    <h2 id="constraints">Key Constraints</h2>
+    <table>
+      <thead>
+        <tr><th>Constraint</th><th>Limit</th><th>Description</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>Driving Time \(D_s\)</td><td>\(\leq\) 540 min (9h)</td><td>Total time spent actively driving</td></tr>
+        <tr><td>Total Time \(T_s\)</td><td>\(\leq\) 840 min (14h)</td><td>Span from shift start to end</td></tr>
+        <tr><td>Working Time \(W_s\)</td><td>\(\leq\) 600 min (10h)</td><td>Total time minus unpaid breaks and splits</td></tr>
+        <tr><td>Max Driving Block</td><td>\(\leq\) 240 min (4h)</td><td>Maximum continuous driving before a break</td></tr>
+        <tr><td>Max Shift Splits</td><td>\(\leq\) 2</td><td>Number of unpaid breaks &gt; 3 hours</td></tr>
+      </tbody>
+    </table>
+
+    <h3>Driving Break Options</h3>
+    <p>Before accumulating 4 hours of driving, drivers must complete one of these break patterns:</p>
+    <ul>
+      <li>One break of at least <strong>30 minutes</strong>, or</li>
+      <li>Two breaks of at least <strong>20 minutes</strong> each, or</li>
+      <li>Three breaks of at least <strong>15 minutes</strong> each</li>
+    </ul>
+
+    <h3>Rest Break Requirements</h3>
+    <p>Based on working time \(W_s\):</p>
+    <ul>
+      <li>\(W_s < 300\) min (5h): No rest break required</li>
+      <li>\(300 \leq W_s \leq 540\) min: At least one 30-minute break</li>
+      <li>\(W_s > 540\) min (9h): At least one 45-minute break</li>
+    </ul>
+
+    <div class="info-box">
+      <p>
+        For the complete formal specification, see
+        <a href="https://doi.org/10.1609/icaps.v30i1.6688">Kletzander &amp; Musliu (2020)</a>.
+      </p>
+    </div>
+
+    <h2 id="terminology">Terminology</h2>
+    <dl>
+      <dt>Position</dt>
+      <dd>A bus stop or location where drivers can start/end work or change between buses. Positions are connected by a distance matrix representing passive travel times.</dd>
+
+      <dt>Tour (Bus Tour)</dt>
+      <dd>A sequence of legs assigned to a single vehicle (bus) for one day. Each tour has a unique ID. Legs within a tour do not overlap in time.</dd>
+
+      <dt>Leg (Bus Leg)</dt>
+      <dd>The atomic unit of work: a trip of a vehicle between two positions at specific times. Defined as a 5-tuple \((\text{tour}, \text{startPos}, \text{endPos}, \text{start}, \text{end})\). Legs cannot be split between drivers.</dd>
+
+      <dt>Shift</dt>
+      <dd>A subset of bus legs assigned to one driver for one day. The work scheduled for a single driver. The solution to BDSP is a set of shifts that partition all legs.</dd>
+
+      <dt>Passive Ride</dt>
+      <dd>Time spent by a driver traveling between positions without actively driving a bus. Occurs when consecutive legs in a shift start/end at different positions.</dd>
+
+      <dt>Shift Split</dt>
+      <dd>An unpaid break longer than 3 hours (180 minutes) between consecutive legs. Splits reset the driving time counter. A shift may contain at most 2 splits.</dd>
+
+      <dt>Driving Time \(D_s\)</dt>
+      <dd>The sum of leg durations in a shift: \(D_s = \sum_{\ell \in s} (\text{end}_\ell - \text{start}_\ell)\). Maximum: 9 hours.</dd>
+
+      <dt>Total Time \(T_s\)</dt>
+      <dd>The span from shift start (including start work time) to shift end (including end work time). Maximum: 14 hours.</dd>
+
+      <dt>Working Time \(W_s\)</dt>
+      <dd>Total time minus shift splits and unpaid rest breaks: \(W_s = T_s - \text{splitTime}_s - \min\{\text{unpaid}_s, \text{upmax}_s\}\). Maximum: 10 hours.</dd>
+
+      <dt>BP (Branch-and-Price)</dt>
+      <dd>An exact optimization algorithm combining branch-and-bound with column generation. Provides optimal solutions for small-medium instances and valid lower bounds.</dd>
+
+      <dt>LNS (Large Neighborhood Search)</dt>
+      <dd>A metaheuristic that iteratively destroys and repairs parts of a solution. Finds high-quality solutions for large instances but does not guarantee optimality.</dd>
+
+      <dt>Lower Bound</dt>
+      <dd>A proven minimum value for the optimal solution cost, computed via linear programming relaxation in Branch-and-Price.</dd>
+
+      <dt>Gap</dt>
+      <dd>The relative difference between the best known solution and the lower bound:
+        \[\text{Gap} = \frac{\text{Best Solution} - \text{Lower Bound}}{\text{Lower Bound}} \times 100\%\]
+        A gap of 0% indicates a proven optimal solution.
+      </dd>
+    </dl>
+
+    <h2 id="naming">Instance Naming Convention</h2>
+    <p>
+      Realistic instances follow the pattern: <code>realistic_[SIZE]_[ID]</code>
+    </p>
+    <ul>
+      <li><code>SIZE</code>: Approximate number of tours (10, 20, 30, &hellip;, 250)</li>
+      <li><code>ID</code>: Unique instance identifier (1&ndash;65)</li>
+    </ul>
+    <p>
+      Example: <code>realistic_50_23</code> is instance #23, containing approximately 50 tours.
+    </p>
+    <p>
+      Synthetic instances follow <code>[SOURCE]_[SIZE]_[ID]</code>, where <code>SOURCE</code> identifies
+      the structural property being stressed (e.g. <code>breakMax</code>, <code>distanceVariation</code>,
+      <code>shortLeg</code>; 12 source types in total). See the
+      <a href="bdsp_collection.html">collection page</a> to filter by source.
+    </p>
+
+    <h2 id="structure">Instance Structure</h2>
+    <p>
+      Each instance defines bus legs as 5-tuples following the formal specification:
+    </p>
+    <table>
+      <thead>
+        <tr>
+          <th>Field</th>
+          <th>Description</th>
+          <th>Example</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td><code>tour</code></td><td>Vehicle/bus ID</td><td>1</td></tr>
+        <tr><td><code>startPos</code></td><td>Starting position</td><td>0</td></tr>
+        <tr><td><code>endPos</code></td><td>Ending position</td><td>1</td></tr>
+        <tr><td><code>start</code></td><td>Departure time (minutes from midnight)</td><td>360 (= 06:00)</td></tr>
+        <tr><td><code>end</code></td><td>Arrival time (minutes from midnight)</td><td>395 (= 06:35)</td></tr>
+      </tbody>
+    </table>
+    <p>
+      Example from the formal specification (two bus tours with 6 legs):
+    </p>
+    <pre>
+tour  startPos  endPos  start  end
+  1        0       1    360   395
+  1        1       2    410   455
+  1        2       1    460   502
+  1        1       0    508   540
+  2        0       3    360   400
+  2        3       0    415   500</pre>
+    <p>
+      The first vehicle (tour 1) starts at 06:00 at position 0, travels between positions 1 and 2 with waiting times in between, then returns to position 0.
+    </p>
+
+    <h2 id="references">References</h2>
+    <ol>
+      <li>
+        Kletzander, L., &amp; Musliu, N. (2020). Solving large real-life bus driver scheduling problems
+        with complex break constraints. <em>ICAPS 2020</em>.
+        <a href="https://doi.org/10.1609/icaps.v30i1.6688">DOI</a>
+      </li>
+      <li>
+        Kletzander, L., Mazzoli, T. M., &amp; Musliu, N. (2022). Metaheuristic algorithms for the bus
+        driver scheduling problem with complex break constraints. <em>GECCO 2022</em>.
+        <a href="https://doi.org/10.1145/3512290.3528876">DOI</a>
+      </li>
+      <li>
+        Mazzoli, T. M., Kletzander, L., Van Hentenryck, P., &amp; Musliu, N. (2024). Investigating
+        Large Neighbourhood Search for Bus Driver Scheduling. <em>ICAPS 2024</em>.
+        <a href="https://doi.org/10.1609/icaps.v34i1.31495">DOI</a>
+      </li>
+      <li>
+        Mannelli Mazzoli, T., Kletzander, L., Musliu, N., &amp; Smith-Miles, K. (2024). Instance Space
+        Analysis for the Bus Driver Scheduling Problem. <em>PATAT 2024</em>.
+        <a href="https://patatconference.org/patat2024/proceedings/papers/20.pdf">PDF</a>
+      </li>
+      <li>
+        Kletzander, L., Mannelli Mazzoli, T., Musliu, N., &amp; Van Hentenryck, P. (2025). Integrating
+        Column Generation and Large Neighborhood Search for Bus Driver Scheduling with Complex
+        Break Constraints. <em>Journal of Artificial Intelligence Research (JAIR)</em>.
+        <a href="https://doi.org/10.1613/jair.1.19027">DOI</a>
+      </li>
+    </ol>
+  </main>
+
+  <footer class="site-footer">
+    <p>
+      <a href="mailto:tommanmaz.math@gmail.com">tommanmaz.math@gmail.com</a>
+      <span class="sep">&middot;</span>
+      <a href="https://github.com/TomManMaz/tommanmaz.github.io" target="_blank" rel="noopener">Source on GitHub</a>
+    </p>
+  </footer>
+</body>
+</html>

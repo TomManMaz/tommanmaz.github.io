@@ -50,13 +50,13 @@
     var name = getInstanceName();
 
     if (!name) {
-      container.innerHTML = '<p>No instance specified. <a href="bdsp.html#best-known-solutions">Return to collection</a>.</p>';
+      container.innerHTML = '<p>No instance specified. <a href="bdsp_collection.html">Return to collection</a>.</p>';
       return;
     }
 
     var inst = findInstance(name);
     if (!inst) {
-      container.innerHTML = '<p>Instance "' + escapeHtml(name) + '" not found. <a href="bdsp.html#best-known-solutions">Return to collection</a>.</p>';
+      container.innerHTML = '<p>Instance "' + escapeHtml(name) + '" not found. <a href="bdsp_collection.html">Return to collection</a>.</p>';
       return;
     }
 

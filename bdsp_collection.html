@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="description" content="Browse 284 BDSP benchmark instances. Filter by source, sort by size or gap, and inspect best known solutions per instance." />
+  <meta name="keywords" content="BDSP, bus driver scheduling, benchmark instances, best known solutions, MIPLIB-style collection" />
+  <meta name="author" content="Tommaso Mannelli Mazzoli" />
+
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://tommanmaz.github.io/bdsp_collection.html" />
+  <meta property="og:title" content="BDSP Instance Collection &mdash; Tommaso Mannelli Mazzoli" />
+  <meta property="og:description" content="Browse 284 BDSP benchmark instances and best known solutions." />
+  <meta property="og:image" content="https://tommanmaz.github.io/icon.png" />
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="BDSP Instance Collection &mdash; Tommaso Mannelli Mazzoli" />
+  <meta name="twitter:description" content="Browse 284 BDSP benchmark instances and best known solutions." />
+  <meta name="twitter:image" content="https://tommanmaz.github.io/icon.png" />
+
+  <meta http-equiv="X-Content-Type-Options" content="nosniff" />
+  <meta http-equiv="X-Frame-Options" content="SAMEORIGIN" />
+  <meta name="referrer" content="no-referrer-when-downgrade" />
+
+  <title>BDSP Instance Collection &mdash; Tommaso Mannelli Mazzoli</title>
+  <link rel="icon" type="image/png" href="icon.png" />
+  <link rel="apple-touch-icon" href="icon.png" />
+  <link rel="stylesheet" href="stylesheet.css" />
+  <script defer id="MathJax-script" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+  <script defer src="js/theme-toggle.js"></script>
+</head>
+<body>
+  <a href="#main-content" class="skip-link">Skip to main content</a>
+
+  <header class="header">
+    <h1>Tommaso Mannelli Mazzoli</h1>
+    <p>TU Wien, Vienna, Austria</p>
+  </header>
+
+  <nav class="navbar" role="navigation" aria-label="Main navigation">
+    <a href="index.html">Home</a>
+    <a href="publications.html">Publications</a>
+    <a class="active" href="bdsp.html" aria-current="page">BDSP</a>
+    <a href="amm.html">AMM</a>
+    <a href="#" class="theme-toggle-link" id="theme-toggle" aria-label="Toggle dark mode">
+      <span id="theme-icon">&#127769;</span>
+    </a>
+  </nav>
+
+  <main id="main-content" class="wide">
+    <a href="bdsp.html" class="back-link">&larr; BDSP overview</a>
+    <h1>Instance Collection</h1>
+    <p class="last-updated">Last updated: <span id="last-updated-date">&hellip;</span></p>
+
+    <p>
+      284 BDSP instances across 12 source types. Sizes range from 8 tours (73 legs) to 250 tours (2339 legs).
+      Lower bounds are computed using Branch-and-Price where available; rows highlighted in
+      <span style="background: var(--success-bg); padding: 2px 6px; border-radius: 3px;">green</span>
+      with 0.0% gap are <strong>proven optimal</strong>. Click an instance name for the per-algorithm breakdown.
+      For the formal definition, see the <a href="bdsp_problem.html">problem reference</a>.
+    </p>
+
+    <h2>Download</h2>
+    <p>
+      The original real-world instances cannot be publicly shared due to agreements with bus companies.
+      An instance generator was developed to create realistic instances following similar distributions.
+    </p>
+    <table>
+      <thead>
+        <tr>
+          <th>Source</th>
+          <th>Description</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><a href="https://cdlab-artis.dbai.tuwien.ac.at/papers/sa-bds/">DBAI Repository</a></td>
+          <td>50 real-world-like instances (realistic_10_1 to realistic_100_50)</td>
+        </tr>
+        <tr>
+          <td><a href="downloads/collection.tar.gz">Extended Collection</a></td>
+          <td>Additional 15 large instances (realistic_150_51 to realistic_250_65)</td>
+        </tr>
+        <tr>
+          <td><a href="https://github.com/TomManMaz/bdsp-validator">Solution Validator</a></td>
+          <td>Python tool to check feasibility and compute objective breakdown (<a href="bdsp_validate.html">web version</a>)</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <h2>Computational Setup</h2>
+    <div class="info-box">
+      <p><strong>Hardware:</strong> Intel Xeon E5-2650 v4 @ 2.2 GHz</p>
+      <p><strong>Time limit:</strong> 3600 seconds per instance for metaheuristics; Branch-and-Price ran until optimality or memory limit.</p>
+      <p><strong>Software:</strong> Custom implementations in Python 3.10.14, executed with PyPy 7.3.17. Branch-and-Price was implemented in Java with OpenJDK 23.0.1, using Gurobi 12.0.0 for the master problem.</p>
+    </div>
+
+    <h2>Instance Collection (284 instances)</h2>
+
+    <button onclick="exportCollectionCSV()">Download CSV (current view)</button>
+
+    <div id="collection-table-container">
+      <p>Loading instance data&hellip;</p>
+    </div>
+
+    <h2>Reporting New Best Solutions</h2>
+    <p>
+      If you find improved solutions, please contact
+      <a href="mailto:tommanmaz.math@gmail.com">tommanmaz.math@gmail.com</a>
+      to have them included in this table.
+      You can also <a href="bdsp_validate.html">validate your solution online</a>
+      using the web-based validator before submitting.
+    </p>
+  </main>
+
+  <footer class="site-footer">
+    <p>
+      <a href="mailto:tommanmaz.math@gmail.com">tommanmaz.math@gmail.com</a>
+      <span class="sep">&middot;</span>
+      <a href="https://github.com/TomManMaz/tommanmaz.github.io" target="_blank" rel="noopener">Source on GitHub</a>
+    </p>
+  </footer>
+
+  <script>
+    fetch('https://api.github.com/repos/TomManMaz/tommanmaz.github.io/commits?path=data/instances.json&per_page=1')
+      .then(function (res) { return res.json(); })
+      .then(function (commits) {
+        if (commits && commits.length > 0) {
+          var date = new Date(commits[0].commit.committer.date);
+          var el = document.getElementById('last-updated-date');
+          if (el) el.textContent = date.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
+        }
+      })
+      .catch(function () {});
+  </script>
+  <script src="data/instances.js"></script>
+  <script src="js/bdsp_collection.js"></script>
+</body>
+</html>

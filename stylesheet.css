@@ -397,6 +397,72 @@ button:hover {
   font-style: italic;
 }
 
+/* BDSP landing: stat strip */
+.stat-strip {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: var(--space-3);
+  margin: var(--space-5) 0;
+}
+.stat-strip-item {
+  background: var(--bg-light);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: var(--space-4);
+  text-align: center;
+}
+.stat-strip-item .stat-value {
+  display: block;
+  font-size: var(--fs-2xl);
+  font-weight: 600;
+  color: var(--primary);
+  line-height: 1.1;
+}
+.stat-strip-item .stat-label {
+  display: block;
+  font-size: var(--fs-xs);
+  color: var(--text-light);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  margin-top: var(--space-1);
+}
+
+/* BDSP landing: CTA tiles */
+.bdsp-tiles {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: var(--space-4);
+  margin: var(--space-5) 0;
+}
+.bdsp-tile {
+  display: block;
+  background: var(--bg-main);
+  border: 1px solid var(--border);
+  border-left: 4px solid var(--primary);
+  border-radius: 6px;
+  padding: var(--space-5);
+  text-decoration: none;
+  color: inherit;
+  transition: transform 0.15s, box-shadow 0.15s, border-left-color 0.15s;
+}
+.bdsp-tile:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(0,0,0,0.08);
+  border-left-color: var(--primary-dark);
+  text-decoration: none;
+}
+.bdsp-tile h3 {
+  margin: 0 0 var(--space-2) 0;
+  color: var(--primary);
+  font-size: var(--fs-lg);
+}
+.bdsp-tile p {
+  margin: 0;
+  color: var(--text-light);
+  font-size: var(--fs-sm);
+  line-height: 1.5;
+}
+
 /* Status badges (used by collection, detail, validator) */
 .status-badge {
   display: inline-block;
