@@ -129,6 +129,10 @@
     html += renderInstanceNav(inst.name);
 
     container.innerHTML = html;
+
+    if (window.MathJax && window.MathJax.typesetPromise) {
+      window.MathJax.typesetPromise([container]).catch(function () {});
+    }
   }
 
   // ---------------------------------------------------------------------------
@@ -229,8 +233,8 @@
 
     // Objective formula
     html += '<div class="obj-formula">';
-    html += 'Obj<sub>e</sub> = 2 &middot; W\u2032 + T + ride + 30 &middot; changes + 180 &middot; splits';
-    html += '<span class="formula-note">where W\u2032 = max(work_time, 390)</span>';
+    html += '\\( \\mathrm{Obj}_e = 2 \\cdot W\' + T + \\mathrm{ride} + 30 \\cdot \\mathrm{changes} + 180 \\cdot \\mathrm{splits} \\)';
+    html += '<span class="formula-note">where \\( W\' = \\max(\\text{work\\_time}, 390) \\)</span>';
     html += '</div>';
 
     // Table
