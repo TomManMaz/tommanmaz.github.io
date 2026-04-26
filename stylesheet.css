@@ -15,22 +15,22 @@
 
 /* ---------- 1. Tokens ---------- */
 :root {
-  /* palette (warm burnt orange identity) */
-  --primary:        #A54918;
-  --primary-dark:   #7a3512;
-  --primary-light:  #c65e2a;
-  --accent:         #d4763b;
+  /* palette (PORR blue identity) */
+  --primary:        #143e70;
+  --primary-dark:   #0d2a4d;
+  --primary-light:  #2a5a96;
+  --accent:         #2a5a96;
 
   --text:           #2c3e50;
   --text-light:     #6c757d;
   --bg-body:        #ffffff;
   --bg-main:        #ffffff;
-  --bg-light:       #fdf9f7;
-  --border:         #f0e5df;
+  --bg-light:       #f5f8fc;
+  --border:         #dde5ef;
 
   --success:        #28a745;
   --success-bg:     #d4edda;
-  --table-hover:    #fff3ed;
+  --table-hover:    #eef3fa;
   --danger:         #dc3545;
 
   /* status colors used by collection / detail / validator */
@@ -60,10 +60,10 @@
 }
 
 [data-theme="dark"] {
-  --primary:        #d4763b;
-  --primary-dark:   #c65e2a;
-  --primary-light:  #e89866;
-  --accent:         #d4763b;
+  --primary:        #6b9ed4;
+  --primary-dark:   #4a7fb8;
+  --primary-light:  #8fb8e0;
+  --accent:         #6b9ed4;
 
   --text:           #e4e4e7;
   --text-light:     #a1a1aa;
