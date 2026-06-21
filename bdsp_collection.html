@@ -26,26 +26,20 @@
   <link rel="icon" type="image/png" href="icon.png" />
   <link rel="apple-touch-icon" href="icon.png" />
   <link rel="stylesheet" href="stylesheet.css" />
-  <script defer id="MathJax-script" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
-  <script defer src="js/theme-toggle.js"></script>
-</head>
+  <script defer id="MathJax-script" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script></head>
 <body>
   <a href="#main-content" class="skip-link">Skip to main content</a>
 
   <header class="header">
     <h1>Tommaso Mannelli Mazzoli</h1>
-    <p>TU Wien, Vienna, Austria</p>
+    <p>AI Architect at PORR AG, Vienna, Austria</p>
   </header>
 
   <nav class="navbar" role="navigation" aria-label="Main navigation">
     <a href="index.html">Home</a>
     <a href="publications.html">Publications</a>
     <a class="active" href="bdsp.html" aria-current="page">BDSP</a>
-    <a href="amm.html">AMM</a>
-    <a href="#" class="theme-toggle-link" id="theme-toggle" aria-label="Toggle dark mode">
-      <span id="theme-icon">&#127769;</span>
-    </a>
-  </nav>
+    <a href="amm.html">AMM</a>  </nav>
 
   <main id="main-content" class="wide">
     <a href="bdsp.html" class="back-link">&larr; BDSP overview</a>
@@ -105,11 +99,14 @@
 
     <h2>Reporting New Best Solutions</h2>
     <p>
-      If you find improved solutions, please contact
-      <a href="mailto:tommanmaz.math@gmail.com">tommanmaz.math@gmail.com</a>
-      to have them included in this table.
-      You can also <a href="bdsp_validate.html">validate your solution online</a>
-      using the web-based validator before submitting.
+      Found a solution that beats a listed BKS? Open a pull request adding your
+      solution as <code>submissions/&lt;instance&gt;.csv</code>. An automated check
+      re-validates it and, if it is feasible and strictly better, publishes it here
+      as the new BKS automatically. See the
+      <a href="https://github.com/TomManMaz/tommanmaz.github.io/tree/main/submissions">submission guide</a>
+      for the format and process. You can pre-check your file with the
+      <a href="bdsp_validate.html">online validator</a>, or email
+      <a href="mailto:tommanmaz.math@gmail.com">tommanmaz.math@gmail.com</a>.
     </p>
   </main>
 

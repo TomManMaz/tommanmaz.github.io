@@ -223,7 +223,7 @@
         html += '<td class="num">' + formatGap(inst.gap_pct) + '</td>';
       }
 
-      html += '<td>' + escapeHtml(inst.best_algorithm || '\u2014') + '</td>';
+      html += '<td>' + escapeHtml(inst.best_algorithm || '\u2014') + (inst.bks_source === 'community' ? ' <span class="community-tag">community</span>' : '') + '</td>';
       html += '</tr>';
     });
 
@@ -310,7 +310,7 @@
       html += '<td class="num">' + inst.tours + '</td>';
       html += '<td class="num">' + inst.legs + '</td>';
       html += '<td class="num">' + formatNumber(inst.bks) + '</td>';
-      html += '<td>' + escapeHtml(inst.best_algorithm || '\u2014') + '</td>';
+      html += '<td>' + escapeHtml(inst.best_algorithm || '\u2014') + (inst.bks_source === 'community' ? ' <span class="community-tag">community</span>' : '') + '</td>';
       html += '</tr>';
     });
 

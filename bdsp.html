@@ -25,26 +25,20 @@
   <title>Bus Driver Scheduling Problem &mdash; Tommaso Mannelli Mazzoli</title>
   <link rel="icon" type="image/png" href="icon.png" />
   <link rel="apple-touch-icon" href="icon.png" />
-  <link rel="stylesheet" href="stylesheet.css" />
-  <script defer src="js/theme-toggle.js"></script>
-</head>
+  <link rel="stylesheet" href="stylesheet.css" /></head>
 <body>
   <a href="#main-content" class="skip-link">Skip to main content</a>
 
   <header class="header">
     <h1>Tommaso Mannelli Mazzoli</h1>
-    <p>TU Wien, Vienna, Austria</p>
+    <p>AI Architect at PORR AG, Vienna, Austria</p>
   </header>
 
   <nav class="navbar" role="navigation" aria-label="Main navigation">
     <a href="index.html">Home</a>
     <a href="publications.html">Publications</a>
     <a class="active" href="bdsp.html" aria-current="page">BDSP</a>
-    <a href="amm.html">AMM</a>
-    <a href="#" class="theme-toggle-link" id="theme-toggle" aria-label="Toggle dark mode">
-      <span id="theme-icon">&#127769;</span>
-    </a>
-  </nav>
+    <a href="amm.html">AMM</a>  </nav>
 
   <main id="main-content">
     <h1>Bus Driver Scheduling Problem</h1>
@@ -55,51 +49,41 @@
       with best known solutions, a Python validator, and reproducible algorithm results.
     </p>
 
-    <div class="stat-strip">
-      <div class="stat-strip-item">
-        <span class="stat-value">284</span>
-        <span class="stat-label">Instances</span>
-      </div>
-      <div class="stat-strip-item">
-        <span class="stat-value">12</span>
-        <span class="stat-label">Source Types</span>
-      </div>
-      <div class="stat-strip-item">
-        <span class="stat-value">9</span>
-        <span class="stat-label">Proven Optimal</span>
-      </div>
-      <div class="stat-strip-item">
-        <span class="stat-value">10</span>
-        <span class="stat-label">LNS Variants</span>
-      </div>
-    </div>
+    <p class="bdsp-summary">
+      284 instances across 12 source types &middot; 9 proven optimal &middot; 10 LNS variants &middot;
+      sizes from 8 tours (73 legs) to 250 tours (2339 legs).
+    </p>
 
-    <div class="bdsp-tiles">
-      <a class="bdsp-tile" href="bdsp_collection.html">
-        <h3>Browse Collection &rarr;</h3>
-        <p>Filter, sort, and search 284 instances. Inspect best known solutions and per-algorithm results.</p>
-      </a>
-      <a class="bdsp-tile" href="bdsp_problem.html">
-        <h3>Problem Reference &rarr;</h3>
-        <p>Formal definition, objective, key constraints, terminology, and instance file format.</p>
-      </a>
-      <a class="bdsp-tile" href="bdsp_validate.html">
-        <h3>Validate a Solution &rarr;</h3>
-        <p>Upload a CSV solution and check feasibility + objective breakdown directly in the browser.</p>
-      </a>
-      <a class="bdsp-tile" href="downloads/collection.tar.gz">
-        <h3>Download Archive &rarr;</h3>
-        <p>Full tarball of all 284 instance JSONs. Also available individually from the collection page.</p>
-      </a>
-      <a class="bdsp-tile" href="https://github.com/TomManMaz/bdsp-validator" target="_blank" rel="noopener">
-        <h3>Validator on GitHub &rarr;</h3>
-        <p>Standalone Python validator. Same logic as the in-browser version, runnable from the command line.</p>
-      </a>
-      <a class="bdsp-tile" href="publications.html">
-        <h3>Publications &rarr;</h3>
-        <p>JAIR 2025, ICAPS 2024, GECCO 2022, PATAT 2024 — papers underpinning the methods and data here.</p>
-      </a>
-    </div>
+    <ul class="bdsp-links">
+      <li>
+        <a href="bdsp_collection.html">Browse the collection</a> &mdash;
+        <span class="desc">filter, sort, and search all 284 instances; inspect best known solutions and per-algorithm results.</span>
+      </li>
+      <li>
+        <a href="bdsp_problem.html">Problem reference</a> &mdash;
+        <span class="desc">formal definition, objective, key constraints, terminology, and instance file format.</span>
+      </li>
+      <li>
+        <a href="bdsp_validate.html">Validate a solution</a> &mdash;
+        <span class="desc">upload a CSV solution and check feasibility and the objective breakdown in the browser.</span>
+      </li>
+      <li>
+        <a href="https://github.com/TomManMaz/tommanmaz.github.io/tree/main/submissions">Submit an improved solution</a> &mdash;
+        <span class="desc">open a pull request with your solution CSV; it is auto-validated and, if better, published as the new BKS.</span>
+      </li>
+      <li>
+        <a href="downloads/collection.tar.gz">Download the archive</a> &mdash;
+        <span class="desc">full tarball of all 284 instance JSONs (also available individually from the collection page).</span>
+      </li>
+      <li>
+        <a href="https://github.com/TomManMaz/bdsp-validator" target="_blank" rel="noopener">Validator on GitHub</a> &mdash;
+        <span class="desc">standalone Python validator, the same logic as the in-browser version.</span>
+      </li>
+      <li>
+        <a href="publications.html">Publications</a> &mdash;
+        <span class="desc">JAIR 2025, ICAPS 2024, GECCO 2022, and PATAT 2024 &mdash; the papers behind the methods and data.</span>
+      </li>
+    </ul>
 
     <h2>How to Cite</h2>
     <p>

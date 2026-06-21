@@ -510,6 +510,19 @@ def build():
 
     instances = []
     breakdown_count = 0
+
+    # Accepted community submissions (written by scripts/apply_submission.py via
+    # the GitHub Actions workflow). Folding them in here keeps a community best
+    # known solution across a full rebuild; otherwise bks would regress to the
+    # best algorithmic value, which the community solution beat.
+    accepted_ledger = {}
+    accepted_ledger_file = REPO_ROOT / "submissions" / "accepted.json"
+    if accepted_ledger_file.exists():
+        try:
+            accepted_ledger = json.loads(accepted_ledger_file.read_text(encoding="utf-8"))
+        except Exception:
+            accepted_ledger = {}
+
     for instance_name in all_instance_names:
         entry = process_instance(instance_name, bks_data, patat_data)
 
@@ -518,6 +531,23 @@ def build():
         if breakdown is not None:
             entry["solution_breakdown"] = breakdown
             breakdown_count += 1
+
+        # Keep an accepted community BKS (published via the submission workflow).
+        led = accepted_ledger.get(instance_name)
+        if (led and breakdown is not None and breakdown.get("feasible")
+                and breakdown.get("total_objective") is not None
+                and (entry.get("bks") is None or breakdown["total_objective"] <= entry["bks"])):
+            entry["bks"] = breakdown["total_objective"]
+            entry["best_algorithm"] = led.get("author", "community")
+            entry["bks_source"] = "community"
+            entry["submitted_by"] = led.get("author")
+            entry["submitted_at"] = led.get("date")
+            lb = entry.get("lower_bound")
+            if entry["bks"] is not None and lb is not None and entry["bks"] > 0:
+                entry["gap_pct"] = round((entry["bks"] - lb) / entry["bks"] * 100, 2)
+            else:
+                entry["gap_pct"] = None
+            entry["status"] = "optimal" if entry["gap_pct"] == 0.0 else "open"
 
         instances.append(entry)
 

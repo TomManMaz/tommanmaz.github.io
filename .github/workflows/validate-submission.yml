@@ -1,0 +1,136 @@
+name: Validate BDSP solution submission
+
+# A community member opens a pull request that adds a single binary-matrix CSV
+# under submissions/. This workflow recomputes feasibility and the objective
+# with the bundled validator and, if the solution is feasible AND strictly
+# better than the current best known solution (BKS), publishes it as the new
+# BKS automatically (updates data/instances.json, data/instances.js and sols/).
+#
+# SECURITY MODEL — this uses pull_request_target, so it runs with the BASE
+# repository's code and a write-enabled token. To stay safe we:
+#   * check out the BASE repo (trusted code) and run only our own scripts;
+#   * NEVER check out or execute the pull request's code;
+#   * fetch ONLY the submitted submissions/*.csv DATA from the PR head commit;
+#   * refuse to auto-process any PR that touches anything other than
+#     submissions/*.csv.
+# The validator only parses 0/1 matrices, so evaluating submitted data is safe.
+#
+# NOTE: automatic publishing pushes to the default branch. If that branch is
+# protected, allow github-actions[bot] to bypass the protection (or replace the
+# push with a PAT), otherwise the "Commit and publish" step will fail.
+
+on:
+  pull_request_target:
+    types: [opened, synchronize, reopened]
+    paths:
+      - 'submissions/**'
+
+permissions:
+  contents: write
+  pull-requests: write
+  issues: write
+
+concurrency:
+  group: bdsp-submission-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+
+jobs:
+  evaluate:
+    runs-on: ubuntu-latest
+    env:
+      GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      PR: ${{ github.event.pull_request.number }}
+      HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+      AUTHOR: ${{ github.event.pull_request.user.login }}
+      DEFAULT_BRANCH: ${{ github.event.repository.default_branch }}
+    steps:
+      - name: Check out base repository (trusted code)
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install validator dependency
+        run: pip install sortedcontainers
+
+      - name: Identify changed files and fetch submitted CSVs (data only)
+        id: fetch
+        run: |
+          set -euo pipefail
+          mkdir -p _ci/results
+          gh api "repos/${{ github.repository }}/pulls/${PR}/files" --paginate \
+            --jq '.[].filename' > _ci/changed.txt
+          echo "Changed files in PR #${PR}:"; cat _ci/changed.txt
+          # Guard: refuse anything other than submissions/<name>.csv
+          if grep -vE '^submissions/[^/]+\.csv$' _ci/changed.txt | grep -q .; then
+            echo "other_files=1" >> "$GITHUB_OUTPUT"
+            echo "PR touches files outside submissions/*.csv — will not auto-process."
+            exit 0
+          fi
+          echo "other_files=0" >> "$GITHUB_OUTPUT"
+          # Fetch ONLY the CSV contents at the PR head commit (data, not code).
+          while IFS= read -r f; do
+            [ -z "$f" ] && continue
+            mkdir -p "$(dirname "$f")"
+            gh api "repos/${{ github.repository }}/contents/${f}?ref=${HEAD_SHA}" \
+              --jq '.content' | base64 -d > "$f"
+            echo "Fetched ${f}"
+          done < _ci/changed.txt
+
+      - name: Reject PRs that change non-submission files
+        if: steps.fetch.outputs.other_files == '1'
+        run: |
+          gh pr comment "${PR}" --body "Thanks for the pull request! This automated check only processes PRs that add solution files under \`submissions/<instance>.csv\`. This PR also changes other files, so it was not auto-validated and needs manual review."
+          gh pr edit "${PR}" --add-label "needs-manual-review" || true
+
+      - name: Validate and apply each submitted solution
+        if: steps.fetch.outputs.other_files == '0'
+        run: |
+          set -uo pipefail
+          while IFS= read -r f; do
+            [ -z "$f" ] && continue
+            name="$(basename "$f" .csv)"
+            echo "::group::Validating ${name}"
+            python scripts/apply_submission.py \
+              --solution "$f" \
+              --instance "$name" \
+              --author "${AUTHOR}" \
+              --apply \
+              --result-json "_ci/results/${name}.json" || true
+            echo "::endgroup::"
+          done < _ci/changed.txt
+
+      - name: Compose result comment
+        if: steps.fetch.outputs.other_files == '0'
+        id: result
+        run: python scripts/ci_compose_comment.py
+
+      - name: Commit and publish new BKS
+        if: steps.result.outputs.accepted == 'true'
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add data/instances.json data/instances.js sols/ submissions/accepted.json
+          git commit -m "BDSP: community best known solution(s) from PR #${PR} (@${AUTHOR})"
+          git push origin "HEAD:${DEFAULT_BRANCH}"
+
+      - name: Post result comment
+        if: steps.fetch.outputs.other_files == '0'
+        run: gh pr comment "${PR}" --body-file _ci/comment.md
+
+      - name: Label and close accepted submission
+        if: steps.result.outputs.accepted == 'true'
+        run: |
+          gh pr edit "${PR}" --add-label "new-bks" || true
+          gh pr close "${PR}" --comment "Published to \`${DEFAULT_BRANCH}\` and recorded as \`sols/<instance>.csv\`. Closing automatically — thank you for the contribution!" || true
+
+      - name: Fail the check on invalid submissions
+        if: steps.result.outputs.invalid == 'true'
+        run: |
+          echo "One or more submissions were invalid (see the PR comment)."
+          exit 1

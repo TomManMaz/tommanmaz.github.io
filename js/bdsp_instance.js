@@ -81,8 +81,14 @@
     html += summaryCard('BKS', formatNum(inst.bks), inst.status === 'optimal');
     html += summaryCard('Lower Bound', inst.lower_bound != null ? formatNum(inst.lower_bound) : '\u2014');
     html += summaryCard('Gap (%)', inst.gap_pct != null ? formatNum(inst.gap_pct, 2) : '\u2014', inst.gap_pct === 0);
-    html += summaryCard('Best Algorithm', inst.best_algorithm || '\u2014');
+    html += summaryCard('Best Algorithm', (inst.best_algorithm || '\u2014') + (inst.bks_source === 'community' ? ' (community)' : ''));
     html += '</div>';
+    if (inst.bks_source === 'community') {
+      html += '<p class="community-note">Best known solution submitted by <strong>' +
+        escapeHtml(inst.submitted_by || inst.best_algorithm || 'a contributor') + '</strong>' +
+        (inst.submitted_at ? ' on ' + escapeHtml(inst.submitted_at) : '') +
+        ' via the <a href="https://github.com/TomManMaz/tommanmaz.github.io/tree/main/submissions">solution submission workflow</a>.</p>';
+    }
 
     // Algorithm comparison
     html += '<h2>Algorithm Comparison</h2>';

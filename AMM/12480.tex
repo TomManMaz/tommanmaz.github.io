@@ -1,0 +1,98 @@
+\documentclass[reqno]{amsart}
+\newcommand{\problemnumber}{12480}
+
+\usepackage{enumerate}
+\usepackage{color}
+% \usepackage[top=3cm, bottom=3cm, left=3cm, right=3cm]{geometry}
+
+\theoremstyle{definition}
+\newtheorem*{solution}{Solution}
+\newtheorem*{remark}{Remark}
+
+\newcommand*\diff{\mathop{}\!\mathrm{d}}
+\newcommand{\abs}[1]{\left\lvert #1 \right\rvert}
+\DeclareMathOperator{\esp}{e}
+\usepackage{upgreek}
+
+\newtheorem{claim}{Claim}
+
+\newcommand{\fulges}[1]{{\color{cyan}#1}}
+
+
+%% shortcuts
+\newcommand{\bbZ}{\mathbb{Z}}
+\newcommand{\bbN}{\mathbb{N}}
+\newcommand{\bbR}{\mathbb{R}}
+\newcommand{\vvirg}{, \ldots ,}
+
+\title{Solution to AMM Problem \problemnumber}
+
+\author[I.Bomze]{Immanuel Bomze}
+\email{}
+\author[T. Mannelli Mazzoli]{Tommaso Mannelli Mazzoli}
+\email{tommaso.mazzoli@tuwien.ac.at}
+
+\setlength{\parskip}{.3cm}
+\begin{document}
+\maketitle
+
+\subsection*{Problem \problemnumber}\textit{Proposed by F. Stanescu (Romania)} \\
+
+Let $f$ and $g$ be two nonnegative functions on $[0,1]$ with $f(0)=g(0)=1$,
+and let $h\colon [0,1] \to \mathbb{R}$ be nondecreasing. Suppose that $f$ is convex and $g$ is concave. Prove
+\[
+\int_0^1 g(x) \diff x \int_0^1 f(x)h(x) \diff x \ge \int_0^1 f(x) \diff x 
+\int_0^1 g(x)h(x) \diff x 
+\]
+
+\begin{solution}
+\textit{\noindent
+We show a slightly more general statement: 
+let $f$ and $g$ be two nonnegative functions on $[0,1]$ with $f(0)=g(0)=\alpha\ge0
+$,
+and let $h\colon [0,1] \to \mathbb{R}$ be nondecreasing. Suppose that $f$ is convex and $g$ is concave. Then
+\[
+\int_0^1 g(x) \diff x \int_0^1 f(x)h(x) \diff x \ge \int_0^1 f(x) \diff x 
+\int_0^1 g(x)h(x) \diff x 
+\]
+}
+
+
+First, let us consider the case in which $\int_0^1 f(x) \diff x = 0$.
+Since $f$ is convex in a compact, it is continuous. Therefore, since $f$ is nonnegative, the condition $\int_0^1 f(x) \diff x = 0$ implies $f \equiv 0$ in $[0,1]$. The desired relation follows with equality.
+The same argument applies to $g$.
+
+So let us assume that $\int_0^1 f(x) \diff x > 0 < \int_0^1 g(x) \diff x$. Then, we can divide both sides by $
+\int_0^1 f(x) \diff x \cdot \int_0^1 g(x) \diff x $. We can assume then, without loss of generality, that
+\[
+    \int_0^1 f(x) \diff x = \int_0^1 g(x) \diff x = 1\, .
+\]
+The problem can be then rewritten as:
+\[
+    \int_0^1 h(x) f(x) \diff x \ge \int_0^1 h(x) g(x) \diff x\]
+    or equivalently 
+    \[\int_0^1 \Bigl(f(x)-g(x)\Bigr)h(x) \diff x \ge 0 \, .
+\]
+Note that
+\begin{itemize}
+    \item $f-g$ is a convex function, since $-g$ is convex;
+    \item $f(0)-g(0)=\alpha-\alpha=0$, by hypothesis;
+    \item  $\int_0^1 (f(x)-g(x)) \diff x = 0$, because we assumed $\int_0^1 f(x) \diff x = 1 = \int_0^1 g(x) \diff x $.
+\end{itemize}
+Hence, there must be a point $t_0\in [0,1)$ such that $f(x)-g(x) \le 0$ for $x\in (0,t_0)$ and $f(x)-g(x) \ge 0$ for $x\in (t_0,1)$.
+
+Therefore
+\[
+\begin{split}
+    \int_0^1 \Bigl(f(x)-g(x)\Bigr)h(x) \diff x 
+    &= \int_0^{t_0} \Bigl(f(x)-g(x)\Bigr)h(x) \diff x  + \int_{t_0}^1 \Bigl(f(x)-g(x)\Bigr)h(x) \diff x  \\
+    &\ge h(t_0)\int_0^{t_0} (f(x)-g(x))\diff x +h(t_0)\int_{t_0}^1 (f(x)-g(x))\diff x \\
+    &= h(t_0)\int_0^{1} (f(x)-g(x))\diff x = 0       
+\end{split},
+\]
+where we used the fact that $f(x)-g(x) \le 0$ in $[0,t_0]$.
+
+\end{solution}
+
+
+\end{document}
