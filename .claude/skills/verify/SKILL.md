@@ -43,7 +43,12 @@ A complete driver covering all flows exists in the session scratchpad history
   "Why is this solution infeasible?" block naming E0.
 - Submission panel: `window.BDSP_INSTANCES.filter(e=>e.name==='realistic_10_1')[0].bks += 1000`
   via Runtime.evaluate BEFORE selecting the instance, then validate the sols CSV
-  → "★ New best!" + `.submit-panel` with prefilled GitHub new-file URL.
+  → "★ New best!" + `.submit-panel` linking the pre-filled issue form
+  (`issues/new?template=new-bks.yml&title=...&instance=...`).
+- Issue-submission backend: test `scripts/process_issue_submission.py` in a
+  sandbox copy of the repo (scripts/ + bdsp-validator/ + data/instances.json +
+  one instance JSON + its sols CSV) with `ISSUE_BODY`/`ISSUE_AUTHOR`/`ISSUE_TITLE`
+  env vars; bump the sandbox `bks` to exercise the accepted path.
 - Custom instance: upload any `downloads/instances/*.json` via `#instance-upload`
   → "no BKS comparison" status; validating shows no BKS text and no submit panel.
 

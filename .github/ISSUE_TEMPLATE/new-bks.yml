@@ -1,0 +1,42 @@
+name: Submit an improved solution (new BKS)
+description: Attach a solution CSV that beats a best known solution — a bot validates and publishes it automatically.
+title: "[BKS] "
+labels: ["bks-submission"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for contributing! Attach your solution below and the validator bot
+        will check it within a couple of minutes. If it is **feasible** and
+        **strictly better** than the current best known solution, it is published
+        automatically and credited to your GitHub account.
+
+        Tip: pre-check your file with the
+        [online validator](https://tommanmaz.github.io/bdsp_validate.html) first.
+  - type: input
+    id: instance
+    attributes:
+      label: Instance
+      description: The exact instance name from the [collection](https://tommanmaz.github.io/bdsp_collection.html).
+      placeholder: realistic_10_1
+    validations:
+      required: true
+  - type: textarea
+    id: solution
+    attributes:
+      label: Solution file
+      description: >-
+        Drag and drop your solution CSV here (it becomes an attachment link).
+        For small instances you may paste the CSV contents directly instead.
+        Format: header-less binary matrix, one row per employee, one column per
+        leg in instance order.
+      placeholder: Drop the .csv file here…
+    validations:
+      required: true
+  - type: markdown
+    attributes:
+      value: |
+        The objective and feasibility are **recomputed from your matrix** by the
+        [bundled validator](https://github.com/TomManMaz/bdsp-validator) — any
+        claimed value is ignored. If the bot reports a problem, edit this issue
+        (fix the attachment or instance name) and it re-validates automatically.

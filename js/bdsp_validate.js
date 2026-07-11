@@ -324,21 +324,10 @@
     // solution of a collection instance (the same criteria the CI applies).
     if (isNewBest) {
       var subName = instance.name + '.csv';
-      var prefillUrl = 'https://github.com/TomManMaz/tommanmaz.github.io/new/main?filename=' +
-        encodeURIComponent('submissions/' + instance.name + '.csv') +
-        '&value=' + encodeURIComponent(csvText || '');
-      var ghUrl, ghHow;
-      if (csvText && prefillUrl.length <= 7000) {
-        ghUrl = prefillUrl;
-        ghHow = 'the file name and content are pre-filled; GitHub forks the repository for you';
-      } else {
-        // /upload/ requires push access (404 for everyone else); /new/ supports
-        // GitHub's automatic fork-and-PR flow, so prefill only the filename.
-        ghUrl = 'https://github.com/TomManMaz/tommanmaz.github.io/new/main?filename=' +
-          encodeURIComponent('submissions/' + instance.name + '.csv');
-        ghHow = 'the file name is pre-filled; paste the contents of the file from step 1 ' +
-          'and GitHub forks the repository for you';
-      }
+      var issueUrl = 'https://github.com/TomManMaz/tommanmaz.github.io/issues/new' +
+        '?template=new-bks.yml' +
+        '&title=' + encodeURIComponent('[BKS] ' + instance.name) +
+        '&instance=' + encodeURIComponent(instance.name);
       html += '<div class="submit-panel">';
       html += '<p><strong>Submit as the new best known solution</strong></p>';
       html += '<p>Submissions are validated automatically: a feasible solution that strictly ' +
@@ -346,10 +335,10 @@
       html += '<ol>';
       html += '<li>Download the solution named after the instance: ' +
         '<button type="button" id="download-submission-btn">' + escapeHtml(subName) + '</button></li>';
-      html += '<li><a href="' + ghUrl + '" target="_blank" rel="noopener">Add the file on GitHub</a> ' +
-        'under <code>submissions/</code> (' + ghHow + ').</li>';
-      html += '<li>Open the pull request — the validator bot comments the verdict and publishes ' +
-        'an accepted result automatically.</li>';
+      html += '<li><a href="' + issueUrl + '" target="_blank" rel="noopener">Open a submission issue</a> ' +
+        '(the instance name is pre-filled).</li>';
+      html += '<li>Drag the downloaded file into the <em>Solution file</em> box and submit — ' +
+        'the validator bot comments the verdict and publishes an accepted result automatically.</li>';
       html += '</ol>';
       html += '<p>Details: <a href="https://github.com/TomManMaz/tommanmaz.github.io/tree/main/submissions" ' +
         'target="_blank" rel="noopener">submission guide</a>.</p>';

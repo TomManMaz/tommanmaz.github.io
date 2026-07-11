@@ -1,0 +1,87 @@
+name: Validate BDSP issue submission
+
+# A community member submits an improved solution through the "new-bks" issue
+# form (label: bks-submission): they attach a solution CSV and name the
+# instance. This workflow re-validates the matrix with the bundled validator
+# and, if the solution is feasible AND strictly better than the current best
+# known solution, publishes it automatically (data/instances.json,
+# data/instances.js, sols/, submissions/accepted.json) and closes the issue.
+# Invalid or non-improving submissions get a comment and the issue stays open —
+# editing the issue re-triggers validation.
+#
+# SECURITY MODEL — the issue body is untrusted DATA, never code:
+#   * only this repository's committed scripts run;
+#   * the instance name is pattern-validated and must exist in the collection;
+#   * the solution is fetched only from github.com attachment URLs (or taken
+#     from a pasted 0/1 matrix) and parsed by the trusted validator.
+#
+# NOTE: publishing pushes to the default branch — same requirement as
+# validate-submission.yml (github-actions[bot] must be allowed to push).
+
+on:
+  issues:
+    types: [opened, edited]
+
+permissions:
+  contents: write
+  issues: write
+
+# Serialize submissions so concurrent accepted solutions don't race the push.
+concurrency:
+  group: bks-publish
+  cancel-in-progress: false
+
+jobs:
+  evaluate:
+    if: contains(github.event.issue.labels.*.name, 'bks-submission') && github.event.issue.state == 'open'
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    env:
+      GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      ISSUE_NUMBER: ${{ github.event.issue.number }}
+      ISSUE_AUTHOR: ${{ github.event.issue.user.login }}
+      DEFAULT_BRANCH: ${{ github.event.repository.default_branch }}
+    steps:
+      - name: Check out repository (trusted code)
+        uses: actions/checkout@v5
+
+      - name: Set up Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: '3.11'
+
+      - name: Install validator dependency
+        run: pip install sortedcontainers
+
+      - name: Validate the submitted solution
+        id: process
+        env:
+          ISSUE_BODY: ${{ github.event.issue.body }}
+          ISSUE_TITLE: ${{ github.event.issue.title }}
+        run: python scripts/process_issue_submission.py
+
+      - name: Commit and publish new BKS
+        if: steps.process.outputs.accepted == 'true'
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add data/instances.json data/instances.js sols/ submissions/accepted.json
+          git commit -m "BDSP: community best known solution from issue #${ISSUE_NUMBER} (@${ISSUE_AUTHOR})"
+          git pull --rebase origin "${DEFAULT_BRANCH}"
+          git push origin "HEAD:${DEFAULT_BRANCH}"
+
+      - name: Post result comment
+        if: always() && steps.process.outcome != 'skipped'
+        run: |
+          if [ -f _ci/comment.md ]; then
+            gh issue comment "${ISSUE_NUMBER}" --body-file _ci/comment.md
+          else
+            gh issue comment "${ISSUE_NUMBER}" --body "⚠️ The validation run failed unexpectedly — a maintainer will take a look. ([workflow run](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}))"
+          fi
+
+      - name: Label and close accepted submission
+        if: steps.process.outputs.accepted == 'true'
+        run: |
+          gh issue edit "${ISSUE_NUMBER}" --add-label "new-bks" || true
+          gh issue close "${ISSUE_NUMBER}" --reason completed || true

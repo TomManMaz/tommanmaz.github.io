@@ -76,13 +76,20 @@ work overruns) is actually triggered.
 
 ## Pipelines
 
-- **Community submissions** (CI, no maintainer data needed): PR adds
-  `submissions/<instance>.csv` → `.github/workflows/validate-submission.yml`
-  → `scripts/apply_submission.py` re-validates with the Python validator;
-  accepts iff feasible AND strictly better than stored `bks`; patches data
-  files, copies to `sols/`, appends `submissions/accepted.json`, pushes,
-  comments, closes the PR. The validate page's submission panel guides
-  researchers into this flow.
+- **Community submissions** (CI, no maintainer data needed) — two entry
+  channels, same validation core (`scripts/apply_submission.py` re-validates
+  with the Python validator; accepts iff feasible AND strictly better than
+  stored `bks`; patches data files, copies to `sols/`, appends
+  `submissions/accepted.json`, pushes, comments):
+  - **Issues (primary, user-facing)**: `.github/ISSUE_TEMPLATE/new-bks.yml`
+    form (label `bks-submission`, CSV attached) →
+    `.github/workflows/validate-issue-submission.yml` →
+    `scripts/process_issue_submission.py` (parses the body, fetches the
+    github.com attachment, composes the verdict comment). Accepted issues are
+    closed; invalid ones stay open and re-validate on edit. The validate
+    page's submission panel deep-links the pre-filled form.
+  - **PRs (legacy, still works, undocumented on the site)**: PR adds
+    `submissions/<instance>.csv` → `.github/workflows/validate-submission.yml`.
 - **Full data rebuild** (`scripts/build_instance_data.py`): maintainer-only;
   requires instance/JAIR sources under `/home/mannelli/...` on the old
   Linux machine — not runnable from this repo alone.

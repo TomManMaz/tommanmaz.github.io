@@ -60,12 +60,14 @@ current page's nav link. Table-heavy pages use `<main class="wide">`.
   `window.BDSP_INSTANCES = ...;`) is generated — never hand-edit either.
 - Full rebuild: `scripts/build_instance_data.py` — maintainer-only, needs
   data sources that live outside this repo on the author's old machine.
-- CI-side surgical update: `scripts/apply_submission.py`, driven by
-  `.github/workflows/validate-submission.yml` when a PR adds
-  `submissions/<instance>.csv`. It re-validates with the bundled Python
-  validator and, if feasible and strictly better than the stored BKS,
-  patches the data files, copies the CSV to `sols/`, and appends to the
-  `submissions/accepted.json` ledger.
+- CI-side surgical update: `scripts/apply_submission.py` re-validates with
+  the bundled Python validator and, if feasible and strictly better than the
+  stored BKS, patches the data files, copies the CSV to `sols/`, and appends
+  to the `submissions/accepted.json` ledger. Two entry channels drive it:
+  the primary issue-based flow (`.github/ISSUE_TEMPLATE/new-bks.yml` +
+  `validate-issue-submission.yml` + `scripts/process_issue_submission.py`)
+  and the legacy PR flow (`validate-submission.yml`, still functional but
+  no longer documented on the site).
 
 ## MathJax
 Loaded with `defer` only on pages that render math: `bdsp_problem.html`,
