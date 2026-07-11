@@ -1,10 +1,13 @@
 /**
- * BDSP Web Solution Validator
- * Client-side validator — ports the Python bdsp-validator logic to vanilla JS.
+ * BDSP Web Solution Validator — page logic.
+ * All computation lives in js/bdsp_validator_core.js (window.BDSP_VALIDATOR_CORE),
+ * which must be loaded before this script. This file only handles DOM and rendering.
  */
 
 (function () {
   'use strict';
+
+  var core = window.BDSP_VALIDATOR_CORE;
 
   // ---------------------------------------------------------------------------
   // Globals
@@ -12,6 +15,7 @@
 
   var currentInstance = null; // parsed instance object
   var currentBKS = null;      // BKS metadata from BDSP_INSTANCES
+  var loadToken = 0;          // guards against slow loads finishing out of order
 
   // ---------------------------------------------------------------------------
   // Utility
@@ -26,7 +30,7 @@
   }
 
   function formatNum(val, decimals) {
-    if (val == null) return '\u2014';
+    if (val == null) return '—';
     if (decimals !== undefined) return val.toFixed(decimals);
     if (Number.isInteger(val)) return val.toLocaleString('en-US');
     return val.toLocaleString('en-US', { maximumFractionDigits: 2 });
@@ -37,6 +41,18 @@
     if (!el) return;
     el.textContent = msg;
     el.className = 'validator-status ' + (cls || '');
+  }
+
+  function downloadText(filename, text, mime) {
+    var blob = new Blob([text], { type: mime || 'text/csv' });
+    var url = URL.createObjectURL(blob);
+    var a = document.createElement('a');
+    a.href = url;
+    a.download = filename;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    setTimeout(function () { URL.revokeObjectURL(url); }, 0);
   }
 
   // ---------------------------------------------------------------------------
@@ -92,8 +108,13 @@
   function onInstanceChange() {
     var select = document.getElementById('instance-select');
     var name = select.value;
+    var token = ++loadToken;
     currentInstance = null;
     document.getElementById('results-section').style.display = 'none';
+
+    // Selecting from the collection replaces any uploaded custom instance
+    var upload = document.getElementById('instance-upload');
+    if (upload) upload.value = '';
 
     if (!name) {
       showStatus('instance-status', '', '');
@@ -108,7 +129,7 @@
       if (data[i].name === name) { currentBKS = data[i]; break; }
     }
 
-    showStatus('instance-status', 'Loading instance\u2026', 'status-loading');
+    showStatus('instance-status', 'Loading instance…', 'status-loading');
 
     var url = 'downloads/instances/' + encodeURIComponent(name) + '.json';
     fetch(url)
@@ -117,12 +138,13 @@
         return resp.json();
       })
       .then(function (json) {
+        if (token !== loadToken) return; // a newer load superseded this one
         try {
-          currentInstance = parseInstance(json, name);
+          currentInstance = core.parseInstance(json, name);
           var statusMsg = 'Loaded: ' + currentInstance.legs.length + ' legs, ' +
             currentInstance.numTours + ' tours';
           if (currentBKS && currentBKS.bks != null) {
-            statusMsg += ' \u2014 BKS: ' + currentBKS.bks.toLocaleString('en-US');
+            statusMsg += ' — BKS: ' + currentBKS.bks.toLocaleString('en-US');
             if (currentBKS.status === 'optimal') statusMsg += ' (optimal)';
           }
           showStatus('instance-status', statusMsg, 'status-ok');
@@ -132,405 +154,72 @@
         }
       })
       .catch(function (e) {
+        if (token !== loadToken) return;
         showStatus('instance-status', 'Failed to load instance: ' + e.message, 'status-error');
       });
   }
 
   // ---------------------------------------------------------------------------
-  // parseInstance(json, name)
+  // Custom instance upload (researcher-provided instance JSON)
   // ---------------------------------------------------------------------------
 
-  function parseInstance(json, name) {
-    // Sort legs by start time, then by original index (matching Python SortedList behaviour)
-    var rawLegs = json.legs || [];
-    var legs = rawLegs.map(function (item, idx) {
-      return {
-        id: idx,           // original index in JSON array
-        tour: item.tour,
-        start: item.start,
-        end: item.end,
-        startPos: item.startPos,
-        endPos: item.endPos,
-        drive: item.end - item.start
-      };
-    });
-    // stable sort by start, then id
-    legs.sort(function (a, b) {
-      if (a.start !== b.start) return a.start - b.start;
-      return a.id - b.id;
-    });
-    // re-assign sorted index
-    legs.forEach(function (leg, idx) { leg.sortedIdx = idx; });
+  function onInstanceUpload() {
+    var input = document.getElementById('instance-upload');
+    var file = input.files && input.files[0];
+    if (!file) return;
 
-    // Distance matrix — distances is an object keyed by string position indices
-    var distRaw = json.distances || {};
-    var numPos = Object.keys(distRaw).length;
-    var distances = [];
-    for (var i = 0; i < numPos; i++) {
-      var row = distRaw[String(i)] || {};
-      distances[i] = [];
-      for (var j = 0; j < numPos; j++) {
-        distances[i][j] = row[String(j)] || 0;
-      }
-    }
+    var token = ++loadToken;
+    var select = document.getElementById('instance-select');
+    if (select) select.value = '';
+    currentInstance = null;
+    currentBKS = null; // no BKS comparison for custom instances
+    document.getElementById('results-section').style.display = 'none';
 
-    // start/end work times — extra is an object keyed by string position indices
-    var extraRaw = json.extra || {};
-    var startWork = [];
-    var endWork = [];
-    var numExtra = Object.keys(extraRaw).length;
-    for (var k = 0; k < numExtra; k++) {
-      var posData = extraRaw[String(k)] || {};
-      startWork[k] = posData.startWork || 0;
-      endWork[k] = posData.endWork || 0;
-    }
+    showStatus('instance-status', 'Reading instance…', 'status-loading');
 
-    // Count unique tours
-    var tourSet = {};
-    legs.forEach(function (l) { tourSet[l.tour] = true; });
-
-    return {
-      name: name,
-      legs: legs,
-      distances: distances,
-      startWork: startWork,
-      endWork: endWork,
-      numTours: Object.keys(tourSet).length
-    };
-  }
-
-  // ---------------------------------------------------------------------------
-  // parseSolution(csvText, instance)
-  // Returns array of employee objects: { id, name, legs[] }
-  // ---------------------------------------------------------------------------
-
-  function parseSolution(csvText, instance) {
-    var lines = csvText.split(/\r?\n/);
-    var employees = [];
-    var counter = 0;
-
-    lines.forEach(function (line) {
-      line = line.trim();
-      if (!line) return;
-
-      var cols = line.split(',').map(function (v) { return parseFloat(v); });
-
-      // Skip all-zero rows
-      if (cols.every(function (v) { return v === 0 || isNaN(v); })) return;
-
-      if (cols.length !== instance.legs.length) {
-        throw new Error(
-          'Row ' + (counter + 1) + ' has ' + cols.length +
-          ' columns but instance has ' + instance.legs.length + ' legs.'
-        );
-      }
-
-      var assignedLegs = [];
-      cols.forEach(function (val, j) {
-        if (val === 1) assignedLegs.push(instance.legs[j]);
-      });
-
-      // Sort by start, then id (same ordering as SortedList)
-      assignedLegs.sort(function (a, b) {
-        if (a.start !== b.start) return a.start - b.start;
-        return a.id - b.id;
-      });
-
-      employees.push({
-        id: counter,
-        name: 'E' + counter,
-        legs: assignedLegs
-      });
-      counter++;
-    });
-
-    return employees;
-  }
-
-  // ---------------------------------------------------------------------------
-  // getPassiveRide(distances, i, j)
-  // ---------------------------------------------------------------------------
-
-  function getPassiveRide(distances, i, j) {
-    if (i === j) return 0;
-    return (distances[i] && distances[i][j]) ? distances[i][j] : 0;
-  }
-
-  // ---------------------------------------------------------------------------
-  // evaluateEmployee(emp, instance)
-  // Returns the employee state object.
-  // ---------------------------------------------------------------------------
-
-  function evaluateEmployee(emp, instance) {
-    var legs = emp.legs;
-    var distances = instance.distances;
-    var startWork = instance.startWork;
-    var endWork = instance.endWork;
-
-    if (!legs.length) {
-      return {
-        feasible: true,
-        objective: 0,
-        work_time_paid: 0,
-        total_time: 0,
-        ride: 0,
-        vehicle_changes: 0,
-        split_shifts: 0,
-        drive_time: 0,
-        bus_penalty: 0,
-        drive_penalty: 0,
-        rest_penalty: 0,
-        work_time: 0,
-        unpaid: 0,
-        upmax: 0,
-        split_time: 0,
-        start_shift: 0,
-        end_shift: 0,
-        hard: 0,
-        total_cost: 0,
-        num_legs: 0
-      };
-    }
-
-    // --- Step 1: Leg-pair variables ---
-    var legVars = []; // {leg_i, leg_j, i, j, ride, diff, diff_1}
-    for (var k = 0; k < legs.length - 1; k++) {
-      var leg_i = legs[k];
-      var leg_j = legs[k + 1];
-      var i = leg_i.endPos;
-      var j = leg_j.startPos;
-      var ride = getPassiveRide(distances, i, j);
-      var diff = leg_j.start - leg_i.end;
-      var diff_1 = diff - ride;
-      legVars.push({ leg_i: leg_i, leg_j: leg_j, i: i, j: j, ride: ride, diff: diff, diff_1: diff_1 });
-    }
-
-    // --- Step 2: Shift boundaries ---
-    var firstLeg = legs[0];
-    var lastLeg = legs[legs.length - 1];
-    var start_shift = firstLeg.start - (startWork[firstLeg.startPos] || 0);
-    var end_shift = lastLeg.end + (endWork[lastLeg.endPos] || 0);
-    var total_time = end_shift - start_shift;
-
-    // --- Step 3: Drive & ride time ---
-    var drive_time = 0;
-    legs.forEach(function (l) { drive_time += l.drive; });
-
-    var ride = 0;
-    legVars.forEach(function (lv) { ride += lv.ride; });
-
-    // --- Step 4: Bus penalty ---
-    var bus_penalty = 0;
-    legVars.forEach(function (lv) {
-      var leg_i = lv.leg_i, leg_j = lv.leg_j;
-      if (leg_i.tour !== leg_j.tour || leg_i.endPos !== leg_j.startPos) {
-        var dist = distances[lv.i] && distances[lv.i][lv.j] ? distances[lv.i][lv.j] : 0;
-        if (lv.diff < dist) {
-          bus_penalty += Math.abs(lv.diff - dist);
-        } else if (lv.diff <= 0) {
-          bus_penalty += Math.abs(lv.diff);
+    var reader = new FileReader();
+    reader.onload = function (e) {
+      if (token !== loadToken) return; // a newer load superseded this one
+      try {
+        var json = JSON.parse(e.target.result);
+        if (!json.legs || !json.legs.length) {
+          throw new Error('no "legs" array found — is this a BDSP instance JSON?');
         }
+        var stem = file.name.replace(/\.[^.]*$/, '');
+        currentInstance = core.parseInstance(json, stem);
+        showStatus('instance-status',
+          'Loaded custom instance "' + stem + '": ' + currentInstance.legs.length +
+          ' legs, ' + currentInstance.numTours + ' tours — no BKS comparison',
+          'status-ok');
+      } catch (err) {
+        currentInstance = null;
+        showStatus('instance-status', 'Invalid instance JSON: ' + err.message, 'status-error');
       }
-    });
-
-    // --- Step 5: Vehicle changes ---
-    var vehicle_changes = 0;
-    legVars.forEach(function (lv) {
-      if (lv.leg_i.tour !== lv.leg_j.tour) vehicle_changes++;
-    });
-
-    // --- Step 6: Drive block penalty ---
-    var drive_penalty = 0;
-    var b_20 = 0;
-    var b_15 = 0;
-    var dc = legs[0].drive;
-    legVars.forEach(function (lv) {
-      var diff = lv.diff;
-      var new_block = (diff >= 30) || (diff >= 20 && b_20 === 1) || (diff >= 15 && b_15 === 2);
-      if (new_block) {
-        dc = lv.leg_j.drive;
-        b_20 = 0;
-        b_15 = 0;
-      } else {
-        dc += lv.leg_j.drive;
-        if (diff >= 20) b_20 = 1;
-        if (diff >= 15) b_15++;
-      }
-      if (dc >= 240) {
-        drive_penalty += (dc - 240);
-      }
-    });
-
-    // --- Step 7: Working regulations ---
-
-    // first15: any diff_1 >= 15 within first 6h of work (skipping splits >= 180)
-    var first15 = false;
-    var split_time_for_first15 = 0;
-    for (var m = 0; m < legVars.length; m++) {
-      var lv = legVars[m];
-      if (lv.diff_1 >= 180) {
-        split_time_for_first15 += lv.diff_1;
-        continue;
-      }
-      if (lv.diff_1 >= 15 && lv.leg_i.end <= start_shift + 6 * 60 + split_time_for_first15) {
-        first15 = true;
-        break;
-      }
-    }
-
-    // break30: any diff_1 >= 30 (skipping splits >= 180)
-    var break30 = false;
-    for (var m2 = 0; m2 < legVars.length; m2++) {
-      var lv2 = legVars[m2];
-      if (lv2.diff_1 >= 180) continue;
-      if (lv2.diff_1 >= 30) { break30 = true; break; }
-    }
-
-    // unpaid & center30
-    var unpaid = 0;
-    var center30 = false;
-    legVars.forEach(function (lv) {
-      if (lv.diff_1 >= 180) return; // skip splits
-      var breakEnd = Math.min(end_shift - 2 * 60, lv.leg_j.start - lv.ride);
-      var breakStart = Math.max(start_shift + 2 * 60, lv.leg_i.end);
-      if (breakEnd - breakStart >= 15) {
-        unpaid += breakEnd - breakStart;
-      }
-      // center30 check
-      var centerEnd = Math.min(end_shift - 3 * 60, lv.leg_j.start - lv.ride);
-      var centerStart = Math.max(start_shift + 3 * 60, lv.leg_i.end);
-      if (centerEnd - centerStart >= 30) {
-        center30 = true;
-      }
-    });
-
-    // upmax
-    var upmax = 0;
-    if (!break30 || !first15) {
-      upmax = 0;
-    } else if (center30) {
-      upmax = 90;
-    } else {
-      upmax = 60;
-    }
-
-    // split
-    var split_shifts = 0;
-    var split_time = 0;
-    legVars.forEach(function (lv) {
-      if (lv.diff_1 >= 180) {
-        split_shifts++;
-        split_time += lv.diff_1;
-      }
-    });
-
-    // --- Step 8: Work time ---
-    var work_time = total_time - split_time - Math.min(unpaid, upmax);
-
-    // --- Step 9: Rest penalty ---
-    var rest_penalty = 0;
-    if (work_time >= 6 * 60) {
-      var rest_time = 0;
-      if (break30 && first15) {
-        legVars.forEach(function (lv) {
-          if (lv.diff_1 >= 3 * 60) return;
-          if (lv.diff_1 >= 15) rest_time += lv.diff_1;
-        });
-      }
-      if (rest_time < 30) {
-        rest_penalty = Math.max(0, work_time - (6 * 60 - 1));
-      } else if (rest_time < 45) {
-        rest_penalty = Math.max(0, work_time - 9 * 60);
-      }
-    }
-
-    // --- Step 10: Objective ---
-    var actual_work_time = Math.max(work_time, 390);
-    var objective = 2 * actual_work_time + total_time + ride + 30 * vehicle_changes + 180 * split_shifts;
-
-    // --- Step 11: Hard constraints ---
-    var hard = 1000 * (
-      bus_penalty +
-      Math.max(drive_time - 540, 0) +
-      Math.max(total_time - 840, 0) +
-      drive_penalty +
-      rest_penalty +
-      Math.max(work_time - 600, 0)
-    );
-
-    var feasible = (hard === 0);
-    var total_cost = hard + objective;
-
-    return {
-      feasible: feasible,
-      objective: objective,
-      work_time_paid: actual_work_time,
-      total_time: total_time,
-      ride: ride,
-      vehicle_changes: vehicle_changes,
-      split_shifts: split_shifts,
-      drive_time: drive_time,
-      bus_penalty: bus_penalty,
-      drive_penalty: drive_penalty,
-      rest_penalty: rest_penalty,
-      work_time: work_time,
-      unpaid: unpaid,
-      upmax: upmax,
-      split_time: split_time,
-      start_shift: start_shift,
-      end_shift: end_shift,
-      hard: hard,
-      total_cost: total_cost,
-      num_legs: legs.length
     };
-  }
-
-  // ---------------------------------------------------------------------------
-  // validateLegs(instance, employees)
-  // Returns { unassigned, duplicates }
-  // ---------------------------------------------------------------------------
-
-  function validateLegs(instance, employees) {
-    var counts = {}; // legSortedIdx -> count
-    instance.legs.forEach(function (leg) { counts[leg.sortedIdx] = 0; });
-
-    employees.forEach(function (emp) {
-      emp.legs.forEach(function (leg) {
-        if (counts[leg.sortedIdx] === undefined) counts[leg.sortedIdx] = 0;
-        counts[leg.sortedIdx]++;
-      });
-    });
-
-    var unassigned = [];
-    var duplicates = [];
-    instance.legs.forEach(function (leg) {
-      var c = counts[leg.sortedIdx] || 0;
-      if (c === 0) unassigned.push(leg);
-      else if (c > 1) duplicates.push({ leg: leg, count: c });
-    });
-
-    return { unassigned: unassigned, duplicates: duplicates };
+    reader.onerror = function () {
+      if (token !== loadToken) return;
+      currentInstance = null;
+      showStatus('instance-status', 'Failed to read file.', 'status-error');
+    };
+    reader.readAsText(file);
   }
 
   // ---------------------------------------------------------------------------
   // renderResults
   // ---------------------------------------------------------------------------
 
-  function renderResults(instance, employees, legCheck) {
+  function renderResults(instance, employees, legCheck, csvText) {
     var resultsSection = document.getElementById('results-section');
     var container = document.getElementById('results-content');
 
-    var evaluated = employees.map(function (emp) {
-      var state = evaluateEmployee(emp, instance);
-      return { emp: emp, state: state };
-    });
+    var result = core.evaluateSolution(instance, employees);
+    var evaluated = result.evaluated;
+    var totalObjective = result.totalCost;
+    var allFeasible = result.allFeasible;
 
-    var totalObjective = 0;
-    var allFeasible = true;
-    evaluated.forEach(function (ev) {
-      totalObjective += ev.state.total_cost;
-      if (!ev.state.feasible) allFeasible = false;
-    });
+    var covered = legCheck.unassigned.length === 0 && legCheck.duplicates.length === 0;
+    var isNewBest = !!(currentBKS && currentBKS.bks != null && allFeasible && covered &&
+      totalObjective < currentBKS.bks);
 
     var html = '';
 
@@ -547,7 +236,7 @@
       var bksVal = currentBKS.bks;
       var gap = (totalObjective - bksVal) / bksVal * 100;
       if (totalObjective < bksVal) {
-        html += '<span class="bks-ref bks-new-best">\u2605 New best! Gap to BKS (' +
+        html += '<span class="bks-ref bks-new-best">★ New best! Gap to BKS (' +
           formatNum(bksVal) + '): ' + gap.toFixed(2) + '%</span>';
       } else {
         html += '<span class="bks-ref">Gap to BKS (' + formatNum(bksVal) + '): ' +
@@ -559,13 +248,13 @@
 
     // Leg coverage
     if (legCheck.unassigned.length === 0 && legCheck.duplicates.length === 0) {
-      html += '<span class="leg-coverage leg-coverage-ok">\u2713 All ' + instance.legs.length + ' legs covered</span>';
+      html += '<span class="leg-coverage leg-coverage-ok">✓ All ' + instance.legs.length + ' legs covered</span>';
     } else {
       if (legCheck.unassigned.length > 0) {
-        html += '<span class="leg-coverage leg-coverage-warn">\u26a0 ' + legCheck.unassigned.length + ' leg(s) unassigned</span>';
+        html += '<span class="leg-coverage leg-coverage-warn">⚠ ' + legCheck.unassigned.length + ' leg(s) unassigned</span>';
       }
       if (legCheck.duplicates.length > 0) {
-        html += '<span class="leg-coverage leg-coverage-warn">\u26a0 ' + legCheck.duplicates.length + ' leg(s) assigned multiple times</span>';
+        html += '<span class="leg-coverage leg-coverage-warn">⚠ ' + legCheck.duplicates.length + ' leg(s) assigned multiple times</span>';
       }
     }
     html += '</div>';
@@ -580,7 +269,7 @@
     html += '<div style="overflow-x:auto;">';
     html += '<table class="algo-table breakdown-table">';
     html += '<thead><tr>';
-    html += '<th>Employee</th><th>Cost</th><th>Obj</th><th>W\u2032</th><th>T</th><th>Ride</th>';
+    html += '<th>Employee</th><th>Cost</th><th>Obj</th><th>W′</th><th>T</th><th>Ride</th>';
     html += '<th>Changes</th><th>Splits</th><th>Drive</th><th>Legs</th><th>Feasible</th>';
     html += '</tr></thead><tbody>';
 
@@ -598,12 +287,74 @@
       html += '<td>' + s.split_shifts + '</td>';
       html += '<td>' + formatNum(s.drive_time) + '</td>';
       html += '<td>' + s.num_legs + '</td>';
-      var fIcon = s.feasible ? '\u2713' : '\u2717';
+      var fIcon = s.feasible ? '✓' : '✗';
       html += '<td class="' + (s.feasible ? 'feasible-icon' : 'infeasible-icon') + '">' + fIcon + '</td>';
       html += '</tr>';
     });
 
     html += '</tbody></table></div>';
+
+    // Hard-constraint diagnostics for infeasible employees
+    if (!allFeasible) {
+      html += '<div class="violation-detail">';
+      html += '<p><strong>Why is this solution infeasible?</strong></p>';
+      evaluated.forEach(function (ev) {
+        if (ev.state.feasible) return;
+        var messages = core.violationList(ev.state).map(function (v) { return v.message; });
+        html += '<p><strong class="violation-emp">' + escapeHtml(ev.emp.name) + ':</strong> ' +
+          escapeHtml(messages.join('; ')) + '.</p>';
+      });
+      html += '</div>';
+    }
+
+    // Actions
+    html += '<p class="results-actions">';
+    html += '<button type="button" id="download-breakdown-btn">Download breakdown CSV</button>';
+    html += '</p>';
+
+    // Schedule timeline
+    if (window.BDSP_GANTT) {
+      html += '<details class="gantt-details"><summary>Schedule timeline</summary>';
+      html += '<div class="gantt-legend">solid = driving &nbsp;&middot;&nbsp; gray = passive ride &nbsp;&middot;&nbsp; tick = sign-on/off &nbsp;&middot;&nbsp; dashed = split break (&ge; 3 h)</div>';
+      html += window.BDSP_GANTT.render(instance, evaluated);
+      html += '</details>';
+    }
+
+    // Submission panel — only for a strictly better, fully covered, feasible
+    // solution of a collection instance (the same criteria the CI applies).
+    if (isNewBest) {
+      var subName = instance.name + '.csv';
+      var prefillUrl = 'https://github.com/TomManMaz/tommanmaz.github.io/new/main?filename=' +
+        encodeURIComponent('submissions/' + instance.name + '.csv') +
+        '&value=' + encodeURIComponent(csvText || '');
+      var ghUrl, ghHow;
+      if (csvText && prefillUrl.length <= 7000) {
+        ghUrl = prefillUrl;
+        ghHow = 'the file name and content are pre-filled; GitHub forks the repository for you';
+      } else {
+        // /upload/ requires push access (404 for everyone else); /new/ supports
+        // GitHub's automatic fork-and-PR flow, so prefill only the filename.
+        ghUrl = 'https://github.com/TomManMaz/tommanmaz.github.io/new/main?filename=' +
+          encodeURIComponent('submissions/' + instance.name + '.csv');
+        ghHow = 'the file name is pre-filled; paste the contents of the file from step 1 ' +
+          'and GitHub forks the repository for you';
+      }
+      html += '<div class="submit-panel">';
+      html += '<p><strong>Submit as the new best known solution</strong></p>';
+      html += '<p>Submissions are validated automatically: a feasible solution that strictly ' +
+        'improves the BKS is published within minutes and credited to your GitHub account.</p>';
+      html += '<ol>';
+      html += '<li>Download the solution named after the instance: ' +
+        '<button type="button" id="download-submission-btn">' + escapeHtml(subName) + '</button></li>';
+      html += '<li><a href="' + ghUrl + '" target="_blank" rel="noopener">Add the file on GitHub</a> ' +
+        'under <code>submissions/</code> (' + ghHow + ').</li>';
+      html += '<li>Open the pull request — the validator bot comments the verdict and publishes ' +
+        'an accepted result automatically.</li>';
+      html += '</ol>';
+      html += '<p>Details: <a href="https://github.com/TomManMaz/tommanmaz.github.io/tree/main/submissions" ' +
+        'target="_blank" rel="noopener">submission guide</a>.</p>';
+      html += '</div>';
+    }
 
     // Leg coverage details (if issues)
     if (legCheck.unassigned.length > 0 || legCheck.duplicates.length > 0) {
@@ -611,23 +362,37 @@
       if (legCheck.unassigned.length > 0) {
         html += '<p><strong>Unassigned legs:</strong> ';
         html += legCheck.unassigned.slice(0, 20).map(function (l) {
-          return 'leg ' + l.sortedIdx + ' (tour ' + l.tour + ', ' + l.start + '\u2013' + l.end + ')';
+          return escapeHtml('leg ' + l.sortedIdx + ' (tour ' + l.tour + ', ' + l.start + '–' + l.end + ')');
         }).join(', ');
-        if (legCheck.unassigned.length > 20) html += ', \u2026';
+        if (legCheck.unassigned.length > 20) html += ', …';
         html += '</p>';
       }
       if (legCheck.duplicates.length > 0) {
         html += '<p><strong>Duplicated legs:</strong> ';
         html += legCheck.duplicates.slice(0, 20).map(function (d) {
-          return 'leg ' + d.leg.sortedIdx + ' (' + d.count + 'x)';
+          return escapeHtml('leg ' + d.leg.sortedIdx + ' (' + d.count + 'x)');
         }).join(', ');
-        if (legCheck.duplicates.length > 20) html += ', \u2026';
+        if (legCheck.duplicates.length > 20) html += ', …';
         html += '</p>';
       }
       html += '</div>';
     }
 
     container.innerHTML = html;
+
+    var breakdownBtn = document.getElementById('download-breakdown-btn');
+    if (breakdownBtn) {
+      breakdownBtn.addEventListener('click', function () {
+        downloadText(instance.name + '_breakdown.csv', core.breakdownToCsv(evaluated));
+      });
+    }
+    var submissionBtn = document.getElementById('download-submission-btn');
+    if (submissionBtn) {
+      submissionBtn.addEventListener('click', function () {
+        downloadText(instance.name + '.csv', csvText);
+      });
+    }
+
     resultsSection.style.display = 'block';
     if (window.MathJax && MathJax.typesetPromise) {
       MathJax.typesetPromise([container]).then(function () {
@@ -661,7 +426,7 @@
     }
 
     validateBtn.disabled = true;
-    showStatus('validate-status', 'Validating\u2026', 'status-loading');
+    showStatus('validate-status', 'Validating…', 'status-loading');
     document.getElementById('results-section').style.display = 'none';
 
     // Yield to the browser so the loading text actually paints before
@@ -670,15 +435,15 @@
       var reader = new FileReader();
       reader.onload = function (e) {
         try {
-          var employees = parseSolution(e.target.result, currentInstance);
+          var employees = core.parseSolution(e.target.result, currentInstance);
           if (!employees.length) {
             showStatus('validate-status', 'No employees found in CSV (all rows were empty).', 'status-error');
             validateBtn.disabled = false;
             return;
           }
-          var legCheck = validateLegs(currentInstance, employees);
-          renderResults(currentInstance, employees, legCheck);
-          showStatus('validate-status', 'Validation complete \u2014 ' + employees.length + ' employee(s).', 'status-ok');
+          var legCheck = core.validateLegs(currentInstance, employees);
+          renderResults(currentInstance, employees, legCheck, e.target.result);
+          showStatus('validate-status', 'Validation complete — ' + employees.length + ' employee(s).', 'status-ok');
         } catch (err) {
           showStatus('validate-status', 'Error: ' + err.message, 'status-error');
           document.getElementById('results-section').style.display = 'none';
@@ -702,6 +467,9 @@
 
     var validateBtn = document.getElementById('validate-btn');
     if (validateBtn) validateBtn.addEventListener('click', onValidate);
+
+    var instanceUpload = document.getElementById('instance-upload');
+    if (instanceUpload) instanceUpload.addEventListener('change', onInstanceUpload);
 
     // Also trigger instance load if a value is pre-selected (e.g. via URL param)
     var params = new URLSearchParams(window.location.search);

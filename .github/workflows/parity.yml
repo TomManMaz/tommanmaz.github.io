@@ -1,0 +1,80 @@
+# Validator parity gate.
+#
+# The in-browser validator (js/bdsp_validator_core.js) must stay numerically
+# identical to the Python reference (bdsp-validator/), which is what the
+# submission pipeline trusts. This workflow re-proves that equivalence
+# whenever either implementation — or the data they are checked against —
+# changes:
+#
+#   1. parity_test.js       — all 65 archived solutions, exact per-employee
+#                             comparison against stored breakdowns AND a live
+#                             run of the Python reference.
+#   2. fuzz_parity.js       — deterministic mutants of the archived solutions
+#                             that trigger every hard-constraint penalty
+#                             branch; JS and Python must agree on every field.
+#
+# Plain `pull_request` (read-only token, no secrets) — safe for forks, and
+# disjoint from validate-submission.yml, which only watches submissions/**.
+
+name: Validator parity
+
+# Note: bot pushes from validate-submission.yml (default GITHUB_TOKEN) do not
+# trigger this workflow — GitHub suppresses those events. Community-accepted
+# solutions were already validated by the Python reference in that pipeline;
+# use workflow_dispatch to re-prove parity on demand.
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - 'js/bdsp_validator_core.js'
+      - 'js/bdsp_validate.js'
+      - 'scripts/parity_test.js'
+      - 'scripts/fuzz_parity.js'
+      - 'scripts/py_eval_batch.py'
+      - 'bdsp-validator/**'
+      - 'sols/**'
+      - 'data/instances.json'
+      - 'downloads/instances/**'
+      - '.github/workflows/parity.yml'
+  pull_request:
+    paths:
+      - 'js/bdsp_validator_core.js'
+      - 'js/bdsp_validate.js'
+      - 'scripts/parity_test.js'
+      - 'scripts/fuzz_parity.js'
+      - 'scripts/py_eval_batch.py'
+      - 'bdsp-validator/**'
+      - 'sols/**'
+      - 'data/instances.json'
+      - 'downloads/instances/**'
+      - '.github/workflows/parity.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  parity:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          lfs: false  # collection.tar.gz is not needed
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install validator dependency
+        run: pip install sortedcontainers
+
+      - name: Parity test (65 archived solutions, JS vs stored + live Python)
+        run: node scripts/parity_test.js --python
+
+      - name: Differential fuzzing (infeasible-path branches)
+        run: node scripts/fuzz_parity.js --seed 42 --per-instance 5

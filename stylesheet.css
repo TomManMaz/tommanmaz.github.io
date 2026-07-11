@@ -585,6 +585,42 @@ button:hover { background: #e0e0e0; }
 .bks-ref { font-size: 0.88rem; font-weight: bold; color: var(--text-muted); }
 .bks-new-best { color: var(--ok); }
 
+.or-note { font-size: 0.85rem; color: var(--text-muted); }
+
+.violation-detail { margin-top: 0.6rem; font-size: 0.9rem; }
+.violation-detail p { margin: 0.15rem 0; }
+.violation-emp { color: var(--bad); }
+
+.results-actions { margin: 0.8rem 0; }
+.results-actions button,
+.submit-panel button {
+  font-family: inherit;
+  padding: 0.25rem 0.7rem;
+  background: #eee;
+  color: var(--text);
+  border: 1px solid #888;
+  font-size: 0.88rem;
+  cursor: pointer;
+}
+.results-actions button:hover,
+.submit-panel button:hover { background: #e0e0e0; }
+
+.submit-panel {
+  border: 1px solid var(--rule);
+  padding: 0.8rem 1rem;
+  margin: 1rem 0;
+  font-size: 0.95rem;
+  background: var(--ok-bg);
+}
+.submit-panel p { margin: 0.3rem 0; }
+.submit-panel ol { margin: 0.4rem 0 0.4rem 1.4rem; }
+.submit-panel li { margin: 0.25rem 0; }
+
+.gantt-details { margin: 1rem 0; }
+.gantt-details summary { cursor: pointer; font-weight: bold; }
+.gantt-legend { font-size: 0.85rem; color: var(--text-muted); margin: 0.4rem 0; }
+.gantt-details svg { max-width: 100%; height: auto; border: 1px solid var(--rule); margin-top: 0.4rem; }
+
 /* ---------- 11. Responsive ---------- */
 @media (max-width: 768px) {
   body { font-size: 16px; }

@@ -47,7 +47,7 @@
     <p class="last-updated">Last updated: <span id="last-updated-date">&hellip;</span></p>
 
     <p>
-      284 BDSP instances across 12 source types. Sizes range from 8 tours (73 legs) to 250 tours (2339 legs).
+      284 BDSP instances across 12 source types. Sizes range from 8 tours (73 legs) to 981 tours (3129 legs).
       Lower bounds are computed using Branch-and-Price where available; rows highlighted in
       <span style="background: var(--success-bg); padding: 2px 6px; border-radius: 3px;">green</span>
       with 0.0% gap are <strong>proven optimal</strong>. Click an instance name for the per-algorithm breakdown.
@@ -81,6 +81,62 @@
         </tr>
       </tbody>
     </table>
+
+    <h2 id="data-access">Data Access</h2>
+    <p>
+      Everything behind this collection is served as static files with stable URLs &mdash;
+      plain JSON and CSV, no API key. Script against them directly:
+    </p>
+    <table>
+      <thead>
+        <tr>
+          <th>URL</th>
+          <th>Content</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><code>/data/instances.json</code></td>
+          <td>Index of all 284 instances: <code>name</code>, <code>source</code>, <code>tours</code>,
+          <code>legs</code>, <code>stations</code>, <code>bks</code>, <code>lower_bound</code>,
+          <code>gap_pct</code>, <code>status</code>, <code>best_algorithm</code>, per-algorithm results
+          (<code>algorithms</code>, <code>old_algorithms</code>), 59 instance features
+          (<code>features</code>), and a per-employee <code>solution_breakdown</code> for the
+          65 realistic instances.</td>
+        </tr>
+        <tr>
+          <td><code>/downloads/instances/&lt;name&gt;.json</code></td>
+          <td>Instance definition: <code>legs</code> &mdash; array of
+          <code>{tour, start, end, startPos, endPos}</code> with times in minutes, ordered by start
+          time &mdash; plus <code>distances</code> (position-indexed travel-time matrix) and
+          <code>extra</code> (per-position sign-on/sign-off times).</td>
+        </tr>
+        <tr>
+          <td><code>/sols/&lt;name&gt;.csv</code></td>
+          <td>Best archived solution matrix (65 realistic instances): header-less binary matrix,
+          one row per employee, one column per leg in instance order.</td>
+        </tr>
+        <tr>
+          <td><code>/downloads/collection.tar.gz</code></td>
+          <td>Full instance archive.</td>
+        </tr>
+      </tbody>
+    </table>
+    <p>URLs are relative to <code>https://tommanmaz.github.io</code>. Example:</p>
+    <pre class="citation-box">import json, urllib.request
+
+BASE = "https://tommanmaz.github.io"
+index = json.load(urllib.request.urlopen(f"{BASE}/data/instances.json"))
+open_instances = [e["name"] for e in index if e["status"] == "open"]
+inst = json.load(urllib.request.urlopen(f"{BASE}/downloads/instances/{open_instances[0]}.json"))
+print(open_instances[0], len(inst["legs"]), "legs")</pre>
+    <p>
+      To validate solutions in bulk, use the
+      <a href="https://github.com/TomManMaz/bdsp-validator">Python validator</a>
+      (<code>--mode folder</code>) or load the web validator&rsquo;s computation core directly in
+      Node.js: <code>require('./js/bdsp_validator_core.js')</code>. The JS core is tested for exact
+      numerical parity with the Python reference on every change.
+    </p>
 
     <h2>Computational Setup</h2>
     <div class="info-box">
