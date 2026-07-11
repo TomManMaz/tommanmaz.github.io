@@ -78,6 +78,7 @@ hr {
 code {
   font-family: "Courier New", Courier, monospace;
   font-size: 0.95em;
+  overflow-wrap: anywhere; /* long paths/URLs wrap instead of widening the page */
 }
 
 pre {
@@ -203,6 +204,14 @@ th {
   font-weight: bold;
 }
 tbody tr:nth-child(even) { background: var(--bg-stripe); }
+
+/* Wide content scrolls in its own box; the page body never scrolls sideways. */
+.table-scroll { overflow-x: auto; }
+mjx-container[display="true"] {
+  overflow-x: auto;
+  overflow-y: hidden;
+  max-width: 100%;
+}
 
 /* Buttons: flat, square */
 button {
@@ -637,4 +646,14 @@ button:hover { background: #e0e0e0; }
 @media (max-width: 480px) {
   .navbar a { display: inline-block; margin: 0.15rem 0.8rem 0.15rem 0; }
   main { padding: 0 0.9rem; }
+  /* On phones even inline formulas may exceed the line; scroll them in place
+     rather than widening the page. inline-block makes max-width/overflow
+     effective on inline math (the baseline shift is acceptable here). */
+  mjx-container {
+    display: inline-block;
+    max-width: 100%;
+    overflow-x: auto;
+    overflow-y: hidden;
+    vertical-align: middle;
+  }
 }
