@@ -42,7 +42,6 @@ import argparse
 import datetime
 import json
 import logging
-import shutil
 import sys
 import traceback
 from pathlib import Path
@@ -74,6 +73,21 @@ from data.instance import Instance as ValidatorInstance  # noqa: E402
 
 class SubmissionError(Exception):
     """Raised for unrecoverable problems (unknown instance, missing files)."""
+
+
+def _canonical_csv(path: Path) -> str:
+    """The submitted matrix as plain '0,1,...' rows joined by LF.
+
+    Only called after the strict parser (Solution.from_file) accepted the file,
+    so every non-blank row already has the right width and 0/1 cells.
+    """
+    rows = []
+    for line in path.read_text(encoding="utf-8-sig").splitlines():
+        cells = [c.strip() for c in line.split(",")] if line.strip() else []
+        bits = ["1" if c in ("1", "1.0") else "0" for c in cells]
+        if "1" in bits:
+            rows.append(",".join(bits))
+    return "\n".join(rows) + "\n"
 
 
 # ---------------------------------------------------------------------------
@@ -238,34 +252,50 @@ def process_submission(
         entry["solution_breakdown"] = breakdown
         instances[index] = entry
 
-        # 2. Save the accepted solution as the canonical best solution
-        #    (skip the copy when the submission already is that file).
-        SOLUTIONS_DIR.mkdir(parents=True, exist_ok=True)
-        dest = SOLUTIONS_DIR / f"{instance_name}.csv"
-        if Path(solution_path).resolve() != dest.resolve():
-            shutil.copyfile(solution_path, dest)
-
-        # 3. Rewrite both data files (same serialization as build_instance_data.py).
-        with open(INSTANCES_JSON, "w", encoding="utf-8") as f:
-            json.dump(instances, f, indent=2)
-        with open(INSTANCES_JS, "w", encoding="utf-8") as f:
-            f.write("window.BDSP_INSTANCES = ")
-            json.dump(instances, f, indent=2)
-            f.write(";\n")
-
-        # 4. Record acceptance in the durable ledger so a future full rebuild
-        #    (build_instance_data.py) keeps this community BKS instead of
-        #    regressing it to the best algorithmic value.
+        # 2. Load the ledger first: a corrupt ledger must abort the run before
+        #    anything is written, never be silently replaced (that would drop
+        #    every earlier community credit on the next rebuild).
         ledger_file = REPO_ROOT / "submissions" / "accepted.json"
-        ledger_file.parent.mkdir(parents=True, exist_ok=True)
         ledger = {}
         if ledger_file.exists():
             try:
                 ledger = json.loads(ledger_file.read_text(encoding="utf-8"))
-            except Exception:
-                ledger = {}
-        ledger[instance_name] = {"author": author, "date": date, "objective": objective}
-        ledger_file.write_text(json.dumps(ledger, indent=2, sort_keys=True) + "\n", encoding="utf-8")
+            except ValueError as exc:
+                raise SubmissionError(f"{ledger_file} is not valid JSON: {exc}") from exc
+
+        # 3. Save the accepted solution as the canonical best solution. It is
+        #    re-serialized from the parsed matrix (LF, 0/1 only, no blank or
+        #    all-zero rows), never copied verbatim: the published file can
+        #    then hold nothing but the solution itself.
+        SOLUTIONS_DIR.mkdir(parents=True, exist_ok=True)
+        dest = SOLUTIONS_DIR / f"{instance_name}.csv"
+        canonical = _canonical_csv(Path(solution_path))
+        with open(dest, "w", encoding="utf-8", newline="\n") as f:
+            f.write(canonical)
+
+        # 4. Rewrite both data files (same serialization as build_instance_data.py).
+        with open(INSTANCES_JSON, "w", encoding="utf-8", newline="\n") as f:
+            json.dump(instances, f, indent=2)
+            f.write("\n")
+        with open(INSTANCES_JS, "w", encoding="utf-8", newline="\n") as f:
+            f.write("window.BDSP_INSTANCES = ")
+            json.dump(instances, f, indent=2)
+            f.write(";\n")
+
+        # 5. Record acceptance in the durable ledger so a future full rebuild
+        #    (build_instance_data.py) keeps this community BKS instead of
+        #    regressing it to the best algorithmic value. The entry for an
+        #    instance is its current record; earlier records it superseded are
+        #    kept under "previous" (newest last).
+        ledger_file.parent.mkdir(parents=True, exist_ok=True)
+        old = ledger.get(instance_name)
+        entry_rec = {"author": author, "date": date, "objective": objective}
+        if old:
+            previous = old.pop("previous", [])
+            entry_rec["previous"] = previous + [old]
+        ledger[instance_name] = entry_rec
+        with open(ledger_file, "w", encoding="utf-8", newline="\n") as f:
+            f.write(json.dumps(ledger, indent=2, sort_keys=True) + "\n")
 
         result["applied"] = True
 

@@ -7,7 +7,7 @@ or pasted CSV), re-validates it with the bundled validator via
 scripts/apply_submission.py, and writes:
 
   * _ci/comment.md          — the verdict comment for the issue
-  * $GITHUB_OUTPUT          — accepted=true|false, invalid=true|false
+  * $GITHUB_OUTPUT          — accepted=true|false
 
 SECURITY MODEL: the issue body is untrusted DATA. Nothing from it is ever
 executed; the instance name is validated against a strict pattern and must
@@ -126,8 +126,30 @@ def pick_gist_file(files: dict, instance: str) -> dict:
                      "(or exactly one .csv file).")
 
 
-def fetch_gist(gist_id: str, instance: str, dest: Path) -> None:
+def find_solution_link(solution_section: str, body: str):
+    """('attachment', url) | ('gist', id) | None.
+
+    The Solution field wins over the rest of the body, so a link pasted in
+    another field never overrides the one the submitter put in that field.
+    """
+    for text in (solution_section, body):
+        m = ATTACHMENT_RE.search(text)
+        if m:
+            return "attachment", m.group(0)
+        m = GIST_RE.search(text)
+        if m:
+            return "gist", m.group(1)
+    return None
+
+
+def fetch_gist(gist_id: str, instance: str, dest: Path, author: str) -> None:
     meta = json.loads(_get(f"https://api.github.com/gists/{gist_id}", api=True))
+    owner = ((meta.get("owner") or {}).get("login") or "")
+    # Credit goes to the issue author, so the gist must be theirs: nobody can
+    # resubmit someone else's public gist under their own name.
+    if owner.lower() != author.lower():
+        raise ValueError(f"The linked gist belongs to @{owner or 'unknown'}, not to you; "
+                         "link a gist from your own account.")
     raw_url = pick_gist_file(meta.get("files") or {}, instance).get("raw_url", "")
     if not raw_url.startswith(GIST_RAW_PREFIX):
         raise ValueError("Unexpected gist download location.")
@@ -184,12 +206,11 @@ def compose_comment(author: str, result: dict) -> str:
     return "\n".join(lines) + "\n"
 
 
-def write_outputs(accepted: bool, invalid: bool) -> None:
+def write_outputs(accepted: bool) -> None:
     out = os.environ.get("GITHUB_OUTPUT")
     if out:
         with open(out, "a", encoding="utf-8") as f:
             f.write(f"accepted={'true' if accepted else 'false'}\n")
-            f.write(f"invalid={'true' if invalid else 'false'}\n")
 
 
 def main() -> int:
@@ -203,9 +224,9 @@ def main() -> int:
         return 2
 
     solution_section = form_field(body, "Solution file")
-    url_match = ATTACHMENT_RE.search(solution_section) or ATTACHMENT_RE.search(body)
-    attachment_url = url_match.group(0) if url_match else None
-    gist_match = GIST_RE.search(solution_section) or GIST_RE.search(body)
+    link = find_solution_link(solution_section, body)
+    attachment_url = link[1] if link and link[0] == "attachment" else None
+    gist_id = link[1] if link and link[0] == "gist" else None
     instance = resolve_instance_name(body, title, attachment_url)
 
     result: dict = {"instance": instance, "status": "error", "message": ""}
@@ -220,8 +241,8 @@ def main() -> int:
             pasted = extract_pasted_csv(solution_section)
             if attachment_url:
                 fetch_attachment(attachment_url, csv_path)
-            elif gist_match:
-                fetch_gist(gist_match.group(1), instance, csv_path)
+            elif gist_id:
+                fetch_gist(gist_id, instance, csv_path, author)
             elif pasted:
                 csv_path.write_text(pasted, encoding="utf-8")
             else:
@@ -246,8 +267,7 @@ def main() -> int:
     ci_dir.mkdir(exist_ok=True)
     (ci_dir / "comment.md").write_text(compose_comment(author, result), encoding="utf-8")
 
-    write_outputs(accepted=result.get("status") == "accepted",
-                  invalid=result.get("status") in ("invalid", "error"))
+    write_outputs(accepted=result.get("status") == "accepted")
     return 0
 
 

@@ -8,6 +8,9 @@ import os
 from data.employee import Employee
 from data.instance import Instance
 
+# Accepted cell spellings in a solution matrix (some tools write floats).
+_BINARY = {'0': 0, '1': 1, '0.0': 0, '1.0': 1}
+
 
 class Solution:
     """Solution class, represented by a list of employees
@@ -119,10 +122,24 @@ class Solution:
         """
         employees: List[Employee] = []
         counter = 0
-        with file.open('r') as f:
-            f = csv.reader(f, quoting=csv.QUOTE_NONNUMERIC)
-            for row in f:
-                row_legs = [index for index, value in enumerate(row) if value == 1]
+        n_legs = len(instance.legs)
+        # Strict format, mirrored by parseSolution in js/bdsp_validator_core.js:
+        # optional UTF-8 BOM, blank lines skipped, every other row has exactly
+        # one 0/1 cell per leg. Anything else is an error, never ignored.
+        with Path(file).open('r', encoding='utf-8-sig', newline='') as f:
+            for line_no, line in enumerate(f, 1):
+                line = line.strip()
+                if not line:
+                    continue
+                cells = [c.strip() for c in line.split(',')]
+                if len(cells) != n_legs:
+                    raise ValueError(f'Row {line_no} has {len(cells)} columns '
+                                     f'but instance has {n_legs} legs.')
+                bad = next((c for c in cells if c not in _BINARY), None)
+                if bad is not None:
+                    raise ValueError(f'Row {line_no} contains "{bad[:20]}"; '
+                                     'only 0 and 1 are allowed.')
+                row_legs = [index for index, value in enumerate(cells) if _BINARY[value] == 1]
                 if not row_legs:
                     continue
                 employee = Employee(counter, instance)

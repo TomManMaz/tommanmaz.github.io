@@ -16,6 +16,7 @@
   var currentInstance = null; // parsed instance object
   var currentBKS = null;      // BKS metadata from BDSP_INSTANCES
   var loadToken = 0;          // guards against slow loads finishing out of order
+  var runToken = 0;           // guards against overlapping validation runs
 
   // ---------------------------------------------------------------------------
   // Utility
@@ -26,7 +27,8 @@
     return String(str)
       .replace(/&/g, '&amp;')
       .replace(/</g, '&lt;')
-      .replace(/>/g, '&gt;');
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;');
   }
 
   function formatNum(val, decimals) {
@@ -110,7 +112,7 @@
     var name = select.value;
     var token = ++loadToken;
     currentInstance = null;
-    document.getElementById('results-section').style.display = 'none';
+    document.getElementById('results-section').hidden = true;
 
     // Selecting from the collection replaces any uploaded custom instance
     var upload = document.getElementById('instance-upload');
@@ -174,7 +176,7 @@
     if (select) select.value = '';
     currentInstance = null;
     currentBKS = null; // no BKS comparison for custom instances
-    document.getElementById('results-section').style.display = 'none';
+    document.getElementById('results-section').hidden = true;
 
     showStatus('instance-status', 'Reading instance…', 'status-loading');
 
@@ -270,7 +272,7 @@
     if (currentBKS && currentBKS.bks != null && allFeasible) {
       var bksVal = currentBKS.bks;
       var gap = (totalObjective - bksVal) / bksVal * 100;
-      if (totalObjective < bksVal) {
+      if (isNewBest) {
         html += '<span class="bks-ref bks-new-best">★ New best! Gap to BKS (' +
           formatNum(bksVal) + '): ' + gap.toFixed(2) + '%</span>';
       } else {
@@ -355,7 +357,7 @@
     }
 
     // Per-employee breakdown table
-    html += '<div style="overflow-x:auto;">';
+    html += '<div class="table-scroll">';
     html += '<table class="algo-table breakdown-table">';
     html += '<thead><tr>';
     [['Employee', 'Row of your file (E0 = first non-empty row)'],
@@ -422,7 +424,7 @@
       });
     }
 
-    resultsSection.style.display = 'block';
+    resultsSection.hidden = false;
     if (window.MathJax && MathJax.typesetPromise) {
       MathJax.typesetPromise([container]).then(function () {
         resultsSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
@@ -438,16 +440,16 @@
 
   // A column-count mismatch almost always means the wrong instance is
   // selected: say so, and name the collection instances that would fit.
-  function explainParseError(err, csvText) {
+  function explainParseError(err, csvText, inst) {
     var firstRow = (csvText.split(/\r?\n/).filter(function (l) { return l.trim(); })[0] || '');
     var cols = firstRow ? firstRow.split(',').length : 0;
-    if (!currentInstance || !cols || cols === currentInstance.legs.length) {
+    if (!inst || !cols || cols === inst.legs.length) {
       return 'Error: ' + err.message;
     }
     var fits = (window.BDSP_INSTANCES || []).filter(function (e) { return e.legs === cols; })
       .map(function (e) { return e.name; });
-    var msg = 'Your file has ' + cols + ' columns per row, but ' + currentInstance.name +
-      ' has ' + currentInstance.legs.length + ' legs, so the file is probably for a different instance.';
+    var msg = 'Your file has ' + cols + ' columns per row, but ' + inst.name +
+      ' has ' + inst.legs.length + ' legs, so the file is probably for a different instance.';
     if (fits.length) {
       msg += ' Instances with ' + cols + ' legs: ' + fits.slice(0, 6).join(', ') +
         (fits.length > 6 ? ', …' : '') + '.';
@@ -510,30 +512,48 @@
 
     validateBtn.disabled = true;
     showStatus('validate-status', 'Validating…', 'status-loading');
-    document.getElementById('results-section').style.display = 'none';
+    document.getElementById('results-section').hidden = true;
+
+    // Pin the instance this run validates against: a newer run, or an
+    // instance change while the file is being read, makes this one stale.
+    var inst = currentInstance;
+    var run = ++runToken;
+    var instToken = loadToken;
+    function stale() { return run !== runToken || instToken !== loadToken; }
 
     // Yield to the browser so the loading text actually paints before
     // the (synchronous) evaluation kicks in.
     setTimeout(function () {
       var reader = new FileReader();
       reader.onload = function (e) {
+        if (stale()) {
+          if (run === runToken) {  // instance changed mid-read: just reset
+            validateBtn.disabled = false;
+            showStatus('validate-status', '', '');
+          }
+          return;
+        }
         try {
-          var employees = core.parseSolution(e.target.result, currentInstance);
+          var employees = core.parseSolution(e.target.result, inst);
           if (!employees.length) {
             showStatus('validate-status', 'No employees found in CSV (all rows were empty).', 'status-error');
             validateBtn.disabled = false;
             return;
           }
-          var legCheck = core.validateLegs(currentInstance, employees);
-          renderResults(currentInstance, employees, legCheck, e.target.result);
+          var legCheck = core.validateLegs(inst, employees);
+          renderResults(inst, employees, legCheck, e.target.result);
           showStatus('validate-status', 'Validation complete — ' + employees.length + ' employee(s).', 'status-ok');
         } catch (err) {
-          showStatus('validate-status', explainParseError(err, e.target.result), 'status-error');
-          document.getElementById('results-section').style.display = 'none';
+          showStatus('validate-status', explainParseError(err, e.target.result, inst), 'status-error');
+          document.getElementById('results-section').hidden = true;
         }
         validateBtn.disabled = false;
       };
       reader.onerror = function () {
+        if (stale()) {
+          if (run === runToken) validateBtn.disabled = false;
+          return;
+        }
         showStatus('validate-status', 'Failed to read file.', 'status-error');
         validateBtn.disabled = false;
       };

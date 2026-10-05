@@ -26,8 +26,9 @@ published automatically as the new BKS, credited to your GitHub account.
 
 **Submitting from the command line or API?** Those cannot upload issue
 attachments: put the CSV in a public [gist](https://gist.github.com) named
-`<instance>.csv` and link it instead. Keep the `[BKS] <instance>` title so the
-bot picks the issue up, e.g.
+`<instance>.csv` **from the same account that opens the issue** (credit goes to
+the issue author, so gists owned by someone else are refused) and link it
+instead. Keep the `[BKS] <instance>` title so the bot picks the issue up, e.g.
 
 ```
 gh gist create --public realistic_50_23.csv
@@ -48,7 +49,12 @@ A header-less CSV **binary assignment matrix**:
   leg order (legs are ordered by start time, matching the instance JSON);
 - cell `i,j` is `1` if leg `j` is assigned to employee `i`, else `0`;
 - every leg must be covered by **exactly one** employee; all-zero rows are
-  ignored.
+  ignored;
+- the format is checked strictly: every row needs exactly one cell per leg
+  (no trailing commas), and cells must be `0` or `1` (`0.0`/`1.0` are
+  tolerated). A UTF-8 byte-order mark (Excel's "CSV UTF-8") and blank lines
+  are fine. The [online validator](https://tommanmaz.github.io/bdsp_validate.html)
+  applies the same rules.
 
 Example (3 employees, 5 legs):
 
@@ -75,9 +81,11 @@ driving-rest and rest-break rules) described on the
 When a submission is accepted, the workflow updates `data/instances.json` and
 `data/instances.js` (new `bks`, `best_algorithm` = your handle,
 `bks_source: community`, `submitted_by`, `submitted_at`, and the per-employee
-`solution_breakdown`), saves your file as `sols/<instance>.csv`, and appends an
-entry to [`accepted.json`](accepted.json) so the record survives future data
-rebuilds.
+`solution_breakdown`), saves your matrix as `sols/<instance>.csv` (re-written
+as plain `0`/`1` rows with LF line endings), and records you in
+[`accepted.json`](accepted.json) so the record survives future data rebuilds.
+If you improve on an earlier community record, that record is kept under
+`previous`.
 
 `accepted.json` is the only file kept in this folder; submitted CSVs live on as
 `sols/<instance>.csv`.

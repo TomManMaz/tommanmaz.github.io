@@ -47,9 +47,6 @@
   --gantt-ride:  #bbbbbb;
   --gantt-split: #888888;
 
-  /* legacy alias still referenced inline in bdsp_collection.html */
-  --success-bg:  var(--ok-bg);
-
   color-scheme: light;
 }
 
@@ -413,6 +410,22 @@ button:hover { background: var(--control-hover); }
 }
 .collection-table th.sortable.sort-asc::after { content: '\2191'; opacity: 1; }
 .collection-table th.sortable.sort-desc::after { content: '\2193'; opacity: 1; }
+/* header label is a real button (keyboard-sortable) that looks like plain text */
+.collection-table .sort-btn {
+  font: inherit;
+  font-weight: bold;
+  color: inherit;
+  background: none;
+  border: none;
+  padding: 0;
+  margin: 0;
+  cursor: pointer;
+  text-align: left;
+}
+.collection-table .sort-btn:hover { background: none; text-decoration: underline; }
+.collection-table td.no-match { text-align: center; }
+.collection-section { margin-top: 2.5rem; }
+.legend-optimal { background: var(--ok-bg); padding: 0 0.3rem; }
 .collection-table td:first-child a { font-weight: bold; }
 .collection-table td.num {
   text-align: right;
@@ -520,13 +533,11 @@ button:hover { background: var(--control-hover); }
 .infeasible-row { background: var(--warn-bg); }
 
 /* Features (collapsible, grouped) */
-.features-toggle {
-  cursor: pointer;
-  user-select: none;
-  color: var(--link);
-  font-weight: bold;
-}
-.features-toggle:hover { text-decoration: underline; }
+/* <summary> holding the section's <h2>: keyboard-operable, looks like a heading */
+.features-details > summary { cursor: pointer; }
+.features-details > summary h2 { display: inline; border: none; color: var(--link); }
+.features-details > summary:hover h2 { text-decoration: underline; }
+.features-details > summary { border-bottom: 1px solid var(--rule); margin: 2rem 0 0.8rem; padding-bottom: 0.25rem; }
 .features-group { margin-bottom: 1rem; }
 .features-group h4 { margin: 0.6rem 0 0.3rem 0; font-size: 0.95rem; }
 .features-grid {
@@ -645,7 +656,6 @@ button:hover { background: var(--control-hover); }
 .bks-ref { font-size: 0.88rem; font-weight: bold; color: var(--text-muted); }
 .bks-new-best { color: var(--ok); }
 
-.or-note,
 .field-hint { font-size: 0.85rem; color: var(--text-muted); }
 .lead { font-size: 1.05rem; }
 

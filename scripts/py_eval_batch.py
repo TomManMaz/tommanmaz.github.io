@@ -27,7 +27,6 @@ Requires: sortedcontainers (pip install sortedcontainers).
 import json
 import logging
 import sys
-from collections import Counter
 from pathlib import Path
 
 REPO_ROOT = Path(__file__).resolve().parent.parent
@@ -75,12 +74,9 @@ def evaluate_pair(instance, solution_path: Path) -> dict:
     solution = Solution.from_file(instance, solution_path)
     solution.evaluate()
 
-    counts = Counter()
-    for employee in solution.employees:
-        for leg in employee.legs:
-            counts[leg.id] += 1
-    unassigned = sum(1 for leg in instance.legs if counts[leg.id] == 0)
-    duplicates = sum(1 for leg in instance.legs if counts[leg.id] > 1)
+    # The coverage check the CI trusts (Validator.validate_legs), not a copy.
+    unassigned_ids, duplicate_ids = _validator_module.leg_coverage(instance, solution)
+    unassigned, duplicates = len(unassigned_ids), len(duplicate_ids)
 
     return {
         "total": solution.value,

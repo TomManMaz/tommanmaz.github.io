@@ -13,17 +13,17 @@
 #                             that trigger every hard-constraint penalty
 #                             branch; JS and Python must agree on every field.
 #
-# Plain `pull_request` (read-only token, no secrets) — safe for forks, and
-# disjoint from validate-submission.yml, which only watches submissions/**.
+# Plain `pull_request` (read-only token, no secrets) — safe for forks.
 
 name: Validator parity
 
-# Note: bot pushes from validate-submission.yml (default GITHUB_TOKEN) do not
-# trigger this workflow — GitHub suppresses those events. Community-accepted
-# solutions were already validated by the Python reference in that pipeline;
-# use workflow_dispatch to re-prove parity on demand.
+# Note: bot pushes from validate-issue-submission.yml (default GITHUB_TOKEN)
+# do not trigger this workflow — GitHub suppresses those events. The weekly
+# run re-proves parity on whatever the bot has published since.
 on:
   workflow_dispatch:
+  schedule:
+    - cron: '17 4 * * 1'
   push:
     branches: [main]
     paths:

@@ -85,31 +85,41 @@
   // Returns array of employee objects: { id, name, legs[] }
   // ---------------------------------------------------------------------------
 
+  // Accepted cell spellings in a solution matrix (some tools write floats).
+  var BINARY = { '0': 0, '1': 1, '0.0': 0, '1.0': 1 };
+
+  // Strict format, mirrored by Solution.from_file in bdsp-validator/data/solution.py:
+  // optional UTF-8 BOM, blank lines skipped, every other row has exactly one
+  // 0/1 cell per leg. Anything else is an error, never ignored.
   function parseSolution(csvText, instance) {
-    var lines = csvText.split(/\r?\n/);
+    var lines = csvText.replace(/^﻿/, '').split(/\r?\n|\r/);
     var employees = [];
     var counter = 0;
+    var nLegs = instance.legs.length;
 
-    lines.forEach(function (line) {
+    lines.forEach(function (line, i) {
       line = line.trim();
       if (!line) return;
 
-      var cols = line.split(',').map(function (v) { return parseFloat(v); });
-
-      // Skip all-zero rows
-      if (cols.every(function (v) { return v === 0 || isNaN(v); })) return;
-
-      if (cols.length !== instance.legs.length) {
+      var cells = line.split(',').map(function (v) { return v.trim(); });
+      if (cells.length !== nLegs) {
         throw new Error(
-          'Row ' + (counter + 1) + ' has ' + cols.length +
-          ' columns but instance has ' + instance.legs.length + ' legs.'
+          'Row ' + (i + 1) + ' has ' + cells.length +
+          ' columns but instance has ' + nLegs + ' legs.'
         );
+      }
+      for (var c = 0; c < cells.length; c++) {
+        if (!Object.prototype.hasOwnProperty.call(BINARY, cells[c])) {
+          throw new Error('Row ' + (i + 1) + ' contains "' + cells[c].slice(0, 20) +
+            '"; only 0 and 1 are allowed.');
+        }
       }
 
       var assignedLegs = [];
-      cols.forEach(function (val, j) {
-        if (val === 1) assignedLegs.push(instance.legs[j]);
+      cells.forEach(function (val, j) {
+        if (BINARY[val] === 1) assignedLegs.push(instance.legs[j]);
       });
+      if (!assignedLegs.length) return;  // all-zero rows are skipped
 
       // Sort by start, then id (same ordering as SortedList)
       assignedLegs.sort(function (a, b) {

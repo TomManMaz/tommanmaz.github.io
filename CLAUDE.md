@@ -18,7 +18,7 @@ All styling goes in `stylesheet.css` (tokens at the top);
 never in page-level `<style>` blocks. Every page repeats the same chrome
 (skip-link, header, navbar Home/Publications/BDSP/AMM, footer) by hand —
 keep them in sync. Table-heavy pages use `<main class="wide">`. MathJax is
-loaded only on `bdsp_problem/collection/instance/validate.html` and
+loaded only on `bdsp_problem/instance/validate.html` and
 `amm.html`.
 
 ## Page map
@@ -80,23 +80,25 @@ work overruns) is actually triggered.
 
 ## Pipelines
 
-- **Community submissions** (CI, no maintainer data needed) — two entry
-  channels, same validation core (`scripts/apply_submission.py` re-validates
-  with the Python validator; accepts iff feasible AND strictly better than
-  stored `bks`; patches data files, copies to `sols/`, appends
-  `submissions/accepted.json`, pushes, comments):
-  - **Issues (primary, user-facing)**: `.github/ISSUE_TEMPLATE/new-bks.yml`
-    form (label `bks-submission`, CSV attached) →
-    `.github/workflows/validate-issue-submission.yml` →
-    `scripts/process_issue_submission.py` (parses the body, fetches the
-    github.com attachment, composes the verdict comment). Accepted issues are
-    closed; invalid ones stay open and re-validate on edit. The validate
-    page's submission panel deep-links the pre-filled form. The workflow
-    also fires on a `[BKS]` title prefix (CLI/API issues from
-    non-collaborators can't carry labels), and the script accepts a public
-    gist link when no attachment is present (CLI can't upload attachments).
-  - **PRs (legacy, still works, undocumented on the site)**: PR adds
-    `submissions/<instance>.csv` → `.github/workflows/validate-submission.yml`.
+- **Community submissions** (CI, no maintainer data needed) — one channel:
+  `.github/ISSUE_TEMPLATE/new-bks.yml` form (label `bks-submission`, CSV
+  attached) → `.github/workflows/validate-issue-submission.yml` →
+  `scripts/process_issue_submission.py` (parses the body, fetches the
+  github.com attachment or a gist owned by the issue author, composes the
+  verdict comment) → `scripts/apply_submission.py` (re-validates with the
+  Python validator; accepts iff every leg is covered exactly once, all
+  shifts feasible, and strictly better than stored `bks`; patches data
+  files, writes the re-serialized matrix to `sols/`, records the ledger
+  entry in `submissions/accepted.json` — the old record moves under
+  `previous` — pushes, comments). The workflow also fires on a `[BKS]`
+  title prefix (CLI/API issues from non-collaborators can't carry labels).
+  Accepted issues are closed; invalid ones stay open and re-validate on
+  edit. The validate page's submission panel deep-links the pre-filled
+  form. (The old PR flow, `validate-submission.yml`, was retired.)
+  - **Solution CSV format is strict in both parsers** (`Solution.from_file`
+    and `parseSolution` must stay identical): optional UTF-8 BOM, blank lines
+    skipped, every other row exactly one cell per leg, cells `0`/`1`
+    (`0.0`/`1.0` tolerated). Anything else is a parse error.
   - Contract tests: `python scripts/submission_test.py` (form parsing,
     verdict comments, validator dry runs); CI runs it via
     `.github/workflows/submission-tests.yml`.

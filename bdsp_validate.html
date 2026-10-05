@@ -84,10 +84,10 @@
     <details class="help-details">
       <summary>How the cost is computed</summary>
       <p>Each employee (shift) costs</p>
-      \[ O_e = 2W' + T + 	ext{ride} + 30\cdot	ext{changes} + 180\cdot	ext{splits}, \quad W' = \max(	ext{work\_time},\; 390) \]
+      \[ O_e = 2W' + T + \text{ride} + 30\cdot\text{changes} + 180\cdot\text{splits}, \quad W' = \max(\text{work\_time},\; 390) \]
       <p>
         and the total is the sum over employees. Employees that break a hard constraint
-        (driving, working or total time, rest breaks) add \(1000	imes\) penalties.
+        (driving, working or total time, rest breaks) add \(1000\times\) penalties.
         Full definitions are on the <a href="bdsp_problem.html">problem reference</a> page.
       </p>
     </details>
@@ -110,7 +110,7 @@
       </p>
     </details>
 
-    <div id="results-section" style="display:none;">
+    <div id="results-section" hidden>
       <h2>Results</h2>
       <div id="results-content"></div>
     </div>

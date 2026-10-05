@@ -1,1 +1,5 @@
+# Text files are stored and checked out with LF everywhere (the CI and the
+# validators run on Linux; community solutions arrive with any line ending).
+* text=auto eol=lf
+
 downloads/*.tar.gz filter=lfs diff=lfs merge=lfs -text

@@ -18,14 +18,18 @@ on:
       - 'scripts/process_issue_submission.py'
       - 'scripts/apply_submission.py'
       - 'scripts/submission_test.py'
+      - 'bdsp-validator/**'
       - '.github/ISSUE_TEMPLATE/new-bks.yml'
       - '.github/workflows/submission-tests.yml'
+      - '.github/workflows/validate-issue-submission.yml'
   pull_request:
     paths:
       - 'scripts/process_issue_submission.py'
       - 'scripts/apply_submission.py'
       - 'scripts/submission_test.py'
       - '.github/ISSUE_TEMPLATE/new-bks.yml'
+      - 'bdsp-validator/**'
+      - '.github/workflows/validate-issue-submission.yml'
       - '.github/workflows/submission-tests.yml'
 
 permissions:

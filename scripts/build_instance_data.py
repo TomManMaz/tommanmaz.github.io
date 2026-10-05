@@ -518,10 +518,9 @@ def build():
     accepted_ledger = {}
     accepted_ledger_file = REPO_ROOT / "submissions" / "accepted.json"
     if accepted_ledger_file.exists():
-        try:
-            accepted_ledger = json.loads(accepted_ledger_file.read_text(encoding="utf-8"))
-        except Exception:
-            accepted_ledger = {}
+        # A corrupt ledger must stop the rebuild: ignoring it would silently
+        # regress every community BKS to the best algorithmic value.
+        accepted_ledger = json.loads(accepted_ledger_file.read_text(encoding="utf-8"))
 
     for instance_name in all_instance_names:
         entry = process_instance(instance_name, bks_data, patat_data)
@@ -563,12 +562,14 @@ def build():
 
     # Write output
     OUTPUT_FILE.parent.mkdir(parents=True, exist_ok=True)
-    with open(OUTPUT_FILE, "w") as f:
+    # Same serialization as scripts/apply_submission.py (UTF-8, LF, final newline).
+    with open(OUTPUT_FILE, "w", encoding="utf-8", newline="\n") as f:
         json.dump(instances, f, indent=2)
+        f.write("\n")
 
     # Also write instances.js for inline loading (no server needed)
     js_file = OUTPUT_FILE.parent / "instances.js"
-    with open(js_file, "w") as f:
+    with open(js_file, "w", encoding="utf-8", newline="\n") as f:
         f.write("window.BDSP_INSTANCES = ")
         json.dump(instances, f, indent=2)
         f.write(";\n")

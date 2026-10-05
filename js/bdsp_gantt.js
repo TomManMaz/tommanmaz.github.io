@@ -58,8 +58,8 @@
 
     var svg = [];
     svg.push('<svg xmlns="http://www.w3.org/2000/svg" width="' + width + '" height="' + height +
-      '" viewBox="0 0 ' + width + ' ' + height + '" role="img" aria-label="Employee schedule timeline">');
-    svg.push('<style>text{font-family:Georgia,serif;font-size:10px;}</style>');
+      '" viewBox="0 0 ' + width + ' ' + height + '" role="img" aria-label="Employee schedule timeline"' +
+      ' font-family="Georgia, serif" font-size="10">');  // inherited by <text>; an inline <style> would leak page-wide
 
     // Time axis: ticks every 2 h
     var tickStart = Math.ceil(minT / 120) * 120;

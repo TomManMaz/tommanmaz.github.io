@@ -113,6 +113,19 @@ class FolderValidator:
                 })
 
 
+def leg_coverage(instance: Instance, solution: Solution):
+    """(unassigned leg ids, duplicated leg ids), both sorted.
+
+    Counted per leg id over the multiset of assignments: a set would collapse
+    duplicates, and a leg covered twice can lower the objective. Shared with
+    scripts/py_eval_batch.py so the parity suite checks this exact code.
+    """
+    counts = Counter(leg.id for employee in solution.employees for leg in employee.legs)
+    unassigned = sorted(leg.id for leg in instance.legs if leg.id not in counts)
+    duplicates = sorted(leg_id for leg_id, count in counts.items() if count > 1)
+    return unassigned, duplicates
+
+
 class Validator:
     def __init__(self, instance: Instance, solution_file: str):
         self.instance = instance
@@ -121,11 +134,8 @@ class Validator:
         self.errors = []
 
     def validate_legs(self) -> bool:
-        """Validate the legs in the solution."""
-        legs_instance = set(self.instance.legs)
-        legs_solution = set(leg for employee in self.solution.employees for leg in employee.legs)
-        unassigned_legs = legs_instance - legs_solution
-        duplicate_legs = [leg for leg, count in Counter(legs_solution).items() if count > 1]
+        """Every leg must be covered exactly once."""
+        unassigned_legs, duplicate_legs = leg_coverage(self.instance, self.solution)
 
         if unassigned_legs:
             self.errors.append(f'Unassigned legs: {unassigned_legs}')
@@ -145,15 +155,6 @@ class Validator:
                 self.errors.append(f'Employee {employee.name} is not feasible')
         return valid
 
-    def validate_objective(self) -> bool:
-        """Validate the objective value of the solution."""
-        self.solution.evaluate()
-        calculated_value = sum(employee.objective for employee in self.solution.employees)
-        if self.solution.value != calculated_value:
-            self.errors.append(f'Objective value {self.solution.value} does not match the calculated value {calculated_value}')
-            return False
-        return True
-
     def report(self):
         """Print or return a detailed report of validation errors."""
         if self.errors:
@@ -167,8 +168,7 @@ class Validator:
         """Validate the solution."""
         valid = (
             self.validate_legs() and
-            self.validate_employees() and
-            self.validate_objective()
+            self.validate_employees()
         )
         self.report()
         return valid

@@ -6,8 +6,6 @@
 (function () {
   'use strict';
 
-  var featuresVisible = false;
-
   function getInstanceName() {
     var params = new URLSearchParams(window.location.search);
     return params.get('instance');
@@ -37,8 +35,8 @@
   }
 
   function escapeHtml(str) {
-    if (!str) return '';
-    return str.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+    if (str == null) return '';
+    return String(str).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
   }
 
   // ---------------------------------------------------------------------------
@@ -68,12 +66,12 @@
     var badgeClass = inst.status === 'optimal' ? 'badge-optimal' : 'badge-open';
     html += '<div class="instance-header">';
     html += '  <h1>' + escapeHtml(inst.name) + '</h1>';
-    html += '  <span class="status-badge ' + badgeClass + '">' + inst.status + '</span>';
+    html += '  <span class="status-badge ' + badgeClass + '">' + escapeHtml(inst.status) + '</span>';
     html += '</div>';
 
     // Summary cards
     html += '<div class="summary-grid">';
-    html += summaryCard('Source', inst.source || 'unknown');
+    html += summaryCard('Source', escapeHtml(inst.source || 'unknown'));
     html += summaryCard('Size', inst.size);
     html += summaryCard('Tours', inst.tours);
     html += summaryCard('Legs', inst.legs);
@@ -101,12 +99,10 @@
     }
 
     // Features section
-    html += '<h2>';
-    html += '<span class="features-toggle" onclick="toggleFeatures()">Instance Features &#9660;</span>';
-    html += '</h2>';
-    html += '<div id="features-section" style="display:none;">';
+    html += '<details class="features-details">';
+    html += '<summary><h2>Instance Features</h2></summary>';
     html += renderFeatures(inst.features || {});
-    html += '</div>';
+    html += '</details>';
 
     // Downloads — split visually into Files and Tools
     html += '<h2>Downloads</h2>';
@@ -164,7 +160,7 @@
     // New algorithms (from JAIR experiments)
     var algoKeys = Object.keys(inst.algorithms || {}).sort();
     if (algoKeys.length > 0) {
-      html += '<div style="overflow-x:auto;">';
+      html += '<div class="table-scroll">';
       html += '<table class="algo-table">';
       html += '<caption>LNS Variants (JAIR 2025)</caption>';
       html += '<thead><tr>';
@@ -195,7 +191,7 @@
     var oldKeys = Object.keys(oldAlgos);
     if (oldKeys.length > 0) {
       var oldLabel = inst.source === 'realistic' ? 'Previous Algorithms' : 'PATAT 2024 Results';
-      html += '<div style="overflow-x:auto;">';
+      html += '<div class="table-scroll">';
       html += '<table class="algo-table">';
       html += '<caption>' + oldLabel + '</caption>';
       html += '<thead><tr>';
@@ -244,7 +240,7 @@
     html += '</div>';
 
     // Table
-    html += '<div style="overflow-x:auto;">';
+    html += '<div class="table-scroll">';
     html += '<table class="algo-table breakdown-table">';
     html += '<thead><tr>';
     html += '<th>Employee</th><th>Obj</th><th>W\u2032</th><th>T</th><th>Ride</th><th>Changes</th><th>Splits</th><th>Drive</th><th>Legs</th><th>Feasible</th>';
@@ -392,21 +388,6 @@
     html += '</div>';
     return html;
   }
-
-  // ---------------------------------------------------------------------------
-  // Toggle features
-  // ---------------------------------------------------------------------------
-
-  window.toggleFeatures = function () {
-    var section = document.getElementById('features-section');
-    var toggle = document.querySelector('.features-toggle');
-    if (!section) return;
-    featuresVisible = !featuresVisible;
-    section.style.display = featuresVisible ? 'block' : 'none';
-    if (toggle) {
-      toggle.innerHTML = 'Instance Features ' + (featuresVisible ? '&#9650;' : '&#9660;');
-    }
-  };
 
   // ---------------------------------------------------------------------------
   // Init

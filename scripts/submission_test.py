@@ -16,6 +16,7 @@ import os
 import shutil
 import subprocess
 import sys
+import tempfile
 from pathlib import Path
 
 REPO_ROOT = Path(__file__).resolve().parent.parent
@@ -83,6 +84,73 @@ def test_gist_links() -> None:
         check(False, "ambiguous gist must be rejected")
     except ValueError:
         check(True, "ambiguous gist rejected")
+
+
+def test_link_precedence_and_gist_owner() -> None:
+    gist = "https://gist.github.com/owner1/" + "a" * 32
+    body = "### Instance\n\nrealistic_10_1\n\n### Notes\n\nsee " + ATT + "\n\n### Solution file\n\n" + gist + "\n"
+    section = pis.form_field(body, "Solution file")
+    check(pis.find_solution_link(section, body) == ("gist", "a" * 32),
+          "link in the Solution field wins over one elsewhere in the body")
+    check(pis.find_solution_link("", "text " + ATT) == ("attachment", ATT),
+          "body is searched when the Solution field has no link")
+
+    real_get = pis._get
+    pis._get = lambda url, api=False: json.dumps(
+        {"owner": {"login": "owner1"},
+         "files": {"x.csv": {"filename": "x.csv", "raw_url": pis.GIST_RAW_PREFIX + "x"}}}).encode()
+    try:
+        try:
+            pis.fetch_gist("a" * 32, "realistic_10_1", Path(os.devnull), "someone-else")
+            check(False, "gist owned by someone else must be refused")
+        except ValueError as exc:
+            check("belongs to @owner1" in str(exc), "foreign gist refused with owner named")
+    finally:
+        pis._get = real_get
+
+
+def _dry_run(name: str, csv_text: str) -> dict:
+    tmp = Path(tempfile.mkdtemp(prefix="bdsp-test-")) / f"{name}.csv"
+    tmp.write_bytes(csv_text.encode("utf-8"))
+    out = subprocess.run(
+        [sys.executable, "scripts/apply_submission.py", "-s", str(tmp), "-i", name],
+        cwd=REPO_ROOT, capture_output=True, text=True, timeout=600,
+    ).stdout
+    return json.loads(out[out.index("{"):])
+
+
+def test_strict_format_and_coverage() -> None:
+    """The CI must reject what the browser rejects (same strict parser) and
+    must never accept a leg covered twice (it can lower the objective)."""
+    name = "realistic_10_1"
+    rows = (REPO_ROOT / "sols" / f"{name}.csv").read_text(encoding="utf-8").split()
+    base = "\n".join(rows) + "\n"
+
+    check(_dry_run(name, "﻿" + base).get("valid") is True, "UTF-8 BOM accepted")
+    check(_dry_run(name, base.replace("\n", "\r\n")).get("valid") is True, "CRLF accepted")
+    check(_dry_run(name, "\n\n" + base + "\n\n").get("valid") is True, "blank lines accepted")
+
+    r = _dry_run(name, "\n".join(row + "," for row in rows) + "\n")
+    check(r.get("status") == "invalid" and "columns" in r.get("message", ""), "trailing comma rejected")
+    r = _dry_run(name, base.replace("0", "2", 1))
+    check(r.get("status") == "invalid" and "only 0 and 1" in r.get("message", ""), "non-binary cell rejected")
+
+    # Duplicate one assigned leg: copy a 1 from row 0 into the same column of row 1.
+    r0, r1 = rows[0].split(","), rows[1].split(",")
+    j = r0.index("1")
+    r1[j] = "1"
+    dup = "\n".join([rows[0], ",".join(r1)] + rows[2:]) + "\n"
+    r = _dry_run(name, dup)
+    check(r.get("status") == "invalid" and any("Duplicate legs" in e for e in r.get("errors", [])),
+          f"duplicate leg rejected ({r.get('status')}: {r.get('errors')})")
+
+
+def test_canonical_csv() -> None:
+    import apply_submission as aps
+    tmp = Path(tempfile.mkdtemp(prefix="bdsp-test-")) / "x.csv"
+    tmp.write_bytes("﻿1, 0 ,1.0\r\n\r\n0,0,0\r\n0.0,1,0\r\n".encode("utf-8"))
+    check(aps._canonical_csv(tmp) == "1,0,1\n0,1,0\n",
+          "published CSV is re-serialized (no BOM/CRLF/blank/all-zero rows)")
 
 
 def test_instance_resolution() -> None:
@@ -158,6 +226,9 @@ def test_dry_run_end_to_end() -> None:
 def main() -> int:
     test_field_parsing()
     test_gist_links()
+    test_link_precedence_and_gist_owner()
+    test_strict_format_and_coverage()
+    test_canonical_csv()
     test_instance_resolution()
     test_pasted_matrix()
     test_comment_contract()

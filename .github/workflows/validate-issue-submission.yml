@@ -12,11 +12,13 @@ name: Validate BDSP issue submission
 # SECURITY MODEL — the issue body is untrusted DATA, never code:
 #   * only this repository's committed scripts run;
 #   * the instance name is pattern-validated and must exist in the collection;
-#   * the solution is fetched only from github.com attachment URLs (or taken
-#     from a pasted 0/1 matrix) and parsed by the trusted validator.
+#   * the solution is fetched only from github.com attachment URLs or a public
+#     gist owned by the issue author (or taken from a pasted 0/1 matrix),
+#     parsed strictly by the trusted validator, and published re-serialized
+#     (never copied verbatim).
 #
-# NOTE: publishing pushes to the default branch — same requirement as
-# validate-submission.yml (github-actions[bot] must be allowed to push).
+# NOTE: publishing pushes to the default branch (github-actions[bot] must be
+# allowed to push).
 
 on:
   issues:
@@ -26,11 +28,6 @@ permissions:
   contents: write
   issues: write
 
-# Serialize submissions so concurrent accepted solutions don't race the push.
-concurrency:
-  group: bks-publish
-  cancel-in-progress: false
-
 jobs:
   evaluate:
     # Label from the form, or the form's "[BKS]" title prefix: issues opened via
@@ -39,6 +36,14 @@ jobs:
       (contains(github.event.issue.labels.*.name, 'bks-submission')
        || startsWith(github.event.issue.title, '[BKS]'))
       && github.event.issue.state == 'open'
+    # Serialize submissions so concurrent accepted solutions don't race the
+    # push. Job-level (after the `if`), so edits to unrelated issues never join
+    # the group: GitHub keeps one pending run per group, and a newcomer would
+    # cancel a waiting submission. Three submissions at once can still lose the
+    # middle one; its author then gets no comment and can re-trigger by editing.
+    concurrency:
+      group: bks-publish
+      cancel-in-progress: false
     runs-on: ubuntu-latest
     timeout-minutes: 15
     env:
