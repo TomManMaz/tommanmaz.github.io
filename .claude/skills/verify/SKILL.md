@@ -27,7 +27,9 @@ Node >= 22 has global `WebSocket` and `fetch`, so raw CDP works without Puppetee
 
 1. Launch: `"C:\Program Files (x86)\Microsoft\Edge\Application\msedge.exe" --headless=new --remote-debugging-port=9223 --user-data-dir=<tmpdir> --no-first-run about:blank`
 2. Get the page target from `http://127.0.0.1:9223/json/list`, connect to its `webSocketDebuggerUrl`.
-3. Enable `Page`, `Runtime`, `Log`; navigate; poll `Runtime.evaluate` for readiness conditions.
+3. Enable `Page`, `Runtime`, `Log`, `Network` and call
+   `Network.setCacheDisabled {cacheDisabled:true}` (a reused profile otherwise
+   serves stale JS/CSS); navigate; poll `Runtime.evaluate` for readiness conditions.
 4. Upload files with `DOM.setFileInputFiles` (nodeId via `DOM.getDocument` + `DOM.querySelector`). Dispatch `change` manually on `#instance-upload` (`el.dispatchEvent(new Event('change'))`); `#solution-upload` needs no event (validation runs on button click).
 5. Screenshot with `Page.captureScreenshot` `{captureBeyondViewport: true}`.
 
@@ -49,6 +51,15 @@ A complete driver covering all flows exists in the session scratchpad history
   sandbox copy of the repo (scripts/ + bdsp-validator/ + data/instances.json +
   one instance JSON + its sols CSV) with `ISSUE_BODY`/`ISSUE_AUTHOR`/`ISSUE_TITLE`
   env vars; bump the sandbox `bks` to exercise the accepted path.
+- Auto flow: with no instance selected, upload `sols/realistic_10_1.csv` and
+  dispatch `change` on `#solution-upload` → instance auto-selected from the file
+  name and validated without clicking; `.verdict` reads "Feasible solution with
+  total cost 14,417 … matches the best known solution".
+- Wrong instance (e.g. `realistic_20_6`) + that file → `#validate-status`
+  explains the column mismatch and suggests `realistic_10_1`.
+- Theme: every page's `.navbar` gets a `.theme-toggle`; clicking it sets
+  `<html data-theme>` + `localStorage.theme`, persists across pages, and the
+  Gantt bars (`rect[style*=gantt-leg]`) take the link color.
 - Custom instance: upload any `downloads/instances/*.json` via `#instance-upload`
   → "no BKS comparison" status; validating shows no BKS text and no submit panel.
 

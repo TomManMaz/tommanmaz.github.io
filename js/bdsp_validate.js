@@ -148,6 +148,7 @@
             if (currentBKS.status === 'optimal') statusMsg += ' (optimal)';
           }
           showStatus('instance-status', statusMsg, 'status-ok');
+          maybeAutoValidate();
         } catch (e) {
           showStatus('instance-status', 'Parse error: ' + e.message, 'status-error');
           currentInstance = null;
@@ -191,6 +192,7 @@
           'Loaded custom instance "' + stem + '": ' + currentInstance.legs.length +
           ' legs, ' + currentInstance.numTours + ' tours — no BKS comparison',
           'status-ok');
+        maybeAutoValidate();
       } catch (err) {
         currentInstance = null;
         showStatus('instance-status', 'Invalid instance JSON: ' + err.message, 'status-error');
@@ -222,6 +224,39 @@
       totalObjective < currentBKS.bks);
 
     var html = '';
+
+    // Verdict: one plain-language sentence first
+    var hasBks = !!(currentBKS && currentBKS.bks != null);
+    var nBad = evaluated.filter(function (ev) { return !ev.state.feasible; }).length;
+    var vClass, vText, vNote = '';
+    if (isNewBest) {
+      vClass = 'verdict-best';
+      vText = '★ This beats the best known solution by ' +
+        formatNum(currentBKS.bks - totalObjective) + ' (' +
+        ((totalObjective - currentBKS.bks) / currentBKS.bks * 100).toFixed(2) + '%).';
+      vNote = 'Submit it below to have it published.';
+    } else if (!allFeasible) {
+      vClass = 'verdict-bad';
+      vText = '✗ Infeasible: ' + nBad + ' of ' + evaluated.length +
+        ' employees break a hard constraint.';
+      vNote = 'The reasons are listed below; their cost includes 1000× penalties.';
+    } else if (!covered) {
+      vClass = 'verdict-warn';
+      vText = '⚠ Every shift is feasible, but not every leg is covered exactly once.';
+      vNote = 'The affected legs are listed below.';
+    } else {
+      vClass = 'verdict-ok';
+      vText = '✓ Feasible solution with total cost ' + formatNum(totalObjective) + '.';
+      if (hasBks) {
+        vNote = totalObjective === currentBKS.bks
+          ? 'It matches the best known solution.'
+          : 'That is ' + formatNum(totalObjective - currentBKS.bks) + ' (' +
+            ((totalObjective - currentBKS.bks) / currentBKS.bks * 100).toFixed(2) +
+            '%) above the best known solution (' + formatNum(currentBKS.bks) + ').';
+      }
+    }
+    html += '<p class="verdict ' + vClass + '">' + escapeHtml(vText) +
+      (vNote ? ' <span class="verdict-note">' + escapeHtml(vNote) + '</span>' : '') + '</p>';
 
     // Summary bar
     html += '<div class="breakdown-summary">';
@@ -259,67 +294,6 @@
     }
     html += '</div>';
 
-    // Objective formula
-    html += '<div class="obj-formula">';
-    html += '\\[ O_e = 2W\' + T + \\text{ride} + 30\\cdot\\text{changes} + 180\\cdot\\text{splits}, \\quad W\' = \\max(\\text{work\\_time},\\; 390) \\]';
-    html += '<span class="formula-note">Infeasible employees additionally incur \\(1000\\times\\) hard-constraint penalties.</span>';
-    html += '</div>';
-
-    // Per-employee breakdown table
-    html += '<div style="overflow-x:auto;">';
-    html += '<table class="algo-table breakdown-table">';
-    html += '<thead><tr>';
-    html += '<th>Employee</th><th>Cost</th><th>Obj</th><th>W′</th><th>T</th><th>Ride</th>';
-    html += '<th>Changes</th><th>Splits</th><th>Drive</th><th>Legs</th><th>Feasible</th>';
-    html += '</tr></thead><tbody>';
-
-    evaluated.forEach(function (ev) {
-      var s = ev.state;
-      var rowClass = s.feasible ? '' : ' class="infeasible-row"';
-      html += '<tr' + rowClass + '>';
-      html += '<td>' + escapeHtml(ev.emp.name) + '</td>';
-      html += '<td>' + formatNum(s.total_cost) + '</td>';
-      html += '<td>' + formatNum(s.objective) + '</td>';
-      html += '<td>' + formatNum(s.work_time_paid) + '</td>';
-      html += '<td>' + formatNum(s.total_time) + '</td>';
-      html += '<td>' + formatNum(s.ride) + '</td>';
-      html += '<td>' + s.vehicle_changes + '</td>';
-      html += '<td>' + s.split_shifts + '</td>';
-      html += '<td>' + formatNum(s.drive_time) + '</td>';
-      html += '<td>' + s.num_legs + '</td>';
-      var fIcon = s.feasible ? '✓' : '✗';
-      html += '<td class="' + (s.feasible ? 'feasible-icon' : 'infeasible-icon') + '">' + fIcon + '</td>';
-      html += '</tr>';
-    });
-
-    html += '</tbody></table></div>';
-
-    // Hard-constraint diagnostics for infeasible employees
-    if (!allFeasible) {
-      html += '<div class="violation-detail">';
-      html += '<p><strong>Why is this solution infeasible?</strong></p>';
-      evaluated.forEach(function (ev) {
-        if (ev.state.feasible) return;
-        var messages = core.violationList(ev.state).map(function (v) { return v.message; });
-        html += '<p><strong class="violation-emp">' + escapeHtml(ev.emp.name) + ':</strong> ' +
-          escapeHtml(messages.join('; ')) + '.</p>';
-      });
-      html += '</div>';
-    }
-
-    // Actions
-    html += '<p class="results-actions">';
-    html += '<button type="button" id="download-breakdown-btn">Download breakdown CSV</button>';
-    html += '</p>';
-
-    // Schedule timeline
-    if (window.BDSP_GANTT) {
-      html += '<details class="gantt-details"><summary>Schedule timeline</summary>';
-      html += '<div class="gantt-legend">solid = driving &nbsp;&middot;&nbsp; gray = passive ride &nbsp;&middot;&nbsp; tick = sign-on/off &nbsp;&middot;&nbsp; dashed = split break (&ge; 3 h)</div>';
-      html += window.BDSP_GANTT.render(instance, evaluated);
-      html += '</details>';
-    }
-
     // Submission panel — only for a strictly better, fully covered, feasible
     // solution of a collection instance (the same criteria the CI applies).
     if (isNewBest) {
@@ -345,6 +319,19 @@
       html += '</div>';
     }
 
+    // Hard-constraint diagnostics for infeasible employees
+    if (!allFeasible) {
+      html += '<div class="violation-detail">';
+      html += '<p><strong>Why is this solution infeasible?</strong></p>';
+      evaluated.forEach(function (ev) {
+        if (ev.state.feasible) return;
+        var messages = core.violationList(ev.state).map(function (v) { return v.message; });
+        html += '<p><strong class="violation-emp">' + escapeHtml(ev.emp.name) + ':</strong> ' +
+          escapeHtml(messages.join('; ')) + '.</p>';
+      });
+      html += '</div>';
+    }
+
     // Leg coverage details (if issues)
     if (legCheck.unassigned.length > 0 || legCheck.duplicates.length > 0) {
       html += '<div class="leg-coverage-detail">';
@@ -365,6 +352,59 @@
         html += '</p>';
       }
       html += '</div>';
+    }
+
+    // Per-employee breakdown table
+    html += '<div style="overflow-x:auto;">';
+    html += '<table class="algo-table breakdown-table">';
+    html += '<thead><tr>';
+    [['Employee', 'Row of your file (E0 = first non-empty row)'],
+     ['Cost', 'Objective plus hard-constraint penalties'],
+     ['Obj', 'Objective: 2W′ + T + ride + 30·changes + 180·splits'],
+     ['W′', 'Paid working time in minutes (at least 390)'],
+     ['T', 'Total shift time in minutes'],
+     ['Ride', 'Passive ride time in minutes'],
+     ['Changes', 'Vehicle changes'],
+     ['Splits', 'Split shifts (breaks of 3 h or more)'],
+     ['Drive', 'Driving time in minutes'],
+     ['Legs', 'Number of legs assigned'],
+     ['Feasible', 'All hard constraints satisfied']].forEach(function (h) {
+      html += '<th title="' + h[1] + '">' + h[0] + '</th>';
+    });
+    html += '</tr></thead><tbody>';
+
+    evaluated.forEach(function (ev) {
+      var s = ev.state;
+      var rowClass = s.feasible ? '' : ' class="infeasible-row"';
+      html += '<tr' + rowClass + '>';
+      html += '<td>' + escapeHtml(ev.emp.name) + '</td>';
+      html += '<td>' + formatNum(s.total_cost) + '</td>';
+      html += '<td>' + formatNum(s.objective) + '</td>';
+      html += '<td>' + formatNum(s.work_time_paid) + '</td>';
+      html += '<td>' + formatNum(s.total_time) + '</td>';
+      html += '<td>' + formatNum(s.ride) + '</td>';
+      html += '<td>' + s.vehicle_changes + '</td>';
+      html += '<td>' + s.split_shifts + '</td>';
+      html += '<td>' + formatNum(s.drive_time) + '</td>';
+      html += '<td>' + s.num_legs + '</td>';
+      var fIcon = s.feasible ? '✓' : '✗';
+      html += '<td class="' + (s.feasible ? 'feasible-icon' : 'infeasible-icon') + '">' + fIcon + '</td>';
+      html += '</tr>';
+    });
+
+    html += '</tbody></table></div>';
+
+    // Actions
+    html += '<p class="results-actions">';
+    html += '<button type="button" id="download-breakdown-btn">Download breakdown CSV</button>';
+    html += '</p>';
+
+    // Schedule timeline
+    if (window.BDSP_GANTT) {
+      html += '<details class="gantt-details"><summary>Schedule timeline</summary>';
+      html += '<div class="gantt-legend">solid = driving &nbsp;&middot;&nbsp; gray = passive ride &nbsp;&middot;&nbsp; tick = sign-on/off &nbsp;&middot;&nbsp; dashed = split break (&ge; 3 h)</div>';
+      html += window.BDSP_GANTT.render(instance, evaluated);
+      html += '</details>';
     }
 
     container.innerHTML = html;
@@ -390,6 +430,60 @@
     } else {
       resultsSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
     }
+  }
+
+  // ---------------------------------------------------------------------------
+  // Friendlier input handling
+  // ---------------------------------------------------------------------------
+
+  // A column-count mismatch almost always means the wrong instance is
+  // selected: say so, and name the collection instances that would fit.
+  function explainParseError(err, csvText) {
+    var firstRow = (csvText.split(/\r?\n/).filter(function (l) { return l.trim(); })[0] || '');
+    var cols = firstRow ? firstRow.split(',').length : 0;
+    if (!currentInstance || !cols || cols === currentInstance.legs.length) {
+      return 'Error: ' + err.message;
+    }
+    var fits = (window.BDSP_INSTANCES || []).filter(function (e) { return e.legs === cols; })
+      .map(function (e) { return e.name; });
+    var msg = 'Your file has ' + cols + ' columns per row, but ' + currentInstance.name +
+      ' has ' + currentInstance.legs.length + ' legs, so the file is probably for a different instance.';
+    if (fits.length) {
+      msg += ' Instances with ' + cols + ' legs: ' + fits.slice(0, 6).join(', ') +
+        (fits.length > 6 ? ', …' : '') + '.';
+    }
+    return msg;
+  }
+
+  function solutionFile() {
+    var input = document.getElementById('solution-upload');
+    return input && input.files && input.files[0];
+  }
+
+  // Validate as soon as both inputs are ready (the button stays for re-runs).
+  function maybeAutoValidate() {
+    if (currentInstance && solutionFile()) onValidate();
+  }
+
+  function onSolutionChange() {
+    var file = solutionFile();
+    showStatus('solution-status', '', '');
+    if (!file) return;
+    var stem = file.name.replace(/\.[^.]*$/, '');
+    var select = document.getElementById('instance-select');
+    var known = (window.BDSP_INSTANCES || []).some(function (e) { return e.name === stem; });
+    var customLoaded = currentInstance && !select.value;
+    if (known && !select.value && !customLoaded) {
+      select.value = stem;
+      onInstanceChange();           // auto-validates once the instance has loaded
+      showStatus('solution-status', 'Selected instance ' + stem + ' from the file name.', 'status-ok');
+      return;
+    }
+    if (known && select.value && select.value !== stem) {
+      showStatus('solution-status', 'Note: the file name suggests ' + stem + ', but ' +
+        select.value + ' is selected.', 'status-loading');
+    }
+    maybeAutoValidate();
   }
 
   // ---------------------------------------------------------------------------
@@ -434,7 +528,7 @@
           renderResults(currentInstance, employees, legCheck, e.target.result);
           showStatus('validate-status', 'Validation complete — ' + employees.length + ' employee(s).', 'status-ok');
         } catch (err) {
-          showStatus('validate-status', 'Error: ' + err.message, 'status-error');
+          showStatus('validate-status', explainParseError(err, e.target.result), 'status-error');
           document.getElementById('results-section').style.display = 'none';
         }
         validateBtn.disabled = false;
@@ -456,6 +550,9 @@
 
     var validateBtn = document.getElementById('validate-btn');
     if (validateBtn) validateBtn.addEventListener('click', onValidate);
+
+    var solutionUpload = document.getElementById('solution-upload');
+    if (solutionUpload) solutionUpload.addEventListener('change', onSolutionChange);
 
     var instanceUpload = document.getElementById('instance-upload');
     if (instanceUpload) instanceUpload.addEventListener('change', onInstanceUpload);

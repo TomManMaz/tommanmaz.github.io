@@ -8,13 +8,13 @@
 (function () {
   'use strict';
 
-  var COLOR_LEG = '#0b3d91';
-  var COLOR_RIDE = '#bbbbbb';
-  var COLOR_TICK = '#111111';
-  var COLOR_SPLIT = '#888888';
-  var COLOR_AXIS = '#bbbbbb';
-  var COLOR_LABEL = '#111111';
-  var COLOR_LABEL_BAD = '#b00020';
+  var COLOR_LEG = 'var(--gantt-leg)';
+  var COLOR_RIDE = 'var(--gantt-ride)';
+  var COLOR_TICK = 'var(--text)';
+  var COLOR_SPLIT = 'var(--gantt-split)';
+  var COLOR_AXIS = 'var(--rule)';
+  var COLOR_LABEL = 'var(--text)';
+  var COLOR_LABEL_BAD = 'var(--bad)';
 
   var LABEL_W = 44;      // left margin for employee names
   var CONTENT_W = 880;   // drawing width for the time axis
@@ -66,9 +66,9 @@
     for (var t = tickStart; t <= maxT; t += 120) {
       var tx = x(t);
       svg.push('<line x1="' + tx.toFixed(1) + '" y1="' + (AXIS_H - 8) + '" x2="' + tx.toFixed(1) +
-        '" y2="' + height + '" stroke="' + COLOR_AXIS + '" stroke-width="0.5"/>');
+        '" y2="' + height + '" style="stroke:' + COLOR_AXIS + '" stroke-width="0.5"/>');
       svg.push('<text x="' + tx.toFixed(1) + '" y="' + (AXIS_H - 12) +
-        '" text-anchor="middle" fill="' + COLOR_LABEL + '">' + fmtTime(t) + '</text>');
+        '" text-anchor="middle" style="fill:' + COLOR_LABEL + '">' + fmtTime(t) + '</text>');
     }
 
     rows.forEach(function (ev, r) {
@@ -79,13 +79,13 @@
 
       var labelColor = s.feasible ? COLOR_LABEL : COLOR_LABEL_BAD;
       svg.push('<text x="' + (LABEL_W - 6) + '" y="' + (yMid + 3.5) +
-        '" text-anchor="end" fill="' + labelColor + '">' + escapeXml(ev.emp.name) + '</text>');
+        '" text-anchor="end" style="fill:' + labelColor + '">' + escapeXml(ev.emp.name) + '</text>');
 
       // sign-on / sign-off ticks (start/end work stubs)
       svg.push('<rect x="' + x(s.start_shift).toFixed(1) + '" y="' + (yBar - 2) +
-        '" width="1.5" height="' + (BAR_H + 4) + '" fill="' + COLOR_TICK + '"/>');
+        '" width="1.5" height="' + (BAR_H + 4) + '" style="fill:' + COLOR_TICK + '"/>');
       svg.push('<rect x="' + (x(s.end_shift) - 1.5).toFixed(1) + '" y="' + (yBar - 2) +
-        '" width="1.5" height="' + (BAR_H + 4) + '" fill="' + COLOR_TICK + '"/>');
+        '" width="1.5" height="' + (BAR_H + 4) + '" style="fill:' + COLOR_TICK + '"/>');
 
       var legs = ev.emp.legs;
       for (var k = 0; k < legs.length; k++) {
@@ -93,7 +93,7 @@
         var lx = x(leg.start);
         var lw = Math.max((leg.end - leg.start) * scale, 1);
         svg.push('<rect x="' + lx.toFixed(1) + '" y="' + yBar + '" width="' + lw.toFixed(1) +
-          '" height="' + BAR_H + '" fill="' + COLOR_LEG + '">' +
+          '" height="' + BAR_H + '" style="fill:' + COLOR_LEG + '">' +
           '<title>' + escapeXml(ev.emp.name + ' leg ' + leg.id + ' (tour ' + leg.tour + '): ' +
           fmtTime(leg.start) + '–' + fmtTime(leg.end)) + '</title></rect>');
 
@@ -106,13 +106,13 @@
           if (ride > 0) {
             var rw = Math.max(Math.min(ride, Math.max(diff, 0)) * scale, 1);
             svg.push('<rect x="' + x(leg.end).toFixed(1) + '" y="' + yBar + '" width="' + rw.toFixed(1) +
-              '" height="' + BAR_H + '" fill="' + COLOR_RIDE + '">' +
+              '" height="' + BAR_H + '" style="fill:' + COLOR_RIDE + '">' +
               '<title>' + escapeXml(ev.emp.name + ' passive ride: ' + ride + ' min') + '</title></rect>');
           }
           if (diff - ride >= 180) {
             svg.push('<line x1="' + x(leg.end + ride).toFixed(1) + '" y1="' + yMid +
               '" x2="' + x(next.start).toFixed(1) + '" y2="' + yMid +
-              '" stroke="' + COLOR_SPLIT + '" stroke-width="1" stroke-dasharray="4 3"/>');
+              '" style="stroke:' + COLOR_SPLIT + '" stroke-width="1" stroke-dasharray="4 3"/>');
           }
         }
       }

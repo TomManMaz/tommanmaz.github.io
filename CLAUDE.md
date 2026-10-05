@@ -9,8 +9,12 @@ validator core as CommonJS — do not add one).
 
 Deliberately plain, old-fashioned aesthetic (see `stylesheet.css` header):
 Georgia serif on white, navy underlined links (`--link: #0b3d91`), flat
-bordered tables. **No dark mode, gradients, shadows, rounded corners, or
-animations.** All styling goes in `stylesheet.css` (tokens at the top);
+bordered tables. **No gradients, shadows, rounded corners, or
+animations.** A dark palette exists (requested Oct 2026): it follows the OS,
+and `js/theme.js` (loaded in every `<head>`) injects a Dark/Light switch
+into the navbar that sets `<html data-theme>`; use color tokens, never
+literal colors, so both themes work (the Gantt SVG uses `style="fill:var(..)"`).
+All styling goes in `stylesheet.css` (tokens at the top);
 never in page-level `<style>` blocks. Every page repeats the same chrome
 (skip-link, header, navbar Home/Publications/BDSP/AMM, footer) by hand —
 keep them in sync. Table-heavy pages use `<main class="wide">`. MathJax is

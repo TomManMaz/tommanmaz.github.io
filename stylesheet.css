@@ -3,7 +3,8 @@
    A deliberately simple, old-fashioned look: black text on a
    white background, a serif body font, underlined links, and
    flat bordered tables. No gradients, shadows, rounded corners,
-   animations, sticky bars, or dark mode.
+   animations, or sticky bars. A dark palette (same plain look,
+   inverted) follows the OS or the navbar Dark/Light switch.
 
    Sections:
      1. Tokens (the few colors reused below)
@@ -36,8 +37,46 @@
   --warn-bg:     #fbf6e3;
   --bad:         #b00020;   /* infeasible (text) */
 
+  --link-hover:     #06214f;
+  --control-bg:     #eeeeee;   /* buttons, table headers */
+  --control-hover:  #e0e0e0;
+  --control-border: #888888;
+
+  /* schedule timeline (js/bdsp_gantt.js) */
+  --gantt-leg:   var(--link);
+  --gantt-ride:  #bbbbbb;
+  --gantt-split: #888888;
+
   /* legacy alias still referenced inline in bdsp_collection.html */
   --success-bg:  var(--ok-bg);
+
+  color-scheme: light;
+}
+
+/* Dark palette: follows the OS unless the visitor picked a theme with the
+   navbar switch (js/theme.js sets <html data-theme="light|dark">). The two
+   blocks must stay identical. */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --text: #e4e4e4; --text-muted: #a3a3a3;
+    --bg: #121212; --bg-soft: #1a1a1a; --bg-stripe: #181818;
+    --link: #8fb3ff; --link-hover: #c2d6ff;
+    --rule: #4a4a4a; --rule-soft: #333333;
+    --ok: #6fcf87; --ok-bg: #15301e; --warn: #e3c55a; --warn-bg: #2d2712; --bad: #ff7a8a;
+    --control-bg: #262626; --control-hover: #333333; --control-border: #6a6a6a;
+    --gantt-ride: #5a5a5a; --gantt-split: #8a8a8a;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --text: #e4e4e4; --text-muted: #a3a3a3;
+  --bg: #121212; --bg-soft: #1a1a1a; --bg-stripe: #181818;
+  --link: #8fb3ff; --link-hover: #c2d6ff;
+  --rule: #4a4a4a; --rule-soft: #333333;
+  --ok: #6fcf87; --ok-bg: #15301e; --warn: #e3c55a; --warn-bg: #2d2712; --bad: #ff7a8a;
+  --control-bg: #262626; --control-hover: #333333; --control-border: #6a6a6a;
+  --gantt-ride: #5a5a5a; --gantt-split: #8a8a8a;
+  color-scheme: dark;
 }
 
 /* ---------- 2. Reset & base ---------- */
@@ -62,7 +101,7 @@ a {
   color: var(--link);
   text-decoration: underline;
 }
-a:hover { color: #06214f; }
+a:hover { color: var(--link-hover); }
 
 img {
   max-width: 100%;
@@ -129,6 +168,18 @@ pre {
   text-decoration: none;
   font-weight: bold;
 }
+/* Dark/Light switch, injected by js/theme.js; styled as a plain link */
+.navbar { display: flex; flex-wrap: wrap; align-items: baseline; }
+.theme-toggle {
+  margin: 0 0 0 auto;
+  padding: 0;
+  border: none;
+  background: none;
+  color: var(--link);
+  text-decoration: underline;
+  font-size: 0.9rem;
+}
+.theme-toggle:hover { background: none; color: var(--link-hover); }
 
 .site-footer {
   margin-top: 2.5rem;
@@ -200,7 +251,7 @@ th, td {
   vertical-align: top;
 }
 th {
-  background: #eee;
+  background: var(--control-bg);
   font-weight: bold;
 }
 tbody tr:nth-child(even) { background: var(--bg-stripe); }
@@ -216,25 +267,25 @@ mjx-container[display="true"] {
 /* Buttons: flat, square */
 button {
   font-family: inherit;
-  background: #eee;
+  background: var(--control-bg);
   color: var(--text);
   padding: 0.35rem 0.8rem;
-  border: 1px solid #888;
+  border: 1px solid var(--control-border);
   cursor: pointer;
   font-size: 0.9rem;
   margin: 0.5rem 0;
 }
-button:hover { background: #e0e0e0; }
+button:hover { background: var(--control-hover); }
 
 /* ---------- 5. Skip-link ---------- */
 .skip-link {
   position: absolute;
   top: -40px;
   left: 0;
-  background: #eee;
+  background: var(--control-bg);
   color: var(--link);
   padding: 8px 16px;
-  border: 1px solid #888;
+  border: 1px solid var(--control-border);
   z-index: 1000;
 }
 .skip-link:focus { top: 0; }
@@ -301,7 +352,7 @@ button:hover { background: #e0e0e0; }
 .collection-search input {
   font-family: inherit;
   padding: 0.3rem 0.5rem;
-  border: 1px solid #888;
+  border: 1px solid var(--control-border);
   font-size: 0.85rem;
   width: 200px;
 }
@@ -309,14 +360,14 @@ button:hover { background: #e0e0e0; }
 .filter-btn {
   font-family: inherit;
   padding: 0.25rem 0.6rem;
-  border: 1px solid #888;
+  border: 1px solid var(--control-border);
   cursor: pointer;
   font-size: 0.82rem;
-  background: #eee;
+  background: var(--control-bg);
   color: var(--text);
   margin: 0;
 }
-.filter-btn:hover { background: #e0e0e0; }
+.filter-btn:hover { background: var(--control-hover); }
 .filter-btn.active {
   background: var(--text);
   color: var(--bg);
@@ -325,7 +376,7 @@ button:hover { background: #e0e0e0; }
 .collection-source-filter select {
   font-family: inherit;
   padding: 0.25rem 0.4rem;
-  border: 1px solid #888;
+  border: 1px solid var(--control-border);
   font-size: 0.82rem;
   background: var(--bg);
   color: var(--text);
@@ -343,7 +394,7 @@ button:hover { background: #e0e0e0; }
   border: 1px solid var(--rule);
   padding: 0.3rem 0.5rem;
 }
-.collection-table th { background: #eee; }
+.collection-table th { background: var(--control-bg); }
 .collection-table th.sortable {
   cursor: pointer;
   user-select: none;
@@ -433,7 +484,7 @@ button:hover { background: #e0e0e0; }
   padding: 0.3rem 0.5rem;
   text-align: left;
 }
-.algo-table thead th { background: #eee; }
+.algo-table thead th { background: var(--control-bg); }
 .algo-table th:nth-child(n+2),
 .algo-table td:nth-child(n+2) {
   text-align: right;
@@ -507,13 +558,13 @@ button:hover { background: #e0e0e0; }
 .download-btn {
   display: inline-block;
   padding: 0.3rem 0.7rem;
-  background: #eee;
+  background: var(--control-bg);
   color: var(--text);
-  border: 1px solid #888;
+  border: 1px solid var(--control-border);
   text-decoration: none;
   font-size: 0.85rem;
 }
-.download-btn:hover { background: #e0e0e0; }
+.download-btn:hover { background: var(--control-hover); }
 
 /* Prev/next instance nav */
 .instance-nav {
@@ -555,7 +606,7 @@ button:hover { background: #e0e0e0; }
 .form-field select {
   font-family: inherit;
   padding: 0.3rem 0.5rem;
-  border: 1px solid #888;
+  border: 1px solid var(--control-border);
   background: var(--bg);
   color: var(--text);
   font-size: 0.9rem;
@@ -571,16 +622,16 @@ button:hover { background: #e0e0e0; }
 .validate-btn {
   font-family: inherit;
   padding: 0.4rem 1.1rem;
-  background: #eee;
+  background: var(--control-bg);
   color: var(--text);
-  border: 1px solid #888;
+  border: 1px solid var(--control-border);
   font-size: 0.9rem;
   font-weight: bold;
   cursor: pointer;
   align-self: flex-start;
   margin: 0;
 }
-.validate-btn:hover:not(:disabled) { background: #e0e0e0; }
+.validate-btn:hover:not(:disabled) { background: var(--control-hover); }
 .validate-btn:disabled { opacity: 0.5; cursor: not-allowed; }
 
 #results-section { margin-top: 1.5rem; }
@@ -594,7 +645,25 @@ button:hover { background: #e0e0e0; }
 .bks-ref { font-size: 0.88rem; font-weight: bold; color: var(--text-muted); }
 .bks-new-best { color: var(--ok); }
 
-.or-note { font-size: 0.85rem; color: var(--text-muted); }
+.or-note,
+.field-hint { font-size: 0.85rem; color: var(--text-muted); }
+.lead { font-size: 1.05rem; }
+
+.help-details { margin: 0.5rem 0; }
+.help-details summary { cursor: pointer; color: var(--link); text-decoration: underline; }
+.help-details[open] { border-left: 2px solid var(--rule); padding-left: 0.8rem; }
+.help-details[open] summary { margin-bottom: 0.4rem; }
+.help-details pre { background: var(--bg-soft); border: 1px solid var(--rule-soft); padding: 0.4rem 0.6rem; display: inline-block; }
+
+.breakdown-table th[title] { cursor: help; text-decoration: underline dotted; }
+
+/* One plain-language sentence at the top of the results */
+.verdict { font-size: 1.1rem; font-weight: bold; margin: 0 0 0.8rem; }
+.verdict-ok { color: var(--ok); }
+.verdict-warn { color: var(--warn); }
+.verdict-bad { color: var(--bad); }
+.verdict-best { color: var(--ok); }
+.verdict-note { font-weight: normal; color: var(--text); font-size: 0.95rem; }
 
 .violation-detail { margin-top: 0.6rem; font-size: 0.9rem; }
 .violation-detail p { margin: 0.15rem 0; }
@@ -605,14 +674,14 @@ button:hover { background: #e0e0e0; }
 .submit-panel button {
   font-family: inherit;
   padding: 0.25rem 0.7rem;
-  background: #eee;
+  background: var(--control-bg);
   color: var(--text);
-  border: 1px solid #888;
+  border: 1px solid var(--control-border);
   font-size: 0.88rem;
   cursor: pointer;
 }
 .results-actions button:hover,
-.submit-panel button:hover { background: #e0e0e0; }
+.submit-panel button:hover { background: var(--control-hover); }
 
 .submit-panel {
   border: 1px solid var(--rule);

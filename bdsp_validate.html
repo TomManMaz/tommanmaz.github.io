@@ -14,6 +14,7 @@
   <link rel="icon" type="image/png" href="icon.png" />
   <link rel="apple-touch-icon" href="icon.png" />
   <link rel="stylesheet" href="stylesheet.css" />
+  <script src="js/theme.js"></script>
   <script defer id="MathJax-script" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script></head>
 <body>
   <a href="#main-content" class="skip-link">Skip to main content</a>
@@ -34,51 +35,80 @@
 
     <h1>Validate a BDSP Solution</h1>
 
-    <div class="info-box">
-      <p>
-        Select an instance, upload your solution CSV, and click <strong>Validate</strong>.
-        Everything runs client-side &mdash; no data is sent to any server.
-        To have an improved solution published as the new BKS,
-        <a href="https://github.com/TomManMaz/tommanmaz.github.io/issues/new?template=new-bks.yml">open a
-        submission issue</a> with the CSV attached &mdash; see the
-        <a href="https://github.com/TomManMaz/tommanmaz.github.io/tree/main/submissions">submission guide</a>.
-      </p>
-      <p>
-        <strong>Solution file format</strong> (<code>.csv</code> or <code>.sol</code>): a binary matrix where row&nbsp;<em>i</em> represents employee&nbsp;<em>i</em>
-        and column&nbsp;<em>j</em> is&nbsp;<code>1</code> if leg&nbsp;<em>j</em> is assigned to that employee,
-        <code>0</code> otherwise. Legs are ordered by start time (matching the instance JSON).
-        All-zero rows are skipped.
-      </p>
-      <p>
-        <strong>Objective formula:</strong>
-        \[ O_e = 2W' + T + \text{ride} + 30\cdot\text{changes} + 180\cdot\text{splits}, \quad W' = \max(\text{work\_time},\; 390) \]
-        Infeasible employees incur additional \(1000\times\) hard-constraint penalties.
-      </p>
-    </div>
+    <p class="lead">
+      Check the cost and feasibility of a solution right here in your browser &mdash;
+      your file is not uploaded anywhere. If it beats the best known solution (BKS),
+      the results tell you how to submit it.
+    </p>
 
-    <h2>Input</h2>
     <div class="validator-form">
       <div class="form-row">
         <div class="form-field">
-          <label for="instance-select">Instance</label>
+          <label for="instance-select">1. Choose the instance</label>
           <select id="instance-select">
             <option value="">&mdash; select an instance &mdash;</option>
           </select>
-          <span class="or-note">or upload your own instance JSON:</span>
-          <input type="file" id="instance-upload" accept=".json,application/json" aria-label="Upload instance JSON" />
           <span id="instance-status" class="validator-status"></span>
         </div>
 
         <div class="form-field">
-          <label for="solution-upload">Solution CSV</label>
+          <label for="solution-upload">2. Choose your solution file</label>
           <input type="file" id="solution-upload" accept=".csv,.sol,text/plain" />
+          <span class="field-hint">A file named after the instance (e.g. <code>realistic_10_1.csv</code>)
+            selects it automatically.</span>
           <span id="solution-status" class="validator-status"></span>
         </div>
       </div>
 
-      <button class="validate-btn" id="validate-btn">Validate</button>
-      <span id="validate-status" class="validator-status"></span>
+      <div>
+        <button class="validate-btn" id="validate-btn">Validate</button>
+        <span id="validate-status" class="validator-status"></span>
+        <span class="field-hint">Runs automatically once both are chosen.</span>
+      </div>
     </div>
+
+    <details class="help-details">
+      <summary>Solution file format</summary>
+      <p>
+        A header-less CSV (<code>.csv</code> or <code>.sol</code>) binary matrix: row&nbsp;<em>i</em>
+        is employee&nbsp;<em>i</em>, and column&nbsp;<em>j</em> is&nbsp;<code>1</code> if leg&nbsp;<em>j</em>
+        is assigned to that employee, <code>0</code> otherwise. Legs are ordered by start time
+        (matching the instance JSON), so every row has one column per leg. Every leg must be
+        covered exactly once; all-zero rows are skipped.
+      </p>
+<pre>1,0,1,0,0
+0,1,0,0,1
+0,0,0,1,0</pre>
+    </details>
+
+    <details class="help-details">
+      <summary>How the cost is computed</summary>
+      <p>Each employee (shift) costs</p>
+      \[ O_e = 2W' + T + 	ext{ride} + 30\cdot	ext{changes} + 180\cdot	ext{splits}, \quad W' = \max(	ext{work\_time},\; 390) \]
+      <p>
+        and the total is the sum over employees. Employees that break a hard constraint
+        (driving, working or total time, rest breaks) add \(1000	imes\) penalties.
+        Full definitions are on the <a href="bdsp_problem.html">problem reference</a> page.
+      </p>
+    </details>
+
+    <details class="help-details">
+      <summary>Use your own instance file</summary>
+      <p>Validate against an instance JSON that is not in the collection (no BKS comparison):</p>
+      <input type="file" id="instance-upload" accept=".json,application/json" aria-label="Upload instance JSON" />
+    </details>
+
+    <details class="help-details">
+      <summary>Submitting a new best known solution</summary>
+      <p>
+        When your solution is feasible and strictly better than the BKS, the results show a
+        <strong>Submit</strong> box: download the correctly named file, open the pre-filled
+        GitHub issue, attach the file and submit. A bot re-checks it and publishes it within
+        minutes, credited to your GitHub account. You need a (free) GitHub account. See the
+        <a href="https://github.com/TomManMaz/tommanmaz.github.io/tree/main/submissions">submission guide</a>
+        for details, including submitting from the command line.
+      </p>
+    </details>
 
     <div id="results-section" style="display:none;">
       <h2>Results</h2>
