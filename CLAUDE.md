@@ -67,6 +67,14 @@ work overruns) is actually triggered.
 - `data/instances.json` / `data/instances.js` — **generated, never
   hand-edit.** 284 instances (65 realistic + 219 synthetic; the PATAT 2024
   set). Realistic entries carry `solution_breakdown`.
+- `bounds/lower_bounds.json` — ledger of lower bounds computed outside the
+  original pipeline (currently LB_flow, the certified path-cover bound from
+  `lb_flow.py` in the paper repo `~/busdriverschedulingproblem`). The
+  published `lower_bound` is always the **max** over sources;
+  `python scripts/apply_lower_bounds.py` folds the ledger in (idempotent,
+  recomputes gap/status, aborts if a bound exceeds the BKS) and
+  `build_instance_data.py` calls the same `fold_lower_bound`. Each entry
+  carries `lower_bound_method` (`Branch-and-Price` or `LB_flow`).
 - `downloads/instances/<name>.json` — 284 individual instance definitions
   (`legs[]{tour,start,end,startPos,endPos}` in minutes, `distances{}`,
   `extra{}`).

@@ -230,6 +230,18 @@ def process_submission(
         )
         return result
 
+    # A feasible objective below a certified lower bound is impossible: either
+    # the validator or the bound is wrong. Never publish it; flag it instead.
+    lower_bound = entry.get("lower_bound")
+    if lower_bound is not None and objective < lower_bound - 1e-6:
+        result["status"] = "error"
+        result["message"] = (
+            f"Objective {objective} is below the certified lower bound {lower_bound} "
+            f"({entry.get('lower_bound_method', 'unknown method')}). This should be "
+            "impossible, so it was not published; the maintainer will investigate."
+        )
+        return result
+
     # Accepted.
     gap_pct, status_label = _compute_gap_and_status(objective, entry.get("lower_bound"))
     result["status"] = "accepted"

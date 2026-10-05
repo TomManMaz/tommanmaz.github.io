@@ -522,6 +522,10 @@ def build():
         # regress every community BKS to the best algorithmic value.
         accepted_ledger = json.loads(accepted_ledger_file.read_text(encoding="utf-8"))
 
+    sys.path.insert(0, str(REPO_ROOT / "scripts"))
+    from apply_lower_bounds import fold_lower_bound, load_ledger
+    lower_bound_ledger = load_ledger()
+
     for instance_name in all_instance_names:
         entry = process_instance(instance_name, bks_data, patat_data)
 
@@ -547,6 +551,10 @@ def build():
             else:
                 entry["gap_pct"] = None
             entry["status"] = "optimal" if entry["gap_pct"] == 0.0 else "open"
+
+        # Best lower bound: max of the experiment's bound and bounds/lower_bounds.json
+        # (also recomputes gap/status). Same code as scripts/apply_lower_bounds.py.
+        fold_lower_bound(entry, lower_bound_ledger)
 
         instances.append(entry)
 

@@ -48,7 +48,11 @@
 
     <p>
       284 BDSP instances across 12 source types. Sizes range from 8 tours (73 legs) to 981 tours (3129 legs).
-      Lower bounds are computed using Branch-and-Price where available; rows highlighted in
+      Each lower bound is the best one available for the instance: from Branch-and-Price,
+      or, marked <span class="lb-mark">&dagger;</span>, the min-cost path-cover bound
+      (LB_flow, a certified bound computable in seconds to minutes even for the largest
+      instances, but weaker: on instances with a known optimum it lies 16&ndash;23% below it,
+      so a large gap there does not mean the BKS is far from optimal). Rows highlighted in
       <span class="legend-optimal">green</span>
       with 0.0% gap are <strong>proven optimal</strong>. Click an instance name for the per-algorithm breakdown.
       For the formal definition, see the <a href="bdsp_problem.html">problem reference</a>.

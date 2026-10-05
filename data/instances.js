@@ -16043,7 +16043,8 @@ window.BDSP_INSTANCES = [
           "num_legs": 5
         }
       ]
-    }
+    },
+    "lower_bound_method": "Branch-and-Price"
   },
   {
     "name": "realistic_10_2",
@@ -16366,7 +16367,8 @@ window.BDSP_INSTANCES = [
           "num_legs": 7
         }
       ]
-    }
+    },
+    "lower_bound_method": "Branch-and-Price"
   },
   {
     "name": "realistic_10_3",
@@ -16701,7 +16703,8 @@ window.BDSP_INSTANCES = [
           "num_legs": 5
         }
       ]
-    }
+    },
+    "lower_bound_method": "Branch-and-Price"
   },
   {
     "name": "realistic_10_4",
@@ -17036,7 +17039,8 @@ window.BDSP_INSTANCES = [
           "num_legs": 7
         }
       ]
-    }
+    },
+    "lower_bound_method": "Branch-and-Price"
   },
   {
     "name": "realistic_10_5",
@@ -17371,7 +17375,8 @@ window.BDSP_INSTANCES = [
           "num_legs": 4
         }
       ]
-    }
+    },
+    "lower_bound_method": "Branch-and-Price"
   },
   {
     "name": "realistic_20_6",
@@ -17838,7 +17843,8 @@ window.BDSP_INSTANCES = [
           "num_legs": 3
         }
       ]
-    }
+    },
+    "lower_bound_method": "Branch-and-Price"
   },
   {
     "name": "realistic_20_7",
@@ -18305,7 +18311,8 @@ window.BDSP_INSTANCES = [
           "num_legs": 7
         }
       ]
-    }
+    },
+    "lower_bound_method": "Branch-and-Price"
   },
   {
     "name": "realistic_20_8",
@@ -18784,7 +18791,8 @@ window.BDSP_INSTANCES = [
           "num_legs": 5
         }
       ]
-    }
+    },
+    "lower_bound_method": "Branch-and-Price"
   },
   {
     "name": "realistic_20_9",
@@ -19239,7 +19247,8 @@ window.BDSP_INSTANCES = [
           "num_legs": 5
         }
       ]
-    }
+    },
+    "lower_bound_method": "Branch-and-Price"
   },
   {
     "name": "realistic_20_10",
@@ -19718,7 +19727,8 @@ window.BDSP_INSTANCES = [
           "num_legs": 8
         }
       ]
-    }
+    },
+    "lower_bound_method": "Branch-and-Price"
   },
   {
     "name": "realistic_30_11",
@@ -20341,7 +20351,8 @@ window.BDSP_INSTANCES = [
           "num_legs": 7
         }
       ]
-    }
+    },
+    "lower_bound_method": "Branch-and-Price"
   },
   {
     "name": "realistic_30_12",
@@ -21000,7 +21011,8 @@ window.BDSP_INSTANCES = [
           "num_legs": 6
         }
       ]
-    }
+    },
+    "lower_bound_method": "Branch-and-Price"
   },
   {
     "name": "realistic_30_13",
@@ -21695,7 +21707,8 @@ window.BDSP_INSTANCES = [
           "num_legs": 4
         }
       ]
-    }
+    },
+    "lower_bound_method": "Branch-and-Price"
   },
   {
     "name": "realistic_30_14",
@@ -22342,7 +22355,8 @@ window.BDSP_INSTANCES = [
           "num_legs": 7
         }
       ]
-    }
+    },
+    "lower_bound_method": "Branch-and-Price"
   },
   {
     "name": "realistic_30_15",
@@ -23013,7 +23027,8 @@ window.BDSP_INSTANCES = [
           "num_legs": 8
         }
       ]
-    }
+    },
+    "lower_bound_method": "Branch-and-Price"
   },
   {
     "name": "realistic_40_16",
@@ -23816,7 +23831,8 @@ window.BDSP_INSTANCES = [
           "num_legs": 9
         }
       ]
-    }
+    },
+    "lower_bound_method": "Branch-and-Price"
   },
   {
     "name": "realistic_40_17",
@@ -24631,7 +24647,8 @@ window.BDSP_INSTANCES = [
           "num_legs": 8
         }
       ]
-    }
+    },
+    "lower_bound_method": "Branch-and-Price"
   },
   {
     "name": "realistic_40_18",
@@ -25446,7 +25463,8 @@ window.BDSP_INSTANCES = [
           "num_legs": 9
         }
       ]
-    }
+    },
+    "lower_bound_method": "Branch-and-Price"
   },
   {
     "name": "realistic_40_19",
@@ -26261,7 +26279,8 @@ window.BDSP_INSTANCES = [
           "num_legs": 6
         }
       ]
-    }
+    },
+    "lower_bound_method": "Branch-and-Price"
   },
   {
     "name": "realistic_40_20",
@@ -27100,7 +27119,8 @@ window.BDSP_INSTANCES = [
           "num_legs": 4
         }
       ]
-    }
+    },
+    "lower_bound_method": "Branch-and-Price"
   },
   {
     "name": "realistic_50_21",
@@ -28035,7 +28055,8 @@ window.BDSP_INSTANCES = [
           "num_legs": 8
         }
       ]
-    }
+    },
+    "lower_bound_method": "Branch-and-Price"
   },
   {
     "name": "realistic_50_22",
@@ -29054,7 +29075,8 @@ window.BDSP_INSTANCES = [
           "num_legs": 3
         }
       ]
-    }
+    },
+    "lower_bound_method": "Branch-and-Price"
   },
   {
     "name": "realistic_50_23",
@@ -29989,7 +30011,8 @@ window.BDSP_INSTANCES = [
           "num_legs": 8
         }
       ]
-    }
+    },
+    "lower_bound_method": "Branch-and-Price"
   },
   {
     "name": "realistic_50_24",
@@ -30996,7 +31019,8 @@ window.BDSP_INSTANCES = [
           "num_legs": 4
         }
       ]
-    }
+    },
+    "lower_bound_method": "Branch-and-Price"
   },
   {
     "name": "realistic_50_25",
@@ -32003,7 +32027,8 @@ window.BDSP_INSTANCES = [
           "num_legs": 9
         }
       ]
-    }
+    },
+    "lower_bound_method": "Branch-and-Price"
   },
   {
     "name": "realistic_60_26",
@@ -33154,7 +33179,8 @@ window.BDSP_INSTANCES = [
           "num_legs": 7
         }
       ]
-    }
+    },
+    "lower_bound_method": "Branch-and-Price"
   },
   {
     "name": "realistic_60_27",
@@ -34307,7 +34333,8 @@ window.BDSP_INSTANCES = [
           "num_legs": 3
         }
       ]
-    }
+    },
+    "lower_bound_method": "Branch-and-Price"
   },
   {
     "name": "realistic_60_28",
@@ -35446,7 +35473,8 @@ window.BDSP_INSTANCES = [
           "num_legs": 5
         }
       ]
-    }
+    },
+    "lower_bound_method": "Branch-and-Price"
   },
   {
     "name": "realistic_60_29",
@@ -36549,7 +36577,8 @@ window.BDSP_INSTANCES = [
           "num_legs": 9
         }
       ]
-    }
+    },
+    "lower_bound_method": "Branch-and-Price"
   },
   {
     "name": "realistic_60_30",
@@ -37642,7 +37671,8 @@ window.BDSP_INSTANCES = [
           "num_legs": 9
         }
       ]
-    }
+    },
+    "lower_bound_method": "Branch-and-Price"
   },
   {
     "name": "realistic_70_31",
@@ -37720,7 +37750,7 @@ window.BDSP_INSTANCES = [
       "CMSA": 119308.0,
       "LNS": 116592.0
     },
-    "lower_bound": 94569.16,
+    "lower_bound": 96270,
     "algorithms": {
       "LNS": {
         "best_value": 117142.0,
@@ -37805,7 +37835,7 @@ window.BDSP_INSTANCES = [
     },
     "bks": 116567.0,
     "best_algorithm": "LNS_CoSto_MaOpSto_Bkgd",
-    "gap_pct": 18.87,
+    "gap_pct": 17.41,
     "status": "open",
     "solution_breakdown": {
       "total_objective": 116567,
@@ -38881,7 +38911,8 @@ window.BDSP_INSTANCES = [
           "num_legs": 8
         }
       ]
-    }
+    },
+    "lower_bound_method": "LB_flow"
   },
   {
     "name": "realistic_70_32",
@@ -40164,7 +40195,8 @@ window.BDSP_INSTANCES = [
           "num_legs": 9
         }
       ]
-    }
+    },
+    "lower_bound_method": "Branch-and-Price"
   },
   {
     "name": "realistic_70_33",
@@ -40242,7 +40274,7 @@ window.BDSP_INSTANCES = [
       "CMSA": 121138.0,
       "LNS": 118318.0
     },
-    "lower_bound": 92676.61,
+    "lower_bound": 96372,
     "algorithms": {
       "LNS": {
         "best_value": 118933.0,
@@ -40337,7 +40369,7 @@ window.BDSP_INSTANCES = [
     },
     "bks": 118318.0,
     "best_algorithm": "LNS",
-    "gap_pct": 21.67,
+    "gap_pct": 18.55,
     "status": "open",
     "solution_breakdown": {
       "total_objective": 118333,
@@ -41449,7 +41481,8 @@ window.BDSP_INSTANCES = [
           "num_legs": 6
         }
       ]
-    }
+    },
+    "lower_bound_method": "LB_flow"
   },
   {
     "name": "realistic_70_34",
@@ -42722,7 +42755,8 @@ window.BDSP_INSTANCES = [
           "num_legs": 7
         }
       ]
-    }
+    },
+    "lower_bound_method": "Branch-and-Price"
   },
   {
     "name": "realistic_70_35",
@@ -44031,7 +44065,8 @@ window.BDSP_INSTANCES = [
           "num_legs": 7
         }
       ]
-    }
+    },
+    "lower_bound_method": "Branch-and-Price"
   },
   {
     "name": "realistic_80_36",
@@ -44109,7 +44144,7 @@ window.BDSP_INSTANCES = [
       "CMSA": 136817.0,
       "LNS": 133127.0
     },
-    "lower_bound": 107444.68,
+    "lower_bound": 109967,
     "algorithms": {
       "LNS": {
         "best_value": 133854.0,
@@ -44204,7 +44239,7 @@ window.BDSP_INSTANCES = [
     },
     "bks": 133127.0,
     "best_algorithm": "LNS",
-    "gap_pct": 19.29,
+    "gap_pct": 17.4,
     "status": "open",
     "solution_breakdown": {
       "total_objective": 133128,
@@ -45472,7 +45507,8 @@ window.BDSP_INSTANCES = [
           "num_legs": 9
         }
       ]
-    }
+    },
+    "lower_bound_method": "LB_flow"
   },
   {
     "name": "realistic_80_37",
@@ -45550,7 +45586,7 @@ window.BDSP_INSTANCES = [
       "CMSA": 137944.0,
       "LNS": 133661.0
     },
-    "lower_bound": 84899.52,
+    "lower_bound": 110817,
     "algorithms": {
       "LNS": {
         "best_value": 134493.0,
@@ -45645,7 +45681,7 @@ window.BDSP_INSTANCES = [
     },
     "bks": 133661.0,
     "best_algorithm": "LNS",
-    "gap_pct": 36.48,
+    "gap_pct": 17.09,
     "status": "open",
     "solution_breakdown": {
       "total_objective": 133758,
@@ -46901,7 +46937,8 @@ window.BDSP_INSTANCES = [
           "num_legs": 8
         }
       ]
-    }
+    },
+    "lower_bound_method": "LB_flow"
   },
   {
     "name": "realistic_80_38",
@@ -48340,7 +48377,8 @@ window.BDSP_INSTANCES = [
           "num_legs": 12
         }
       ]
-    }
+    },
+    "lower_bound_method": "Branch-and-Price"
   },
   {
     "name": "realistic_80_39",
@@ -48418,7 +48456,7 @@ window.BDSP_INSTANCES = [
       "CMSA": 141245.0,
       "LNS": 135143.0
     },
-    "lower_bound": 109028.34,
+    "lower_bound": 109596,
     "algorithms": {
       "LNS": {
         "best_value": 136057.0,
@@ -48513,7 +48551,7 @@ window.BDSP_INSTANCES = [
     },
     "bks": 135116,
     "best_algorithm": "ToukoUrsin",
-    "gap_pct": 19.31,
+    "gap_pct": 18.89,
     "status": "open",
     "solution_breakdown": {
       "total_objective": 135116,
@@ -49820,7 +49858,8 @@ window.BDSP_INSTANCES = [
     },
     "bks_source": "community",
     "submitted_by": "ToukoUrsin",
-    "submitted_at": "2026-10-05"
+    "submitted_at": "2026-10-05",
+    "lower_bound_method": "LB_flow"
   },
   {
     "name": "realistic_80_40",
@@ -49898,7 +49937,7 @@ window.BDSP_INSTANCES = [
       "CMSA": 136934.0,
       "LNS": 132687.0
     },
-    "lower_bound": 95989.84,
+    "lower_bound": 112389,
     "algorithms": {
       "LNS": {
         "best_value": 133802.0,
@@ -49993,7 +50032,7 @@ window.BDSP_INSTANCES = [
     },
     "bks": 132687.0,
     "best_algorithm": "LNS",
-    "gap_pct": 27.66,
+    "gap_pct": 15.3,
     "status": "open",
     "solution_breakdown": {
       "total_objective": 132751,
@@ -51201,7 +51240,8 @@ window.BDSP_INSTANCES = [
           "num_legs": 7
         }
       ]
-    }
+    },
+    "lower_bound_method": "LB_flow"
   },
   {
     "name": "realistic_90_41",
@@ -51279,7 +51319,7 @@ window.BDSP_INSTANCES = [
       "CMSA": 152977.0,
       "LNS": 148488.0
     },
-    "lower_bound": 105743.38,
+    "lower_bound": 124289,
     "algorithms": {
       "LNS": {
         "best_value": 149190.0,
@@ -51364,7 +51404,7 @@ window.BDSP_INSTANCES = [
     },
     "bks": 148488.0,
     "best_algorithm": "LNS",
-    "gap_pct": 28.79,
+    "gap_pct": 16.3,
     "status": "open",
     "solution_breakdown": {
       "total_objective": 148550,
@@ -52740,7 +52780,8 @@ window.BDSP_INSTANCES = [
           "num_legs": 7
         }
       ]
-    }
+    },
+    "lower_bound_method": "LB_flow"
   },
   {
     "name": "realistic_90_42",
@@ -52818,7 +52859,7 @@ window.BDSP_INSTANCES = [
       "CMSA": 154906.0,
       "LNS": 149859.0
     },
-    "lower_bound": 119680.32,
+    "lower_bound": 125108,
     "algorithms": {
       "LNS": {
         "best_value": 150642.0,
@@ -52903,7 +52944,7 @@ window.BDSP_INSTANCES = [
     },
     "bks": 149859.0,
     "best_algorithm": "LNS",
-    "gap_pct": 20.14,
+    "gap_pct": 16.52,
     "status": "open",
     "solution_breakdown": {
       "total_objective": 149983,
@@ -54291,7 +54332,8 @@ window.BDSP_INSTANCES = [
           "num_legs": 6
         }
       ]
-    }
+    },
+    "lower_bound_method": "LB_flow"
   },
   {
     "name": "realistic_90_43",
@@ -54369,7 +54411,7 @@ window.BDSP_INSTANCES = [
       "CMSA": 155595.0,
       "LNS": 150053.0
     },
-    "lower_bound": 94474.61,
+    "lower_bound": 123751,
     "algorithms": {
       "LNS": {
         "best_value": 150521.0,
@@ -54464,7 +54506,7 @@ window.BDSP_INSTANCES = [
     },
     "bks": 150053.0,
     "best_algorithm": "LNS",
-    "gap_pct": 37.04,
+    "gap_pct": 17.53,
     "status": "open",
     "solution_breakdown": {
       "total_objective": 150336,
@@ -55912,7 +55954,8 @@ window.BDSP_INSTANCES = [
           "num_legs": 6
         }
       ]
-    }
+    },
+    "lower_bound_method": "LB_flow"
   },
   {
     "name": "realistic_90_44",
@@ -55990,7 +56033,7 @@ window.BDSP_INSTANCES = [
       "CMSA": 154984.0,
       "LNS": 148185.0
     },
-    "lower_bound": 82276.3,
+    "lower_bound": 127069,
     "algorithms": {
       "LNS": {
         "best_value": 149843.0,
@@ -56085,7 +56128,7 @@ window.BDSP_INSTANCES = [
     },
     "bks": 148185.0,
     "best_algorithm": "LNS",
-    "gap_pct": 44.48,
+    "gap_pct": 14.25,
     "status": "open",
     "solution_breakdown": {
       "total_objective": 148461,
@@ -57449,7 +57492,8 @@ window.BDSP_INSTANCES = [
           "num_legs": 9
         }
       ]
-    }
+    },
+    "lower_bound_method": "LB_flow"
   },
   {
     "name": "realistic_90_45",
@@ -57527,7 +57571,7 @@ window.BDSP_INSTANCES = [
       "CMSA": 155001.0,
       "LNS": 150116.0
     },
-    "lower_bound": 122065.95,
+    "lower_bound": 123688,
     "algorithms": {
       "LNS": {
         "best_value": 151217.0,
@@ -57622,7 +57666,7 @@ window.BDSP_INSTANCES = [
     },
     "bks": 150116.0,
     "best_algorithm": "LNS",
-    "gap_pct": 18.69,
+    "gap_pct": 17.61,
     "status": "open",
     "solution_breakdown": {
       "total_objective": 150133,
@@ -59058,7 +59102,8 @@ window.BDSP_INSTANCES = [
           "num_legs": 9
         }
       ]
-    }
+    },
+    "lower_bound_method": "LB_flow"
   },
   {
     "name": "realistic_100_46",
@@ -59136,7 +59181,7 @@ window.BDSP_INSTANCES = [
       "CMSA": 170593.0,
       "LNS": 164451.0
     },
-    "lower_bound": 80858.12,
+    "lower_bound": 137963,
     "algorithms": {
       "LNS_BP": {
         "best_value": 166230.0,
@@ -59191,7 +59236,7 @@ window.BDSP_INSTANCES = [
     },
     "bks": 164070,
     "best_algorithm": "ToukoUrsin",
-    "gap_pct": 50.72,
+    "gap_pct": 15.91,
     "status": "open",
     "solution_breakdown": {
       "total_objective": 164070,
@@ -60654,7 +60699,8 @@ window.BDSP_INSTANCES = [
     },
     "bks_source": "community",
     "submitted_by": "ToukoUrsin",
-    "submitted_at": "2026-10-05"
+    "submitted_at": "2026-10-05",
+    "lower_bound_method": "LB_flow"
   },
   {
     "name": "realistic_100_47",
@@ -60732,7 +60778,7 @@ window.BDSP_INSTANCES = [
       "CMSA": 169992.0,
       "LNS": 164381.0
     },
-    "lower_bound": 108262.39,
+    "lower_bound": 137800,
     "algorithms": {
       "LNS": {
         "best_value": 165176.0,
@@ -60827,7 +60873,7 @@ window.BDSP_INSTANCES = [
     },
     "bks": 164372.0,
     "best_algorithm": "LNS_CoSto_MaOpSto_Bkgd",
-    "gap_pct": 34.14,
+    "gap_pct": 16.17,
     "status": "open",
     "solution_breakdown": {
       "total_objective": 164372,
@@ -62383,7 +62429,8 @@ window.BDSP_INSTANCES = [
           "num_legs": 7
         }
       ]
-    }
+    },
+    "lower_bound_method": "LB_flow"
   },
   {
     "name": "realistic_100_48",
@@ -62461,7 +62508,7 @@ window.BDSP_INSTANCES = [
       "CMSA": 171738.0,
       "LNS": 166310.0
     },
-    "lower_bound": 108025.4,
+    "lower_bound": 136088,
     "algorithms": {
       "LNS": {
         "best_value": 167265.0,
@@ -62546,7 +62593,7 @@ window.BDSP_INSTANCES = [
     },
     "bks": 166310.0,
     "best_algorithm": "LNS",
-    "gap_pct": 35.05,
+    "gap_pct": 18.17,
     "status": "open",
     "solution_breakdown": {
       "total_objective": 167088,
@@ -64114,7 +64161,8 @@ window.BDSP_INSTANCES = [
           "num_legs": 5
         }
       ]
-    }
+    },
+    "lower_bound_method": "LB_flow"
   },
   {
     "name": "realistic_100_49",
@@ -64192,7 +64240,7 @@ window.BDSP_INSTANCES = [
       "CMSA": 173986.0,
       "LNS": 167394.0
     },
-    "lower_bound": 117095.14,
+    "lower_bound": 138042,
     "algorithms": {
       "LNS": {
         "best_value": 168557.0,
@@ -64277,7 +64325,7 @@ window.BDSP_INSTANCES = [
     },
     "bks": 167311,
     "best_algorithm": "ToukoUrsin",
-    "gap_pct": 30.01,
+    "gap_pct": 17.49,
     "status": "open",
     "solution_breakdown": {
       "total_objective": 167311,
@@ -65836,7 +65884,8 @@ window.BDSP_INSTANCES = [
     },
     "bks_source": "community",
     "submitted_by": "ToukoUrsin",
-    "submitted_at": "2026-10-05"
+    "submitted_at": "2026-10-05",
+    "lower_bound_method": "LB_flow"
   },
   {
     "name": "realistic_100_50",
@@ -65914,7 +65963,7 @@ window.BDSP_INSTANCES = [
       "CMSA": 169488.0,
       "LNS": 164121.0
     },
-    "lower_bound": 100052.18,
+    "lower_bound": 133840,
     "algorithms": {
       "LNS": {
         "best_value": 165292.0,
@@ -66009,7 +66058,7 @@ window.BDSP_INSTANCES = [
     },
     "bks": 164107,
     "best_algorithm": "ToukoUrsin",
-    "gap_pct": 39.03,
+    "gap_pct": 18.44,
     "status": "open",
     "solution_breakdown": {
       "total_objective": 164107,
@@ -67568,7 +67617,8 @@ window.BDSP_INSTANCES = [
     },
     "bks_source": "community",
     "submitted_by": "ToukoUrsin",
-    "submitted_at": "2026-10-05"
+    "submitted_at": "2026-10-05",
+    "lower_bound_method": "LB_flow"
   },
   {
     "name": "realistic_150_51",
@@ -67645,7 +67695,7 @@ window.BDSP_INSTANCES = [
       "CMSA": 258908.0,
       "LNS": 250478.0
     },
-    "lower_bound": null,
+    "lower_bound": 203819,
     "algorithms": {
       "LNS": {
         "best_value": 251250.0,
@@ -67720,7 +67770,7 @@ window.BDSP_INSTANCES = [
     },
     "bks": 249050,
     "best_algorithm": "ToukoUrsin",
-    "gap_pct": null,
+    "gap_pct": 18.16,
     "status": "open",
     "solution_breakdown": {
       "total_objective": 249050,
@@ -70035,7 +70085,8 @@ window.BDSP_INSTANCES = [
     },
     "bks_source": "community",
     "submitted_by": "ToukoUrsin",
-    "submitted_at": "2026-10-05"
+    "submitted_at": "2026-10-05",
+    "lower_bound_method": "LB_flow"
   },
   {
     "name": "realistic_150_52",
@@ -70112,7 +70163,7 @@ window.BDSP_INSTANCES = [
       "CMSA": 265643.0,
       "LNS": 256206.0
     },
-    "lower_bound": null,
+    "lower_bound": 210014,
     "algorithms": {
       "LNS": {
         "best_value": 257048.0,
@@ -70187,7 +70238,7 @@ window.BDSP_INSTANCES = [
     },
     "bks": 255668,
     "best_algorithm": "ToukoUrsin",
-    "gap_pct": null,
+    "gap_pct": 17.86,
     "status": "open",
     "solution_breakdown": {
       "total_objective": 255668,
@@ -72646,7 +72697,8 @@ window.BDSP_INSTANCES = [
     },
     "bks_source": "community",
     "submitted_by": "ToukoUrsin",
-    "submitted_at": "2026-10-05"
+    "submitted_at": "2026-10-05",
+    "lower_bound_method": "LB_flow"
   },
   {
     "name": "realistic_150_53",
@@ -72723,7 +72775,7 @@ window.BDSP_INSTANCES = [
       "CMSA": 265714.0,
       "LNS": 255763.0
     },
-    "lower_bound": null,
+    "lower_bound": 207916,
     "algorithms": {
       "LNS": {
         "best_value": 255521.0,
@@ -72798,7 +72850,7 @@ window.BDSP_INSTANCES = [
     },
     "bks": 254481,
     "best_algorithm": "ToukoUrsin",
-    "gap_pct": null,
+    "gap_pct": 18.3,
     "status": "open",
     "solution_breakdown": {
       "total_objective": 254481,
@@ -75257,7 +75309,8 @@ window.BDSP_INSTANCES = [
     },
     "bks_source": "community",
     "submitted_by": "ToukoUrsin",
-    "submitted_at": "2026-10-05"
+    "submitted_at": "2026-10-05",
+    "lower_bound_method": "LB_flow"
   },
   {
     "name": "realistic_150_54",
@@ -75334,7 +75387,7 @@ window.BDSP_INSTANCES = [
       "CMSA": 263511.0,
       "LNS": 255008.0
     },
-    "lower_bound": null,
+    "lower_bound": 207469,
     "algorithms": {
       "LNS": {
         "best_value": 256103.0,
@@ -75409,7 +75462,7 @@ window.BDSP_INSTANCES = [
     },
     "bks": 254376,
     "best_algorithm": "ToukoUrsin",
-    "gap_pct": null,
+    "gap_pct": 18.44,
     "status": "open",
     "solution_breakdown": {
       "total_objective": 254376,
@@ -77832,7 +77885,8 @@ window.BDSP_INSTANCES = [
     },
     "bks_source": "community",
     "submitted_by": "ToukoUrsin",
-    "submitted_at": "2026-10-05"
+    "submitted_at": "2026-10-05",
+    "lower_bound_method": "LB_flow"
   },
   {
     "name": "realistic_150_55",
@@ -77909,7 +77963,7 @@ window.BDSP_INSTANCES = [
       "CMSA": 261620.0,
       "LNS": 253524.0
     },
-    "lower_bound": null,
+    "lower_bound": 207040,
     "algorithms": {
       "LNS": {
         "best_value": 253789.0,
@@ -77984,7 +78038,7 @@ window.BDSP_INSTANCES = [
     },
     "bks": 252758,
     "best_algorithm": "ToukoUrsin",
-    "gap_pct": null,
+    "gap_pct": 18.09,
     "status": "open",
     "solution_breakdown": {
       "total_objective": 252758,
@@ -80383,7 +80437,8 @@ window.BDSP_INSTANCES = [
     },
     "bks_source": "community",
     "submitted_by": "ToukoUrsin",
-    "submitted_at": "2026-10-05"
+    "submitted_at": "2026-10-05",
+    "lower_bound_method": "LB_flow"
   },
   {
     "name": "realistic_200_56",
@@ -80460,7 +80515,7 @@ window.BDSP_INSTANCES = [
       "CMSA": 351189.0,
       "LNS": 338966.0
     },
-    "lower_bound": null,
+    "lower_bound": 279142,
     "algorithms": {
       "LNS": {
         "best_value": 339133.0,
@@ -80535,7 +80590,7 @@ window.BDSP_INSTANCES = [
     },
     "bks": 337176,
     "best_algorithm": "ToukoUrsin",
-    "gap_pct": null,
+    "gap_pct": 17.21,
     "status": "open",
     "solution_breakdown": {
       "total_objective": 337176,
@@ -83762,7 +83817,8 @@ window.BDSP_INSTANCES = [
     },
     "bks_source": "community",
     "submitted_by": "ToukoUrsin",
-    "submitted_at": "2026-10-05"
+    "submitted_at": "2026-10-05",
+    "lower_bound_method": "LB_flow"
   },
   {
     "name": "realistic_200_57",
@@ -83839,7 +83895,7 @@ window.BDSP_INSTANCES = [
       "CMSA": 350191.0,
       "LNS": 339736.0
     },
-    "lower_bound": null,
+    "lower_bound": 277443,
     "algorithms": {
       "LNS": {
         "best_value": 339400.0,
@@ -83914,7 +83970,7 @@ window.BDSP_INSTANCES = [
     },
     "bks": 336941,
     "best_algorithm": "ToukoUrsin",
-    "gap_pct": null,
+    "gap_pct": 17.66,
     "status": "open",
     "solution_breakdown": {
       "total_objective": 336941,
@@ -87105,7 +87161,8 @@ window.BDSP_INSTANCES = [
     },
     "bks_source": "community",
     "submitted_by": "ToukoUrsin",
-    "submitted_at": "2026-10-05"
+    "submitted_at": "2026-10-05",
+    "lower_bound_method": "LB_flow"
   },
   {
     "name": "realistic_200_58",
@@ -87182,7 +87239,7 @@ window.BDSP_INSTANCES = [
       "CMSA": 346885.0,
       "LNS": 335751.0
     },
-    "lower_bound": null,
+    "lower_bound": 275909,
     "algorithms": {
       "LNS": {
         "best_value": 336049.0,
@@ -87257,7 +87314,7 @@ window.BDSP_INSTANCES = [
     },
     "bks": 332985,
     "best_algorithm": "ToukoUrsin",
-    "gap_pct": null,
+    "gap_pct": 17.14,
     "status": "open",
     "solution_breakdown": {
       "total_objective": 332985,
@@ -90364,7 +90421,8 @@ window.BDSP_INSTANCES = [
     },
     "bks_source": "community",
     "submitted_by": "ToukoUrsin",
-    "submitted_at": "2026-10-05"
+    "submitted_at": "2026-10-05",
+    "lower_bound_method": "LB_flow"
   },
   {
     "name": "realistic_200_59",
@@ -90441,7 +90499,7 @@ window.BDSP_INSTANCES = [
       "CMSA": 348357.0,
       "LNS": 336242.0
     },
-    "lower_bound": null,
+    "lower_bound": 276728,
     "algorithms": {
       "LNS": {
         "best_value": 336657.0,
@@ -90516,7 +90574,7 @@ window.BDSP_INSTANCES = [
     },
     "bks": 334066,
     "best_algorithm": "ToukoUrsin",
-    "gap_pct": null,
+    "gap_pct": 17.16,
     "status": "open",
     "solution_breakdown": {
       "total_objective": 334066,
@@ -93719,7 +93777,8 @@ window.BDSP_INSTANCES = [
     },
     "bks_source": "community",
     "submitted_by": "ToukoUrsin",
-    "submitted_at": "2026-10-05"
+    "submitted_at": "2026-10-05",
+    "lower_bound_method": "LB_flow"
   },
   {
     "name": "realistic_200_60",
@@ -93796,7 +93855,7 @@ window.BDSP_INSTANCES = [
       "CMSA": 346421.0,
       "LNS": 335414.0
     },
-    "lower_bound": null,
+    "lower_bound": 278354,
     "algorithms": {
       "LNS": {
         "best_value": 336156.0,
@@ -93871,7 +93930,7 @@ window.BDSP_INSTANCES = [
     },
     "bks": 331804,
     "best_algorithm": "ToukoUrsin",
-    "gap_pct": null,
+    "gap_pct": 16.11,
     "status": "open",
     "solution_breakdown": {
       "total_objective": 331804,
@@ -96942,7 +97001,8 @@ window.BDSP_INSTANCES = [
     },
     "bks_source": "community",
     "submitted_by": "ToukoUrsin",
-    "submitted_at": "2026-10-05"
+    "submitted_at": "2026-10-05",
+    "lower_bound_method": "LB_flow"
   },
   {
     "name": "realistic_250_61",
@@ -97019,7 +97079,7 @@ window.BDSP_INSTANCES = [
       "CMSA": 437522.0,
       "LNS": 425880.0
     },
-    "lower_bound": null,
+    "lower_bound": 346993,
     "algorithms": {
       "LNS": {
         "best_value": 426676.0,
@@ -97094,7 +97154,7 @@ window.BDSP_INSTANCES = [
     },
     "bks": 422357,
     "best_algorithm": "ToukoUrsin",
-    "gap_pct": null,
+    "gap_pct": 17.84,
     "status": "open",
     "solution_breakdown": {
       "total_objective": 422357,
@@ -101161,7 +101221,8 @@ window.BDSP_INSTANCES = [
     },
     "bks_source": "community",
     "submitted_by": "ToukoUrsin",
-    "submitted_at": "2026-10-05"
+    "submitted_at": "2026-10-05",
+    "lower_bound_method": "LB_flow"
   },
   {
     "name": "realistic_250_62",
@@ -101238,7 +101299,7 @@ window.BDSP_INSTANCES = [
       "CMSA": 440515.0,
       "LNS": 428008.0
     },
-    "lower_bound": null,
+    "lower_bound": 351941,
     "algorithms": {
       "LNS": {
         "best_value": 427686.0,
@@ -101313,7 +101374,7 @@ window.BDSP_INSTANCES = [
     },
     "bks": 420982,
     "best_algorithm": "ToukoUrsin",
-    "gap_pct": null,
+    "gap_pct": 16.4,
     "status": "open",
     "solution_breakdown": {
       "total_objective": 420982,
@@ -105272,7 +105333,8 @@ window.BDSP_INSTANCES = [
     },
     "bks_source": "community",
     "submitted_by": "ToukoUrsin",
-    "submitted_at": "2026-10-05"
+    "submitted_at": "2026-10-05",
+    "lower_bound_method": "LB_flow"
   },
   {
     "name": "realistic_250_63",
@@ -105349,7 +105411,7 @@ window.BDSP_INSTANCES = [
       "CMSA": 438561.0,
       "LNS": 426919.0
     },
-    "lower_bound": null,
+    "lower_bound": 350462,
     "algorithms": {
       "LNS": {
         "best_value": 426333.0,
@@ -105424,7 +105486,7 @@ window.BDSP_INSTANCES = [
     },
     "bks": 422996,
     "best_algorithm": "ToukoUrsin",
-    "gap_pct": null,
+    "gap_pct": 17.15,
     "status": "open",
     "solution_breakdown": {
       "total_objective": 422996,
@@ -109407,7 +109469,8 @@ window.BDSP_INSTANCES = [
     },
     "bks_source": "community",
     "submitted_by": "ToukoUrsin",
-    "submitted_at": "2026-10-05"
+    "submitted_at": "2026-10-05",
+    "lower_bound_method": "LB_flow"
   },
   {
     "name": "realistic_250_64",
@@ -109484,7 +109547,7 @@ window.BDSP_INSTANCES = [
       "CMSA": 440638.0,
       "LNS": 427983.0
     },
-    "lower_bound": null,
+    "lower_bound": 350589,
     "algorithms": {
       "LNS": {
         "best_value": 428442.0,
@@ -109559,7 +109622,7 @@ window.BDSP_INSTANCES = [
     },
     "bks": 423241,
     "best_algorithm": "ToukoUrsin",
-    "gap_pct": null,
+    "gap_pct": 17.17,
     "status": "open",
     "solution_breakdown": {
       "total_objective": 423241,
@@ -113614,7 +113677,8 @@ window.BDSP_INSTANCES = [
     },
     "bks_source": "community",
     "submitted_by": "ToukoUrsin",
-    "submitted_at": "2026-10-05"
+    "submitted_at": "2026-10-05",
+    "lower_bound_method": "LB_flow"
   },
   {
     "name": "realistic_250_65",
@@ -113691,7 +113755,7 @@ window.BDSP_INSTANCES = [
       "CMSA": 436821.0,
       "LNS": 424907.0
     },
-    "lower_bound": null,
+    "lower_bound": 348280,
     "algorithms": {
       "LNS": {
         "best_value": 425405.0,
@@ -113766,7 +113830,7 @@ window.BDSP_INSTANCES = [
     },
     "bks": 418517,
     "best_algorithm": "ToukoUrsin",
-    "gap_pct": null,
+    "gap_pct": 16.78,
     "status": "open",
     "solution_breakdown": {
       "total_objective": 418517,
@@ -117641,7 +117705,8 @@ window.BDSP_INSTANCES = [
     },
     "bks_source": "community",
     "submitted_by": "ToukoUrsin",
-    "submitted_at": "2026-10-05"
+    "submitted_at": "2026-10-05",
+    "lower_bound_method": "LB_flow"
   },
   {
     "name": "shortLeg_50_1",

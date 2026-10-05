@@ -426,6 +426,9 @@ button:hover { background: var(--control-hover); }
 .collection-table td.no-match { text-align: center; }
 .collection-section { margin-top: 2.5rem; }
 .legend-optimal { background: var(--ok-bg); padding: 0 0.3rem; }
+/* lower bound from the path-cover bound (LB_flow) rather than Branch-and-Price */
+.lb-mark { text-decoration: none; cursor: help; margin-left: 0.15rem; }
+.lb-method { font-size: 0.75em; font-weight: normal; color: var(--text-muted); }
 .collection-table td:first-child a { font-weight: bold; }
 .collection-table td.num {
   text-align: right;

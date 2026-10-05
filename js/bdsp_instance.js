@@ -77,7 +77,10 @@
     html += summaryCard('Legs', inst.legs);
     html += summaryCard('Stations', inst.stations);
     html += summaryCard('BKS', formatNum(inst.bks), inst.status === 'optimal');
-    html += summaryCard('Lower Bound', inst.lower_bound != null ? formatNum(inst.lower_bound) : '\u2014');
+    html += summaryCard('Lower Bound', inst.lower_bound != null
+      ? formatNum(inst.lower_bound) + (inst.lower_bound_method
+        ? ' <span class="lb-method">(' + escapeHtml(inst.lower_bound_method) + ')</span>' : '')
+      : '\u2014');
     html += summaryCard('Gap (%)', inst.gap_pct != null ? formatNum(inst.gap_pct, 2) : '\u2014', inst.gap_pct === 0);
     html += summaryCard('Best Algorithm', escapeHtml(inst.best_algorithm || '\u2014') + (inst.bks_source === 'community' ? ' (community)' : ''));
     html += '</div>';

@@ -263,7 +263,9 @@
       html += '<td class="num">' + inst.legs + '</td>';
       html += '<td class="num">' + formatNumber(inst.bks) + '</td>';
       if (table === 'realistic') {
-        html += '<td class="num">' + formatBound(inst.lower_bound) + '</td>';
+        html += '<td class="num">' + formatBound(inst.lower_bound) +
+          (inst.lower_bound_method === 'LB_flow'
+            ? '<abbr class="lb-mark" title="Path-cover bound (LB_flow)">†</abbr>' : '') + '</td>';
         html += inst.gap_pct === 0
           ? '<td class="num"><span class="gap-optimal">' + formatGap(0) + '</span></td>'
           : '<td class="num">' + formatGap(inst.gap_pct) + '</td>';
@@ -332,7 +334,7 @@
   // ---------------------------------------------------------------------------
 
   window.exportCollectionCSV = function () {
-    var rows = [['Instance', 'Source', 'Status', 'Size', 'Tours', 'Legs', 'BKS', 'Lower Bound', 'Gap (%)', 'Best Algorithm']];
+    var rows = [['Instance', 'Source', 'Status', 'Size', 'Tours', 'Legs', 'BKS', 'Lower Bound', 'LB Method', 'Gap (%)', 'Best Algorithm']];
     // Exactly the current view (possibly empty); everything only before the first render.
     var visible = rendered
       ? tableState.realistic.filtered.concat(tableState.patat.filtered)
@@ -347,6 +349,7 @@
         inst.legs,
         inst.bks != null ? inst.bks : '',
         inst.lower_bound != null ? inst.lower_bound : '',
+        inst.lower_bound_method || '',
         inst.gap_pct != null ? inst.gap_pct : '',
         inst.best_algorithm || ''
       ]);
