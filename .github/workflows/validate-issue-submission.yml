@@ -33,7 +33,12 @@ concurrency:
 
 jobs:
   evaluate:
-    if: contains(github.event.issue.labels.*.name, 'bks-submission') && github.event.issue.state == 'open'
+    # Label from the form, or the form's "[BKS]" title prefix: issues opened via
+    # the CLI/API by non-collaborators cannot carry labels.
+    if: >-
+      (contains(github.event.issue.labels.*.name, 'bks-submission')
+       || startsWith(github.event.issue.title, '[BKS]'))
+      && github.event.issue.state == 'open'
     runs-on: ubuntu-latest
     timeout-minutes: 15
     env:
@@ -43,7 +48,11 @@ jobs:
       DEFAULT_BRANCH: ${{ github.event.repository.default_branch }}
     steps:
       - name: Check out repository (trusted code)
+        # The branch tip, not the event-time SHA: a run queued behind another
+        # accepted submission must validate against the data that run pushed.
         uses: actions/checkout@v5
+        with:
+          ref: ${{ github.event.repository.default_branch }}
 
       - name: Set up Python
         uses: actions/setup-python@v6
@@ -61,6 +70,7 @@ jobs:
         run: python scripts/process_issue_submission.py
 
       - name: Commit and publish new BKS
+        id: publish
         if: steps.process.outputs.accepted == 'true'
         run: |
           set -euo pipefail
@@ -73,11 +83,16 @@ jobs:
 
       - name: Post result comment
         if: always() && steps.process.outcome != 'skipped'
+        env:
+          RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
         run: |
-          if [ -f _ci/comment.md ]; then
+          if [ "${{ steps.process.outputs.accepted }}" = "true" ] && [ "${{ steps.publish.outcome }}" != "success" ]; then
+            # comment.md pre-claims "published", but the push did not land.
+            gh issue comment "${ISSUE_NUMBER}" --body "⚠️ The solution validated as a new best known solution, but publishing hit a concurrent update. A maintainer will re-run the validation. ([workflow run](${RUN_URL}))"
+          elif [ -f _ci/comment.md ]; then
             gh issue comment "${ISSUE_NUMBER}" --body-file _ci/comment.md
           else
-            gh issue comment "${ISSUE_NUMBER}" --body "⚠️ The validation run failed unexpectedly — a maintainer will take a look. ([workflow run](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}))"
+            gh issue comment "${ISSUE_NUMBER}" --body "⚠️ The validation run failed unexpectedly — a maintainer will take a look. ([workflow run](${RUN_URL}))"
           fi
 
       - name: Label and close accepted submission

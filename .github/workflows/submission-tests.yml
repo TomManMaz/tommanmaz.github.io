@@ -1,0 +1,51 @@
+# Submission-pipeline contract tests.
+#
+# The issue form (new-bks.yml) and the issue parser
+# (scripts/process_issue_submission.py) share one body format. These tests
+# re-prove the contract whenever either side changes: field parsing,
+# attachment/pasted-matrix extraction, the verdict comment, and a validator
+# dry run on real archived solutions.
+#
+# Plain `pull_request` (read-only token, no secrets) — safe for forks.
+
+name: Submission pipeline tests
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - 'scripts/process_issue_submission.py'
+      - 'scripts/apply_submission.py'
+      - 'scripts/submission_test.py'
+      - '.github/ISSUE_TEMPLATE/new-bks.yml'
+      - '.github/workflows/submission-tests.yml'
+  pull_request:
+    paths:
+      - 'scripts/process_issue_submission.py'
+      - 'scripts/apply_submission.py'
+      - 'scripts/submission_test.py'
+      - '.github/ISSUE_TEMPLATE/new-bks.yml'
+      - '.github/workflows/submission-tests.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  submission-tests:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          lfs: false  # collection.tar.gz is not needed
+
+      - uses: actions/setup-python@v6
+        with:
+          python-version: '3.11'
+
+      - name: Install validator dependency
+        run: pip install sortedcontainers
+
+      - name: Submission parser tests (parsing + dry runs)
+        run: python scripts/submission_test.py

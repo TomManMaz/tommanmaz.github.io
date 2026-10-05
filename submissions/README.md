@@ -12,9 +12,8 @@ published automatically as the new BKS, credited to your GitHub account.
 2. Fill in the **Instance** field with the exact instance name (e.g.
    `realistic_50_23`, `breakMax_100_1`) — see the names in the
    [collection](https://tommanmaz.github.io/bdsp_collection.html).
-3. **Drag and drop your solution CSV** into the *Solution file* box (it becomes
-   an attachment link; for small instances you may paste the matrix instead)
-   and submit the issue.
+3. **Attach your solution CSV** in the *Solution file* field and submit the
+   issue.
 4. The bot comments the verdict within a minute or two:
    - ✅ **accepted** — feasible and better: published as the new BKS, the issue
      is closed, and you are credited as the contributor.
@@ -24,6 +23,17 @@ published automatically as the new BKS, credited to your GitHub account.
 
    If something went wrong, **edit the issue** (fix the attachment or the
    instance name) — it re-validates automatically.
+
+**Submitting from the command line or API?** Those cannot upload issue
+attachments: put the CSV in a public [gist](https://gist.github.com) named
+`<instance>.csv` and link it instead. Keep the `[BKS] <instance>` title so the
+bot picks the issue up, e.g.
+
+```
+gh gist create --public realistic_50_23.csv
+gh issue create --repo TomManMaz/tommanmaz.github.io --title "[BKS] realistic_50_23" \
+  --body $'### Instance\n\nrealistic_50_23\n\n### Solution file\n\n<gist URL>'
+```
 
 The easiest starting point is the
 [online validator](https://tommanmaz.github.io/bdsp_validate.html): validate

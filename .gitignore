@@ -11,6 +11,9 @@ __pycache__/
 .venv/
 venv/
 
+# Scratch output of the submission CI scripts (comment.md verdicts)
+_ci/
+
 # LaTeX build artifacts (CV)
 docs/cv-build/*.aux
 docs/cv-build/*.log

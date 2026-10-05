@@ -87,9 +87,15 @@ work overruns) is actually triggered.
     `scripts/process_issue_submission.py` (parses the body, fetches the
     github.com attachment, composes the verdict comment). Accepted issues are
     closed; invalid ones stay open and re-validate on edit. The validate
-    page's submission panel deep-links the pre-filled form.
+    page's submission panel deep-links the pre-filled form. The workflow
+    also fires on a `[BKS]` title prefix (CLI/API issues from
+    non-collaborators can't carry labels), and the script accepts a public
+    gist link when no attachment is present (CLI can't upload attachments).
   - **PRs (legacy, still works, undocumented on the site)**: PR adds
     `submissions/<instance>.csv` → `.github/workflows/validate-submission.yml`.
+  - Contract tests: `python scripts/submission_test.py` (form parsing,
+    verdict comments, validator dry runs); CI runs it via
+    `.github/workflows/submission-tests.yml`.
 - **Full data rebuild** (`scripts/build_instance_data.py`): maintainer-only;
   requires instance/JAIR sources under `/home/mannelli/...` on the old
   Linux machine — not runnable from this repo alone.

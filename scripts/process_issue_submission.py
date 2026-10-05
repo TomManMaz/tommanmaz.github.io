@@ -11,8 +11,9 @@ scripts/apply_submission.py, and writes:
 
 SECURITY MODEL: the issue body is untrusted DATA. Nothing from it is ever
 executed; the instance name is validated against a strict pattern and must
-exist in the committed collection; the attachment is only fetched from
-github.com and parsed as a 0/1 matrix by the trusted validator.
+exist in the committed collection; the solution is only fetched from
+github.com attachments or public gists and parsed as a 0/1 matrix by the
+trusted validator.
 
 Environment:
   ISSUE_BODY    (required) — the issue body text
@@ -44,6 +45,12 @@ ATTACHMENT_RE = re.compile(
     r"(?:user-attachments/files/\d+/[A-Za-z0-9._%-]+"
     r"|[A-Za-z0-9_.-]+/[A-Za-z0-9_.-]+/files/\d+/[A-Za-z0-9._%-]+)"
 )
+
+# Public gists — the fallback for solutions submitted from the CLI/API, which
+# cannot upload issue attachments. Fetched via the gists API; raw content only
+# from gist.githubusercontent.com.
+GIST_RE = re.compile(r"https://gist\.github\.com/(?:[A-Za-z0-9-]+/)?([0-9a-f]{20,40})\b")
+GIST_RAW_PREFIX = "https://gist.githubusercontent.com/"
 
 MAX_ATTACHMENT_BYTES = 30 * 1024 * 1024
 FETCH_TIMEOUT_S = 60
@@ -89,13 +96,42 @@ def extract_pasted_csv(section: str) -> str | None:
     return None
 
 
-def fetch_attachment(url: str, dest: Path) -> None:
-    req = urllib.request.Request(url, headers={"User-Agent": "bdsp-submission-bot"})
+def _get(url: str, api: bool = False) -> bytes:
+    headers = {"User-Agent": "bdsp-submission-bot"}
+    token = os.environ.get("GH_TOKEN")
+    if api and token:  # avoids the 60/h unauthenticated API limit on shared runners
+        headers["Authorization"] = f"Bearer {token}"
+    req = urllib.request.Request(url, headers=headers)
     with urllib.request.urlopen(req, timeout=FETCH_TIMEOUT_S) as resp:
         data = resp.read(MAX_ATTACHMENT_BYTES + 1)
     if len(data) > MAX_ATTACHMENT_BYTES:
         raise ValueError(f"Attachment exceeds the {MAX_ATTACHMENT_BYTES // 2**20} MB limit.")
-    dest.write_bytes(data)
+    return data
+
+
+def fetch_attachment(url: str, dest: Path) -> None:
+    dest.write_bytes(_get(url))
+
+
+def pick_gist_file(files: dict, instance: str) -> dict:
+    """The gist file named <instance>.csv/.txt, else its only .csv/.txt file."""
+    candidates = [f for name, f in files.items()
+                  if re.search(r"\.(csv|txt)$", name, re.IGNORECASE)]
+    for f in candidates:
+        if re.sub(r"\.(csv|txt)$", "", f["filename"], flags=re.IGNORECASE) == instance:
+            return f
+    if len(candidates) == 1:
+        return candidates[0]
+    raise ValueError(f"The gist must contain {instance}.csv "
+                     "(or exactly one .csv file).")
+
+
+def fetch_gist(gist_id: str, instance: str, dest: Path) -> None:
+    meta = json.loads(_get(f"https://api.github.com/gists/{gist_id}", api=True))
+    raw_url = pick_gist_file(meta.get("files") or {}, instance).get("raw_url", "")
+    if not raw_url.startswith(GIST_RAW_PREFIX):
+        raise ValueError("Unexpected gist download location.")
+    dest.write_bytes(_get(raw_url))
 
 
 def compose_comment(author: str, result: dict) -> str:
@@ -142,8 +178,8 @@ def compose_comment(author: str, result: dict) -> str:
             "",
             "Make sure the **Instance** field holds an exact instance name from the "
             "[collection](https://tommanmaz.github.io/bdsp_collection.html) and the "
-            "**Solution file** section contains the attached CSV (drag & drop the "
-            "file into the text box). Edit this issue to retry.",
+            "**Solution file** field has your CSV attached. Edit this issue "
+            "to retry.",
         ]
     return "\n".join(lines) + "\n"
 
@@ -169,6 +205,7 @@ def main() -> int:
     solution_section = form_field(body, "Solution file")
     url_match = ATTACHMENT_RE.search(solution_section) or ATTACHMENT_RE.search(body)
     attachment_url = url_match.group(0) if url_match else None
+    gist_match = GIST_RE.search(solution_section) or GIST_RE.search(body)
     instance = resolve_instance_name(body, title, attachment_url)
 
     result: dict = {"instance": instance, "status": "error", "message": ""}
@@ -183,11 +220,13 @@ def main() -> int:
             pasted = extract_pasted_csv(solution_section)
             if attachment_url:
                 fetch_attachment(attachment_url, csv_path)
+            elif gist_match:
+                fetch_gist(gist_match.group(1), instance, csv_path)
             elif pasted:
                 csv_path.write_text(pasted, encoding="utf-8")
             else:
                 result["message"] = ("No solution found: attach a .csv file in the "
-                                     "'Solution file' section (or paste the matrix).")
+                                     "'Solution file' section (or link a public gist).")
                 csv_path = None
 
             if csv_path is not None:

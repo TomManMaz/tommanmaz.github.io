@@ -337,7 +337,7 @@
         '<button type="button" id="download-submission-btn">' + escapeHtml(subName) + '</button></li>';
       html += '<li><a href="' + issueUrl + '" target="_blank" rel="noopener">Open a submission issue</a> ' +
         '(the instance name is pre-filled).</li>';
-      html += '<li>Drag the downloaded file into the <em>Solution file</em> box and submit — ' +
+      html += '<li>Attach the downloaded file in the <em>Solution file</em> field and submit — ' +
         'the validator bot comments the verdict and publishes an accepted result automatically.</li>';
       html += '</ol>';
       html += '<p>Details: <a href="https://github.com/TomManMaz/tommanmaz.github.io/tree/main/submissions" ' +

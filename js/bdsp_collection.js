@@ -396,7 +396,12 @@
       ]);
     });
 
-    var csv = rows.map(function (r) { return r.join(','); }).join('\n');
+    // Community best_algorithm values are free text and may contain commas.
+    function csvCell(value) {
+      var s = value == null ? '' : String(value);
+      return /[",\n\r]/.test(s) ? '"' + s.replace(/"/g, '""') + '"' : s;
+    }
+    var csv = rows.map(function (r) { return r.map(csvCell).join(','); }).join('\n');
     var blob = new Blob([csv], { type: 'text/csv' });
     var link = document.createElement('a');
     link.href = URL.createObjectURL(blob);
