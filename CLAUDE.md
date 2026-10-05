@@ -75,7 +75,8 @@ work overruns) is actually triggered.
   order. **Caveat:** for ~26 instances the recorded `bks` (from algorithm
   result tables) is slightly better than what the archived matrix achieves;
   `parity_test.js` reports these as WARN, not FAIL.
-- `downloads/collection.tar.gz` — Git LFS, built on the author's old
+- `downloads/collection.tar.gz` — Git LFS (Pages serves only the pointer, so
+  the site links the copy attached to GitHub Release `collection-v1`), built on the author's old
   machine; do not regenerate here.
 
 ## Pipelines

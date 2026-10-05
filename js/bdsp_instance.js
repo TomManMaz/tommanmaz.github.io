@@ -114,7 +114,7 @@
     if (inst.source === 'realistic') {
       html += '<a class="download-btn" href="sols/' + encodeURIComponent(inst.name) + '.csv" download>Best Solution (CSV)</a>';
     }
-    html += '<a class="download-btn" href="downloads/collection.tar.gz">Full Archive</a>';
+    html += '<a class="download-btn" href="https://github.com/TomManMaz/tommanmaz.github.io/releases/download/collection-v1/collection.tar.gz">Full Archive</a>';
     html += '<a class="download-btn" href="docs/bdsp_problem_formulation.pdf">Problem Formulation (PDF)</a>';
     html += '</div>';
     html += '</div>';
