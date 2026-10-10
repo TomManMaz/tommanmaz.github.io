@@ -114,8 +114,15 @@
   },
   "realistic_250_65": {
     "author": "ToukoUrsin",
-    "date": "2026-10-05",
-    "objective": 418517
+    "date": "2026-10-10",
+    "objective": 417461,
+    "previous": [
+      {
+        "author": "ToukoUrsin",
+        "date": "2026-10-05",
+        "objective": 418517
+      }
+    ]
   },
   "realistic_80_39": {
     "author": "ToukoUrsin",
