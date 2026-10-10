@@ -96,7 +96,25 @@ def test_link_precedence_and_gist_owner() -> None:
           "body is searched when the Solution field has no link")
 
     real_get = pis._get
-    pis._get = lambda url, api=False: json.dumps(
+    # Regression: the Actions token must never reach the gists API (403).
+    seen = []
+    real_urlopen = pis.urllib.request.urlopen
+
+    class _Resp:
+        def __enter__(self): return self
+        def __exit__(self, *a): return False
+        def read(self, n=-1): return b"{}"
+    pis.urllib.request.urlopen = lambda req, timeout=None: (seen.append(req), _Resp())[1]
+    os.environ["GH_TOKEN"] = "ci-installation-token"
+    try:
+        pis._get("https://api.github.com/gists/" + "a" * 32)
+    finally:
+        pis.urllib.request.urlopen = real_urlopen
+        os.environ.pop("GH_TOKEN", None)
+    check(seen and not seen[0].has_header("Authorization"),
+          "gist requests are unauthenticated even when GH_TOKEN is set")
+
+    pis._get = lambda url: json.dumps(
         {"owner": {"login": "owner1"},
          "files": {"x.csv": {"filename": "x.csv", "raw_url": pis.GIST_RAW_PREFIX + "x"}}}).encode()
     try:

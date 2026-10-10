@@ -96,12 +96,12 @@ def extract_pasted_csv(section: str) -> str | None:
     return None
 
 
-def _get(url: str, api: bool = False) -> bytes:
-    headers = {"User-Agent": "bdsp-submission-bot"}
-    token = os.environ.get("GH_TOKEN")
-    if api and token:  # avoids the 60/h unauthenticated API limit on shared runners
-        headers["Authorization"] = f"Bearer {token}"
-    req = urllib.request.Request(url, headers=headers)
+def _get(url: str) -> bytes:
+    # Always unauthenticated: the Actions GITHUB_TOKEN is an app installation
+    # token, which the gists API rejects with 403 (a personal token works, so
+    # a local run with `gh auth token` hides this). Public gists need no auth;
+    # the 60 requests/hour per runner IP are plenty for one fetch per issue.
+    req = urllib.request.Request(url, headers={"User-Agent": "bdsp-submission-bot"})
     with urllib.request.urlopen(req, timeout=FETCH_TIMEOUT_S) as resp:
         data = resp.read(MAX_ATTACHMENT_BYTES + 1)
     if len(data) > MAX_ATTACHMENT_BYTES:
@@ -143,7 +143,7 @@ def find_solution_link(solution_section: str, body: str):
 
 
 def fetch_gist(gist_id: str, instance: str, dest: Path, author: str) -> None:
-    meta = json.loads(_get(f"https://api.github.com/gists/{gist_id}", api=True))
+    meta = json.loads(_get(f"https://api.github.com/gists/{gist_id}"))
     owner = ((meta.get("owner") or {}).get("login") or "")
     # Credit goes to the issue author, so the gist must be theirs: nobody can
     # resubmit someone else's public gist under their own name.
