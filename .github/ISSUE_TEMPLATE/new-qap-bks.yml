@@ -1,0 +1,42 @@
+name: QAPLIB — new best known solution, proof or lower bound
+description: Report a permutation that beats a QAPLIB best known value, or a new optimality proof or lower bound. It is checked by hand and then published with credit.
+title: "[QAP] "
+labels: ["qap-submission"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for contributing! Please pre-check the permutation with the
+        [online checker](https://tommanmaz.github.io/qap_validate.html): it gives the cost
+        under the QAPLIB convention, cost(p) = sum a[i][j] * b[p(i)][p(j)].
+  - type: input
+    id: instance
+    attributes:
+      label: Instance
+      description: The exact name from the [instance table](https://tommanmaz.github.io/qap_collection.html).
+      placeholder: tai100a
+    validations:
+      required: true
+  - type: input
+    id: value
+    attributes:
+      label: Objective value (or bound)
+      placeholder: "21040996"
+    validations:
+      required: true
+  - type: textarea
+    id: permutation
+    attributes:
+      label: Permutation
+      description: Numbers 1..n separated by spaces, p(i) = location of facility i. Leave empty for a proof or a lower bound.
+      render: text
+  - type: input
+    id: method
+    attributes:
+      label: Method
+      placeholder: e.g. iterated tabu search, 100 runs of 2 h on 32 cores
+  - type: input
+    id: reference
+    attributes:
+      label: Reference
+      description: Paper, preprint or code (DOI or URL), if any.

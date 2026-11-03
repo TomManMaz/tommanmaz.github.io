@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="description" content="Up-to-date, verified best known solutions for the QAPLIB instances of the Quadratic Assignment Problem: optimality status, lower bounds, permutations, and every change since the official 2012 tables." />
+  <meta name="keywords" content="QAP, quadratic assignment problem, QAPLIB, best known solutions, lower bounds, benchmark instances" />
+  <meta name="author" content="Tommaso Mannelli Mazzoli" />
+
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://tommanmaz.github.io/qap.html" />
+  <meta property="og:title" content="QAPLIB Best Known Solutions &mdash; Tommaso Mannelli Mazzoli" />
+  <meta property="og:description" content="Verified, up-to-date best known solutions for the QAPLIB instances." />
+  <meta property="og:image" content="https://tommanmaz.github.io/icon.png" />
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="QAPLIB Best Known Solutions &mdash; Tommaso Mannelli Mazzoli" />
+  <meta name="twitter:description" content="Verified, up-to-date best known solutions for the QAPLIB instances." />
+  <meta name="twitter:image" content="https://tommanmaz.github.io/icon.png" />
+
+  <meta http-equiv="X-Content-Type-Options" content="nosniff" />
+  <meta http-equiv="X-Frame-Options" content="SAMEORIGIN" />
+  <meta name="referrer" content="no-referrer-when-downgrade" />
+
+  <title>QAPLIB Best Known Solutions &mdash; Tommaso Mannelli Mazzoli</title>
+  <link rel="icon" type="image/png" href="icon.png" />
+  <link rel="apple-touch-icon" href="icon.png" />
+  <link rel="stylesheet" href="stylesheet.css" />
+  <script src="js/theme.js"></script></head>
+<body>
+  <a href="#main-content" class="skip-link">Skip to main content</a>
+
+  <header class="header">
+    <h1>Tommaso Mannelli Mazzoli</h1>
+    <p>AI Architect at PORR AG, Vienna, Austria</p>
+  </header>
+
+  <nav class="navbar" role="navigation" aria-label="Main navigation">
+    <a href="index.html">Home</a>
+    <a href="publications.html">Publications</a>
+    <a href="bdsp.html">BDSP</a>
+    <a class="active" href="qap.html" aria-current="page">QAP</a>
+    <a href="amm.html">AMM</a>  </nav>
+
+  <main id="main-content">
+    <h1>Quadratic Assignment Problem</h1>
+    <p>
+      An up-to-date, verified table of best known solutions for
+      <a href="https://coral.ise.lehigh.edu/data-sets/qaplib/">QAPLIB</a>, the standard benchmark
+      library for the <strong>Quadratic Assignment Problem (QAP)</strong> by Burkard, Karisch and Rendl.
+      The official QAPLIB tables were last updated in April 2012. Since then, several instances have
+      been proved optimal and the record for <code>tai100a</code> has been improved three times. This
+      page brings those results together, with a permutation for every value.
+    </p>
+    <p class="field-hint">
+      This is an unofficial update, not affiliated with the QAPLIB authors or maintainers. The
+      instance data are the official files, unchanged.
+    </p>
+
+    <p class="bdsp-summary" id="qap-summary">
+      136 instances &middot; 108 proven optimal &middot; 28 open &middot;
+      every best known value backed by a permutation recomputed on the official data.
+    </p>
+
+    <ul class="bdsp-links">
+      <li>
+        <a href="qap_collection.html">Browse the instances</a> &mdash;
+        <span class="desc">filter, sort and search all instances; best known values, lower bounds, gaps, and sources.</span>
+      </li>
+      <li>
+        <a href="qap_validate.html">Check a permutation</a> &mdash;
+        <span class="desc">paste a permutation or upload an <code>.sln</code> file and get its cost in the browser.</span>
+      </li>
+      <li>
+        <a href="https://github.com/TomManMaz/tommanmaz.github.io/issues/new?template=new-qap-bks.yml">Submit an improved solution</a> &mdash;
+        <span class="desc">open an issue with the permutation; it is checked and, if better, published with credit.</span>
+      </li>
+      <li>
+        <a href="qap_collection.html#data-access">Download the data</a> &mdash;
+        <span class="desc">instance files, verified solution files, and a JSON index with stable URLs.</span>
+      </li>
+    </ul>
+
+    <h2>What Changed Since the Official Tables</h2>
+    <div class="table-scroll" id="qap-changes">
+      <p>Loading&hellip;</p>
+    </div>
+    <p>
+      The lower bounds of the open instances are the best ones published, mostly from
+      H.D. Mittelmann&rsquo;s <a href="https://plato.asu.edu/ftp/qaplib_bounds.html">improved QAPLIB
+      lower bounds</a> (August 2026). A 2026 paper by Sergienko et al. reports another improvement
+      on <code>tai100a</code>; it will be listed once its permutation can be checked.
+    </p>
+
+    <h2>Conventions</h2>
+    <p>
+      An instance file (<code>.dat</code>) contains <em>n</em>, then the <em>n</em>&times;<em>n</em>
+      matrix <em>a</em>, then the <em>n</em>&times;<em>n</em> matrix <em>b</em>. A solution is a
+      permutation <em>p</em> of 1..<em>n</em>, where <em>p</em>(<em>i</em>) is the location of
+      facility <em>i</em>, and its cost is
+    </p>
+    <pre>cost(p) = sum over i, j of  a[i][j] * b[p(i)][p(j)]</pre>
+    <p>
+      This is the QAPLIB convention. A solution file (<code>.sln</code>) has a first line
+      <code>n value</code>, followed by the permutation. The gap of an open instance is
+      (BKS &minus; lower bound) / BKS.
+    </p>
+
+    <h2>How the Values Were Checked</h2>
+    <ul>
+      <li>Instance data: the official QAPLIB archive (<code>qapdata.tar.gz</code>), unchanged.</li>
+      <li>
+        Every best known value was recomputed from its permutation. Sources: the official solution
+        archive, the papers listed with each instance, and, for <code>esc32a</code>&ndash;<code>d</code>,
+        <code>esc32h</code> and <code>esc64a</code>, whose official solution files are missing, new
+        permutations found with robust tabu search.
+      </li>
+      <li>
+        Optimality is taken from QAPLIB or from the published proof cited with each instance;
+        <code>tai10a</code> and <code>tai10b</code> were proved by enumerating all 10! permutations.
+      </li>
+    </ul>
+    <details class="help-details">
+      <summary>Known errors in other sources</summary>
+      <ul>
+        <li>
+          Several official <code>.sln</code> files store the inverse permutation (<code>esc128</code>,
+          <code>kra30a</code>, <code>kra30b</code>, <code>ste36c</code>, <code>tai60a</code>,
+          <code>tai80a</code>, <code>tho30</code>, <code>tho150</code>), and <code>tai40a.sln</code>
+          counts from 0. The files offered here all use the convention above.
+        </li>
+        <li>The header of the official <code>kra32.sln</code> says 88900; its permutation costs 88700, the optimum.</li>
+        <li>Mittelmann&rsquo;s page lists 7505962 as the <code>tai60a</code> upper bound; the best known value is 7205962.</li>
+        <li>
+          Taillard&rsquo;s instance files and grey-pattern table still carry older values for
+          <code>tai50a</code>, <code>tai80a</code>, <code>tai150b</code> and <code>tai256c</code>.
+        </li>
+      </ul>
+    </details>
+
+    <h2>How to Cite</h2>
+    <p>Please cite QAPLIB itself, and the paper behind any best known value or proof you use:</p>
+    <pre class="citation-box">@article{burkard1997qaplib,
+  author  = {Burkard, Rainer E. and Karisch, Stefan E. and Rendl, Franz},
+  title   = {{QAPLIB} -- A Quadratic Assignment Problem Library},
+  journal = {Journal of Global Optimization},
+  volume  = {10},
+  pages   = {391--403},
+  year    = {1997},
+  doi     = {10.1023/A:1008293323270}
+}</pre>
+
+    <h2>Contact</h2>
+    <p>
+      New best known solutions, proofs, lower bounds and corrections are welcome at
+      <a href="mailto:tommanmaz.math@gmail.com">tommanmaz.math@gmail.com</a>.
+    </p>
+  </main>
+
+  <footer class="site-footer">
+    <p>
+      <a href="mailto:tommanmaz.math@gmail.com">tommanmaz.math@gmail.com</a>
+      <span class="sep">&middot;</span>
+      <a href="https://github.com/TomManMaz/tommanmaz.github.io" target="_blank" rel="noopener">Source on GitHub</a>
+    </p>
+  </footer>
+
+  <script src="data/qap_instances.js"></script>
+  <script src="js/qap_overview.js"></script>
+</body>
+</html>

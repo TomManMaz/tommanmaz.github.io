@@ -1,0 +1,266 @@
+{
+ "updated": "2026-11-03",
+ "objective": "cost(p) = sum over i, j of a[i][j] * b[p(i)][p(j)], with a the first and b the second matrix of the .dat file and p a 1-based permutation.",
+ "references": {
+   "qaplib": {
+     "short": "QAPLIB",
+     "text": "R.E. Burkard, S.E. Karisch, F. Rendl. QAPLIB – A Quadratic Assignment Problem Library. Journal of Global Optimization 10:391–403, 1997. Instance and solution tables at Lehigh University, last updated April 2012.",
+     "url": "https://coral.ise.lehigh.edu/data-sets/qaplib/qaplib-problem-instances-and-solutions/"
+   },
+   "goncalves2017": {
+     "short": "Gonçalves et al. 2017",
+     "text": "A.D. Gonçalves, A.A. Pessoa, C. Bentes, R. Farias, L.M.A. Drummond. A graphics processing unit algorithm to solve the quadratic assignment problem using level-2 reformulation-linearization technique. INFORMS Journal on Computing 29(4):676–687, 2017.",
+     "url": "https://doi.org/10.1287/ijoc.2017.0754"
+   },
+   "fujii2021": {
+     "short": "Fujii et al. 2021",
+     "text": "K. Fujii, N. Ito, S. Kim, M. Kojima, Y. Shinano, K.-C. Toh. Solving challenging large scale QAPs. ZIB-Report 21-02, arXiv:2101.09629, 2021.",
+     "url": "https://arxiv.org/abs/2101.09629"
+   },
+   "shylo2017": {
+     "short": "Shylo 2017",
+     "text": "V.P. Shylo, repeated iterated tabu search on the SCIT-4 supercomputer. Reported on the QAPLIB mirror at Polytechnique Montréal, November 2017 (archived copy).",
+     "url": "http://web.archive.org/web/20200811075322/http://anjos.mgi.polymtl.ca:80/qaplib/soln.d/tai100a.sln"
+   },
+   "misevicius2019": {
+     "short": "Misevičius 2019",
+     "text": "A. Misevičius. Letter: New best known solution for the most difficult QAP instance “tai100a”. Memetic Computing 11:331–332, 2019.",
+     "url": "https://doi.org/10.1007/s12293-019-00289-y"
+   },
+   "sergienko2024": {
+     "short": "Sergienko et al. 2024",
+     "text": "I. Sergienko, V. Shylo, V. Roshchyn, P. Shylo, D. Boyarchuk, V. Moroz. Algorithm portfolios for solving the quadratic assignment problem. Cybernetics and Computer Technologies 2024(3):25–33 (in Ukrainian). The paper prints the permutation.",
+     "url": "https://doi.org/10.34229/2707-451X.24.3.3"
+   },
+   "sergienko2026": {
+     "short": "Sergienko et al. 2026",
+     "text": "I.V. Sergienko, V.P. Shylo, V.O. Roshchyn, D.O. Boyarchuk. Applying algorithm unions to specific classes of Boolean programming problems. Cybernetics and Systems Analysis 62(4):578–587, 2026. Reports a further improvement on tai100a; the value could not be checked yet and is not listed until its permutation is available.",
+     "url": "https://doi.org/10.1007/s10559-026-00893-0"
+   },
+   "mittelmann2026": {
+     "short": "Mittelmann 2026",
+     "text": "H.D. Mittelmann. Improved QAPLIB lower bounds using BBCPOP and NewtBracket. Web page dated 26 August 2026.",
+     "url": "https://plato.asu.edu/ftp/qaplib_bounds.html"
+   },
+   "quadi": {
+     "short": "QUADI (Baylis)",
+     "text": "QUADI (T. Baylis, quadi.dev), as listed by H.D. Mittelmann on 26 August 2026.",
+     "url": "https://plato.asu.edu/ftp/qaplib_bounds.html"
+   },
+   "enumeration": {
+     "short": "enumeration",
+     "text": "Proved optimal for this page by complete enumeration of all 10! permutations (3 November 2026). These two instances are in the QAPLIB data archive but not in its table.",
+     "url": null
+   },
+   "mittelmann2026log": {
+     "short": "Mittelmann 2026 (log)",
+     "text": "H.D. Mittelmann, NewtBracket log for this instance (2026): the valid bound in the log, rounded up to the next integer as the log's summary line does. QAPLIB data are integers, so the optimum is an integer; the table on his page shows the bound rounded down.",
+     "url": "https://plato.asu.edu/ftp/qaplib_bounds/"
+   },
+   "fujii2025": {
+     "short": "Fujii et al. 2025",
+     "text": "K. Fujii, S. Kim, M. Kojima, H.D. Mittelmann, Y. Shinano. An exceptionally difficult binary quadratic optimization problem with symmetry: a challenge for the largest unsolved QAP instance tai256c. Optimization Letters 19(6):1075–1097, 2025. Proves the lower bound 44,200,000 by branch and bound; the higher bound listed here (QUADI) has not been published in a paper.",
+     "url": "https://doi.org/10.1007/s11590-024-02157-2"
+   }
+ },
+ "families": {
+   "bur": {
+     "authors": "R.E. Burkard and J. Offermann (1977)",
+     "description": "Typewriter keyboard design: typing times of a stenotypist and letter-pair frequencies in several languages."
+   },
+   "chr": {
+     "authors": "N. Christofides and E. Benavent (1989)",
+     "description": "One matrix is the adjacency matrix of a weighted tree, the other that of a complete graph."
+   },
+   "els": {
+     "authors": "A.N. Elshafei (1977)",
+     "description": "Hospital layout: distances between 19 facilities and the flow of patients between them."
+   },
+   "esc": {
+     "authors": "B. Eschermann and H.J. Wunderlich (1990)",
+     "description": "Testing of self-testable sequential circuits, minimising the extra hardware."
+   },
+   "had": {
+     "authors": "S.W. Hadley, F. Rendl and H. Wolkowicz (1992)",
+     "description": "Manhattan distances of a cellular complex in the plane; flows drawn uniformly from [1, n]."
+   },
+   "kra": {
+     "authors": "J. Krarup and P.M. Pruzan (1978)",
+     "description": "Real data used to plan the Klinikum Regensburg hospital in Germany."
+   },
+   "lipa": {
+     "authors": "Y. Li and P.M. Pardalos (1992)",
+     "description": "Generated asymmetric instances with known optimal solutions."
+   },
+   "nug": {
+     "authors": "C.E. Nugent, T.E. Vollmann and J. Ruml (1968)",
+     "description": "Manhattan distances of rectangular grids; the most used QAPLIB instances."
+   },
+   "rou": {
+     "authors": "C. Roucairol (1987)",
+     "description": "Matrix entries drawn from [1, 100]."
+   },
+   "scr": {
+     "authors": "M. Scriabin and R.C. Vergin (1975)",
+     "description": "Rectangular distances."
+   },
+   "sko": {
+     "authors": "J. Skorin-Kapov (1990)",
+     "description": "Rectangular distances and pseudo-random flows."
+   },
+   "ste": {
+     "authors": "L. Steinberg (1961)",
+     "description": "Backboard wiring with Manhattan, squared Euclidean and Euclidean distances."
+   },
+   "tai": {
+     "authors": "E.D. Taillard (1991, 1994)",
+     "description": "taiXXa uniformly random; taiXXb asymmetric, random but structured like real-life instances; taiXXc from the generation of grey patterns."
+   },
+   "tho": {
+     "authors": "U.W. Thonemann and A. Bölte (1994)",
+     "description": "Rectangular distances."
+   },
+   "wil": {
+     "authors": "M.R. Wilhelm and T.L. Ward (1987)",
+     "description": "Rectangular distances."
+   }
+ },
+ "instances": [
+  {"name": "bur26a", "n": 26, "bks": 5426670, "qaplib_2012": {"value": 5426670, "status": "optimal"}, "status": "optimal", "proof": "qaplib"},
+  {"name": "bur26b", "n": 26, "bks": 3817852, "qaplib_2012": {"value": 3817852, "status": "optimal"}, "status": "optimal", "proof": "qaplib"},
+  {"name": "bur26c", "n": 26, "bks": 5426795, "qaplib_2012": {"value": 5426795, "status": "optimal"}, "status": "optimal", "proof": "qaplib"},
+  {"name": "bur26d", "n": 26, "bks": 3821225, "qaplib_2012": {"value": 3821225, "status": "optimal"}, "status": "optimal", "proof": "qaplib"},
+  {"name": "bur26e", "n": 26, "bks": 5386879, "qaplib_2012": {"value": 5386879, "status": "optimal"}, "status": "optimal", "proof": "qaplib"},
+  {"name": "bur26f", "n": 26, "bks": 3782044, "qaplib_2012": {"value": 3782044, "status": "optimal"}, "status": "optimal", "proof": "qaplib"},
+  {"name": "bur26g", "n": 26, "bks": 10117172, "qaplib_2012": {"value": 10117172, "status": "optimal"}, "status": "optimal", "proof": "qaplib"},
+  {"name": "bur26h", "n": 26, "bks": 7098658, "qaplib_2012": {"value": 7098658, "status": "optimal"}, "status": "optimal", "proof": "qaplib"},
+  {"name": "chr12a", "n": 12, "bks": 9552, "qaplib_2012": {"value": 9552, "status": "optimal"}, "status": "optimal", "proof": "qaplib"},
+  {"name": "chr12b", "n": 12, "bks": 9742, "qaplib_2012": {"value": 9742, "status": "optimal"}, "status": "optimal", "proof": "qaplib"},
+  {"name": "chr12c", "n": 12, "bks": 11156, "qaplib_2012": {"value": 11156, "status": "optimal"}, "status": "optimal", "proof": "qaplib"},
+  {"name": "chr15a", "n": 15, "bks": 9896, "qaplib_2012": {"value": 9896, "status": "optimal"}, "status": "optimal", "proof": "qaplib"},
+  {"name": "chr15b", "n": 15, "bks": 7990, "qaplib_2012": {"value": 7990, "status": "optimal"}, "status": "optimal", "proof": "qaplib"},
+  {"name": "chr15c", "n": 15, "bks": 9504, "qaplib_2012": {"value": 9504, "status": "optimal"}, "status": "optimal", "proof": "qaplib"},
+  {"name": "chr18a", "n": 18, "bks": 11098, "qaplib_2012": {"value": 11098, "status": "optimal"}, "status": "optimal", "proof": "qaplib"},
+  {"name": "chr18b", "n": 18, "bks": 1534, "qaplib_2012": {"value": 1534, "status": "optimal"}, "status": "optimal", "proof": "qaplib"},
+  {"name": "chr20a", "n": 20, "bks": 2192, "qaplib_2012": {"value": 2192, "status": "optimal"}, "status": "optimal", "proof": "qaplib"},
+  {"name": "chr20b", "n": 20, "bks": 2298, "qaplib_2012": {"value": 2298, "status": "optimal"}, "status": "optimal", "proof": "qaplib"},
+  {"name": "chr20c", "n": 20, "bks": 14142, "qaplib_2012": {"value": 14142, "status": "optimal"}, "status": "optimal", "proof": "qaplib"},
+  {"name": "chr22a", "n": 22, "bks": 6156, "qaplib_2012": {"value": 6156, "status": "optimal"}, "status": "optimal", "proof": "qaplib"},
+  {"name": "chr22b", "n": 22, "bks": 6194, "qaplib_2012": {"value": 6194, "status": "optimal"}, "status": "optimal", "proof": "qaplib"},
+  {"name": "chr25a", "n": 25, "bks": 3796, "qaplib_2012": {"value": 3796, "status": "optimal"}, "status": "optimal", "proof": "qaplib"},
+  {"name": "els19", "n": 19, "bks": 17212548, "qaplib_2012": {"value": 17212548, "status": "optimal"}, "status": "optimal", "proof": "qaplib"},
+  {"name": "esc128", "n": 128, "bks": 64, "qaplib_2012": {"value": 64, "status": "optimal"}, "status": "optimal", "proof": "qaplib"},
+  {"name": "esc16a", "n": 16, "bks": 68, "qaplib_2012": {"value": 68, "status": "optimal"}, "status": "optimal", "proof": "qaplib"},
+  {"name": "esc16b", "n": 16, "bks": 292, "qaplib_2012": {"value": 292, "status": "optimal"}, "status": "optimal", "proof": "qaplib"},
+  {"name": "esc16c", "n": 16, "bks": 160, "qaplib_2012": {"value": 160, "status": "optimal"}, "status": "optimal", "proof": "qaplib"},
+  {"name": "esc16d", "n": 16, "bks": 16, "qaplib_2012": {"value": 16, "status": "optimal"}, "status": "optimal", "proof": "qaplib"},
+  {"name": "esc16e", "n": 16, "bks": 28, "qaplib_2012": {"value": 28, "status": "optimal"}, "status": "optimal", "proof": "qaplib"},
+  {"name": "esc16f", "n": 16, "bks": 0, "qaplib_2012": {"value": 0, "status": "optimal"}, "status": "optimal", "proof": "qaplib"},
+  {"name": "esc16g", "n": 16, "bks": 26, "qaplib_2012": {"value": 26, "status": "optimal"}, "status": "optimal", "proof": "qaplib"},
+  {"name": "esc16h", "n": 16, "bks": 996, "qaplib_2012": {"value": 996, "status": "optimal"}, "status": "optimal", "proof": "qaplib"},
+  {"name": "esc16i", "n": 16, "bks": 14, "qaplib_2012": {"value": 14, "status": "optimal"}, "status": "optimal", "proof": "qaplib"},
+  {"name": "esc16j", "n": 16, "bks": 8, "qaplib_2012": {"value": 8, "status": "optimal"}, "status": "optimal", "proof": "qaplib"},
+  {"name": "esc32a", "n": 32, "bks": 130, "qaplib_2012": {"value": 130, "status": "optimal"}, "status": "optimal", "proof": "qaplib"},
+  {"name": "esc32b", "n": 32, "bks": 168, "qaplib_2012": {"value": 168, "status": "optimal"}, "status": "optimal", "proof": "qaplib"},
+  {"name": "esc32c", "n": 32, "bks": 642, "qaplib_2012": {"value": 642, "status": "optimal"}, "status": "optimal", "proof": "qaplib"},
+  {"name": "esc32d", "n": 32, "bks": 200, "qaplib_2012": {"value": 200, "status": "optimal"}, "status": "optimal", "proof": "qaplib"},
+  {"name": "esc32e", "n": 32, "bks": 2, "qaplib_2012": {"value": 2, "status": "optimal"}, "status": "optimal", "proof": "qaplib"},
+  {"name": "esc32g", "n": 32, "bks": 6, "qaplib_2012": {"value": 6, "status": "optimal"}, "status": "optimal", "proof": "qaplib"},
+  {"name": "esc32h", "n": 32, "bks": 438, "qaplib_2012": {"value": 438, "status": "optimal"}, "status": "optimal", "proof": "qaplib"},
+  {"name": "esc64a", "n": 64, "bks": 116, "qaplib_2012": {"value": 116, "status": "optimal"}, "status": "optimal", "proof": "qaplib"},
+  {"name": "had12", "n": 12, "bks": 1652, "qaplib_2012": {"value": 1652, "status": "optimal"}, "status": "optimal", "proof": "qaplib"},
+  {"name": "had14", "n": 14, "bks": 2724, "qaplib_2012": {"value": 2724, "status": "optimal"}, "status": "optimal", "proof": "qaplib"},
+  {"name": "had16", "n": 16, "bks": 3720, "qaplib_2012": {"value": 3720, "status": "optimal"}, "status": "optimal", "proof": "qaplib"},
+  {"name": "had18", "n": 18, "bks": 5358, "qaplib_2012": {"value": 5358, "status": "optimal"}, "status": "optimal", "proof": "qaplib"},
+  {"name": "had20", "n": 20, "bks": 6922, "qaplib_2012": {"value": 6922, "status": "optimal"}, "status": "optimal", "proof": "qaplib"},
+  {"name": "kra30a", "n": 30, "bks": 88900, "qaplib_2012": {"value": 88900, "status": "optimal"}, "status": "optimal", "proof": "qaplib"},
+  {"name": "kra30b", "n": 30, "bks": 91420, "qaplib_2012": {"value": 91420, "status": "optimal"}, "status": "optimal", "proof": "qaplib"},
+  {"name": "kra32", "n": 32, "bks": 88700, "qaplib_2012": {"value": 88700, "status": "optimal"}, "status": "optimal", "proof": "qaplib"},
+  {"name": "lipa20a", "n": 20, "bks": 3683, "qaplib_2012": {"value": 3683, "status": "optimal"}, "status": "optimal", "proof": "qaplib"},
+  {"name": "lipa20b", "n": 20, "bks": 27076, "qaplib_2012": {"value": 27076, "status": "optimal"}, "status": "optimal", "proof": "qaplib"},
+  {"name": "lipa30a", "n": 30, "bks": 13178, "qaplib_2012": {"value": 13178, "status": "optimal"}, "status": "optimal", "proof": "qaplib"},
+  {"name": "lipa30b", "n": 30, "bks": 151426, "qaplib_2012": {"value": 151426, "status": "optimal"}, "status": "optimal", "proof": "qaplib"},
+  {"name": "lipa40a", "n": 40, "bks": 31538, "qaplib_2012": {"value": 31538, "status": "optimal"}, "status": "optimal", "proof": "qaplib"},
+  {"name": "lipa40b", "n": 40, "bks": 476581, "qaplib_2012": {"value": 476581, "status": "optimal"}, "status": "optimal", "proof": "qaplib"},
+  {"name": "lipa50a", "n": 50, "bks": 62093, "qaplib_2012": {"value": 62093, "status": "optimal"}, "status": "optimal", "proof": "qaplib"},
+  {"name": "lipa50b", "n": 50, "bks": 1210244, "qaplib_2012": {"value": 1210244, "status": "optimal"}, "status": "optimal", "proof": "qaplib"},
+  {"name": "lipa60a", "n": 60, "bks": 107218, "qaplib_2012": {"value": 107218, "status": "optimal"}, "status": "optimal", "proof": "qaplib"},
+  {"name": "lipa60b", "n": 60, "bks": 2520135, "qaplib_2012": {"value": 2520135, "status": "optimal"}, "status": "optimal", "proof": "qaplib"},
+  {"name": "lipa70a", "n": 70, "bks": 169755, "qaplib_2012": {"value": 169755, "status": "optimal"}, "status": "optimal", "proof": "qaplib"},
+  {"name": "lipa70b", "n": 70, "bks": 4603200, "qaplib_2012": {"value": 4603200, "status": "optimal"}, "status": "optimal", "proof": "qaplib"},
+  {"name": "lipa80a", "n": 80, "bks": 253195, "qaplib_2012": {"value": 253195, "status": "optimal"}, "status": "optimal", "proof": "qaplib"},
+  {"name": "lipa80b", "n": 80, "bks": 7763962, "qaplib_2012": {"value": 7763962, "status": "optimal"}, "status": "optimal", "proof": "qaplib"},
+  {"name": "lipa90a", "n": 90, "bks": 360630, "qaplib_2012": {"value": 360630, "status": "optimal"}, "status": "optimal", "proof": "qaplib"},
+  {"name": "lipa90b", "n": 90, "bks": 12490441, "qaplib_2012": {"value": 12490441, "status": "optimal"}, "status": "optimal", "proof": "qaplib"},
+  {"name": "nug12", "n": 12, "bks": 578, "qaplib_2012": {"value": 578, "status": "optimal"}, "status": "optimal", "proof": "qaplib"},
+  {"name": "nug14", "n": 14, "bks": 1014, "qaplib_2012": {"value": 1014, "status": "optimal"}, "status": "optimal", "proof": "qaplib"},
+  {"name": "nug15", "n": 15, "bks": 1150, "qaplib_2012": {"value": 1150, "status": "optimal"}, "status": "optimal", "proof": "qaplib"},
+  {"name": "nug16a", "n": 16, "bks": 1610, "qaplib_2012": {"value": 1610, "status": "optimal"}, "status": "optimal", "proof": "qaplib"},
+  {"name": "nug16b", "n": 16, "bks": 1240, "qaplib_2012": {"value": 1240, "status": "optimal"}, "status": "optimal", "proof": "qaplib"},
+  {"name": "nug17", "n": 17, "bks": 1732, "qaplib_2012": {"value": 1732, "status": "optimal"}, "status": "optimal", "proof": "qaplib"},
+  {"name": "nug18", "n": 18, "bks": 1930, "qaplib_2012": {"value": 1930, "status": "optimal"}, "status": "optimal", "proof": "qaplib"},
+  {"name": "nug20", "n": 20, "bks": 2570, "qaplib_2012": {"value": 2570, "status": "optimal"}, "status": "optimal", "proof": "qaplib"},
+  {"name": "nug21", "n": 21, "bks": 2438, "qaplib_2012": {"value": 2438, "status": "optimal"}, "status": "optimal", "proof": "qaplib"},
+  {"name": "nug22", "n": 22, "bks": 3596, "qaplib_2012": {"value": 3596, "status": "optimal"}, "status": "optimal", "proof": "qaplib"},
+  {"name": "nug24", "n": 24, "bks": 3488, "qaplib_2012": {"value": 3488, "status": "optimal"}, "status": "optimal", "proof": "qaplib"},
+  {"name": "nug25", "n": 25, "bks": 3744, "qaplib_2012": {"value": 3744, "status": "optimal"}, "status": "optimal", "proof": "qaplib"},
+  {"name": "nug27", "n": 27, "bks": 5234, "qaplib_2012": {"value": 5234, "status": "optimal"}, "status": "optimal", "proof": "qaplib"},
+  {"name": "nug28", "n": 28, "bks": 5166, "qaplib_2012": {"value": 5166, "status": "optimal"}, "status": "optimal", "proof": "qaplib"},
+  {"name": "nug30", "n": 30, "bks": 6124, "qaplib_2012": {"value": 6124, "status": "optimal"}, "status": "optimal", "proof": "qaplib"},
+  {"name": "rou12", "n": 12, "bks": 235528, "qaplib_2012": {"value": 235528, "status": "optimal"}, "status": "optimal", "proof": "qaplib"},
+  {"name": "rou15", "n": 15, "bks": 354210, "qaplib_2012": {"value": 354210, "status": "optimal"}, "status": "optimal", "proof": "qaplib"},
+  {"name": "rou20", "n": 20, "bks": 725522, "qaplib_2012": {"value": 725522, "status": "optimal"}, "status": "optimal", "proof": "qaplib"},
+  {"name": "scr12", "n": 12, "bks": 31410, "qaplib_2012": {"value": 31410, "status": "optimal"}, "status": "optimal", "proof": "qaplib"},
+  {"name": "scr15", "n": 15, "bks": 51140, "qaplib_2012": {"value": 51140, "status": "optimal"}, "status": "optimal", "proof": "qaplib"},
+  {"name": "scr20", "n": 20, "bks": 110030, "qaplib_2012": {"value": 110030, "status": "optimal"}, "status": "optimal", "proof": "qaplib"},
+  {"name": "sko100a", "n": 100, "bks": 152002, "qaplib_2012": {"value": 152002, "status": "open", "found_by": "GEN", "lower_bound": 143846}, "status": "open", "lower_bound": 147972, "lower_bound_source": "mittelmann2026log"},
+  {"name": "sko100b", "n": 100, "bks": 153890, "qaplib_2012": {"value": 153890, "status": "open", "found_by": "GEN", "lower_bound": 145522}, "status": "open", "lower_bound": 149668, "lower_bound_source": "mittelmann2026"},
+  {"name": "sko100c", "n": 100, "bks": 147862, "qaplib_2012": {"value": 147862, "status": "open", "found_by": "GEN", "lower_bound": 139881}, "status": "open", "lower_bound": 144169, "lower_bound_source": "mittelmann2026log"},
+  {"name": "sko100d", "n": 100, "bks": 149576, "qaplib_2012": {"value": 149576, "status": "open", "found_by": "GEN", "lower_bound": 141289}, "status": "open", "lower_bound": 145352, "lower_bound_source": "mittelmann2026log"},
+  {"name": "sko100e", "n": 100, "bks": 149150, "qaplib_2012": {"value": 149150, "status": "open", "found_by": "GEN", "lower_bound": 140893}, "status": "open", "lower_bound": 145250, "lower_bound_source": "mittelmann2026log"},
+  {"name": "sko100f", "n": 100, "bks": 149036, "qaplib_2012": {"value": 149036, "status": "open", "found_by": "GEN", "lower_bound": 140691}, "status": "open", "lower_bound": 144755, "lower_bound_source": "mittelmann2026"},
+  {"name": "sko42", "n": 42, "bks": 15812, "qaplib_2012": {"value": 15812, "status": "open", "found_by": "Ro-TS", "lower_bound": 14934}, "status": "optimal", "proof": "fujii2021"},
+  {"name": "sko49", "n": 49, "bks": 23386, "qaplib_2012": {"value": 23386, "status": "open", "found_by": "Ro-TS", "lower_bound": 22004}, "status": "open", "lower_bound": 22941, "lower_bound_source": "mittelmann2026"},
+  {"name": "sko56", "n": 56, "bks": 34458, "qaplib_2012": {"value": 34458, "status": "open", "found_by": "Ro-TS", "lower_bound": 32610}, "status": "open", "lower_bound": 33449, "lower_bound_source": "mittelmann2026"},
+  {"name": "sko64", "n": 64, "bks": 48498, "qaplib_2012": {"value": 48498, "status": "open", "found_by": "Ro-TS", "lower_bound": 45736}, "status": "open", "lower_bound": 47078, "lower_bound_source": "mittelmann2026"},
+  {"name": "sko72", "n": 72, "bks": 66256, "qaplib_2012": {"value": 66256, "status": "open", "found_by": "Ro-TS", "lower_bound": 62691}, "status": "open", "lower_bound": 64643, "lower_bound_source": "mittelmann2026"},
+  {"name": "sko81", "n": 81, "bks": 90998, "qaplib_2012": {"value": 90998, "status": "open", "found_by": "GEN", "lower_bound": 86072}, "status": "open", "lower_bound": 88592, "lower_bound_source": "mittelmann2026"},
+  {"name": "sko90", "n": 90, "bks": 115534, "qaplib_2012": {"value": 115534, "status": "open", "found_by": "Ro-TS", "lower_bound": 109030}, "status": "open", "lower_bound": 112423, "lower_bound_source": "mittelmann2026"},
+  {"name": "ste36a", "n": 36, "bks": 9526, "qaplib_2012": {"value": 9526, "status": "optimal"}, "status": "optimal", "proof": "qaplib"},
+  {"name": "ste36b", "n": 36, "bks": 15852, "qaplib_2012": {"value": 15852, "status": "optimal"}, "status": "optimal", "proof": "qaplib"},
+  {"name": "ste36c", "n": 36, "bks": 8239110, "qaplib_2012": {"value": 8239110, "status": "optimal"}, "status": "optimal", "proof": "qaplib"},
+  {"name": "tai100a", "n": 100, "bks": 21040996, "qaplib_2012": {"value": 21052466, "status": "open", "found_by": "ITS", "lower_bound": 15844731}, "status": "open", "lower_bound": 17853840, "lower_bound_source": "mittelmann2026", "history": [{"value": 21052466, "source": "qaplib", "note": "QAPLIB table (ITS)"}, {"value": 21044752, "year": 2017, "source": "shylo2017"}, {"value": 21043560, "year": 2019, "source": "misevicius2019"}, {"value": 21040996, "year": 2024, "source": "sergienko2024"}], "bks_source": "sergienko2024", "notes": ["sergienko2026"]},
+  {"name": "tai100b", "n": 100, "bks": 1185996137, "qaplib_2012": {"value": 1185996137, "status": "open", "found_by": "Ro-TS", "lower_bound": 1058131796}, "status": "open", "lower_bound": 1160455924, "lower_bound_source": "mittelmann2026"},
+  {"name": "tai10a", "n": 10, "bks": 135028, "status": "optimal", "proof": "enumeration", "qaplib_2012": null},
+  {"name": "tai10b", "n": 10, "bks": 1183760, "status": "optimal", "proof": "enumeration", "qaplib_2012": null},
+  {"name": "tai12a", "n": 12, "bks": 224416, "qaplib_2012": {"value": 224416, "status": "optimal"}, "status": "optimal", "proof": "qaplib"},
+  {"name": "tai12b", "n": 12, "bks": 39464925, "qaplib_2012": {"value": 39464925, "status": "optimal"}, "status": "optimal", "proof": "qaplib"},
+  {"name": "tai150b", "n": 150, "bks": 498896643, "qaplib_2012": {"value": 498896643, "status": "open", "found_by": "GEN-3", "lower_bound": 441786736}, "status": "open", "lower_bound": 473337386, "lower_bound_source": "mittelmann2026"},
+  {"name": "tai15a", "n": 15, "bks": 388214, "qaplib_2012": {"value": 388214, "status": "optimal"}, "status": "optimal", "proof": "qaplib"},
+  {"name": "tai15b", "n": 15, "bks": 51765268, "qaplib_2012": {"value": 51765268, "status": "optimal"}, "status": "optimal", "proof": "qaplib"},
+  {"name": "tai17a", "n": 17, "bks": 491812, "qaplib_2012": {"value": 491812, "status": "optimal"}, "status": "optimal", "proof": "qaplib"},
+  {"name": "tai20a", "n": 20, "bks": 703482, "qaplib_2012": {"value": 703482, "status": "optimal"}, "status": "optimal", "proof": "qaplib"},
+  {"name": "tai20b", "n": 20, "bks": 122455319, "qaplib_2012": {"value": 122455319, "status": "optimal"}, "status": "optimal", "proof": "qaplib"},
+  {"name": "tai256c", "n": 256, "bks": 44759294, "qaplib_2012": {"value": 44759294, "status": "open", "found_by": "ANT", "lower_bound": 43849646}, "status": "open", "lower_bound": 44445735, "lower_bound_source": "quadi", "notes": ["fujii2025"]},
+  {"name": "tai25a", "n": 25, "bks": 1167256, "qaplib_2012": {"value": 1167256, "status": "optimal"}, "status": "optimal", "proof": "qaplib"},
+  {"name": "tai25b", "n": 25, "bks": 344355646, "qaplib_2012": {"value": 344355646, "status": "optimal"}, "status": "optimal", "proof": "qaplib"},
+  {"name": "tai30a", "n": 30, "bks": 1818146, "qaplib_2012": {"value": 1818146, "status": "open", "found_by": "Ro-TS", "lower_bound": 1706855}, "status": "optimal", "proof": "fujii2021"},
+  {"name": "tai30b", "n": 30, "bks": 637117113, "qaplib_2012": {"value": 637117113, "status": "optimal"}, "status": "optimal", "proof": "qaplib"},
+  {"name": "tai35a", "n": 35, "bks": 2422002, "qaplib_2012": {"value": 2422002, "status": "open", "found_by": "Ro-TS", "lower_bound": 2216627}, "status": "open", "lower_bound": 2292261, "lower_bound_source": "mittelmann2026"},
+  {"name": "tai35b", "n": 35, "bks": 283315445, "qaplib_2012": {"value": 283315445, "status": "open", "found_by": "Ro-TS", "lower_bound": 242172800}, "status": "optimal", "proof": "goncalves2017"},
+  {"name": "tai40a", "n": 40, "bks": 3139370, "qaplib_2012": {"value": 3139370, "status": "open", "found_by": "Ro-TS", "lower_bound": 2843274}, "status": "open", "lower_bound": 2923073, "lower_bound_source": "mittelmann2026"},
+  {"name": "tai40b", "n": 40, "bks": 637250948, "qaplib_2012": {"value": 637250948, "status": "open", "found_by": "Ro-TS", "lower_bound": 564428353}, "status": "optimal", "proof": "goncalves2017"},
+  {"name": "tai50a", "n": 50, "bks": 4938796, "qaplib_2012": {"value": 4938796, "status": "open", "found_by": "ITS", "lower_bound": 4390920}, "status": "open", "lower_bound": 4470692, "lower_bound_source": "mittelmann2026"},
+  {"name": "tai50b", "n": 50, "bks": 458821517, "qaplib_2012": {"value": 458821517, "status": "open", "found_by": "Ro-TS", "lower_bound": 395543467}, "status": "open", "lower_bound": 448410946, "lower_bound_source": "mittelmann2026"},
+  {"name": "tai60a", "n": 60, "bks": 7205962, "qaplib_2012": {"value": 7205962, "status": "open", "found_by": "TS-2", "lower_bound": 5578356}, "status": "open", "lower_bound": 6371803, "lower_bound_source": "mittelmann2026"},
+  {"name": "tai60b", "n": 60, "bks": 608215054, "qaplib_2012": {"value": 608215054, "status": "open", "found_by": "Ro-TS", "lower_bound": 542376603}, "status": "open", "lower_bound": 595752237, "lower_bound_source": "mittelmann2026"},
+  {"name": "tai64c", "n": 64, "bks": 1855928, "qaplib_2012": {"value": 1855928, "status": "optimal"}, "status": "optimal", "proof": "qaplib"},
+  {"name": "tai80a", "n": 80, "bks": 13499184, "qaplib_2012": {"value": 13499184, "status": "open", "found_by": "ITS", "lower_bound": 10501941}, "status": "open", "lower_bound": 11730513, "lower_bound_source": "mittelmann2026"},
+  {"name": "tai80b", "n": 80, "bks": 818415043, "qaplib_2012": {"value": 818415043, "status": "open", "found_by": "Ro-TS", "lower_bound": 717907288}, "status": "open", "lower_bound": 790015925, "lower_bound_source": "mittelmann2026"},
+  {"name": "tho150", "n": 150, "bks": 8133398, "qaplib_2012": {"value": 8133398, "status": "open", "found_by": "SIM-3", "lower_bound": 7620628}, "status": "open", "lower_bound": 7854894, "lower_bound_source": "mittelmann2026"},
+  {"name": "tho30", "n": 30, "bks": 149936, "qaplib_2012": {"value": 149936, "status": "optimal"}, "status": "optimal", "proof": "qaplib"},
+  {"name": "tho40", "n": 40, "bks": 240516, "qaplib_2012": {"value": 240516, "status": "open", "found_by": "SIM-2", "lower_bound": 224414}, "status": "open", "lower_bound": 228079, "lower_bound_source": "mittelmann2026"},
+  {"name": "wil100", "n": 100, "bks": 273038, "qaplib_2012": {"value": 273038, "status": "open", "found_by": "GEN", "lower_bound": 264442}, "status": "open", "lower_bound": 269313, "lower_bound_source": "mittelmann2026"},
+  {"name": "wil50", "n": 50, "bks": 48816, "qaplib_2012": {"value": 48816, "status": "open", "found_by": "SIM-2", "lower_bound": 47098}, "status": "open", "lower_bound": 48397, "lower_bound_source": "mittelmann2026"}
+ ]
+}

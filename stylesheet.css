@@ -17,7 +17,8 @@
      8. BDSP collection table
      9. BDSP instance detail
     10. BDSP validator
-    11. Responsive
+    11. QAP checker (the QAP pages otherwise reuse sections 7-10)
+    12. Responsive
    ============================================================ */
 
 /* ---------- 1. Tokens ---------- */
@@ -712,7 +713,19 @@ button:hover { background: var(--control-hover); }
 .gantt-legend { font-size: 0.85rem; color: var(--text-muted); margin: 0.4rem 0; }
 .gantt-details svg { max-width: 100%; height: auto; border: 1px solid var(--rule); margin-top: 0.4rem; }
 
-/* ---------- 11. Responsive ---------- */
+/* ---------- 11. QAP checker ---------- */
+.permutation-input {
+  font-family: "Courier New", Courier, monospace;
+  font-size: 0.9rem;
+  padding: 0.4rem 0.5rem;
+  border: 1px solid var(--control-border);
+  background: var(--bg);
+  color: var(--text);
+  width: 100%;
+  max-width: 760px;
+}
+
+/* ---------- 12. Responsive ---------- */
 @media (max-width: 768px) {
   body { font-size: 16px; }
   table { font-size: 0.9rem; }
