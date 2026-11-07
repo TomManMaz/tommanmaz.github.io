@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="description" content="Check a Quadratic Assignment Problem permutation against a QAPLIB instance in the browser: cost, gap to the best known value, and how to submit an improvement." />
+  <meta name="author" content="Tommaso Mannelli Mazzoli" />
+
+  <meta http-equiv="X-Content-Type-Options" content="nosniff" />
+  <meta http-equiv="X-Frame-Options" content="SAMEORIGIN" />
+  <meta name="referrer" content="no-referrer-when-downgrade" />
+
+  <title>Check a QAP Permutation &mdash; Tommaso Mannelli Mazzoli</title>
+  <link rel="icon" type="image/png" href="icon.png" />
+  <link rel="apple-touch-icon" href="icon.png" />
+  <link rel="stylesheet" href="stylesheet.css" />
+  <script src="js/theme.js"></script></head>
+<body>
+  <a href="#main-content" class="skip-link">Skip to main content</a>
+
+  <header class="header">
+    <h1>Tommaso Mannelli Mazzoli</h1>
+    <p>AI Architect at PORR AG, Vienna, Austria</p>
+  </header>
+
+  <nav class="navbar" role="navigation" aria-label="Main navigation">
+    <a href="index.html">Home</a>
+    <a href="publications.html">Publications</a>
+    <a href="bdsp.html">BDSP</a>
+    <a class="active" href="qap.html" aria-current="page">QAP</a>
+    <a href="amm.html">AMM</a>  </nav>
+
+  <main id="main-content" class="wide">
+    <a href="qap.html" class="back-link">&larr; QAP overview</a>
+    <h1>Check a Permutation</h1>
+    <p class="lead">
+      Choose a QAPLIB instance, paste a permutation or upload an <code>.sln</code> file, and get its
+      cost compared with the best known value. Everything runs in your browser.
+    </p>
+
+    <div class="validator-form">
+      <div class="form-row">
+        <div class="form-field">
+          <label for="instance-select">1. Choose the instance</label>
+          <select id="instance-select">
+            <option value="">&mdash; select an instance &mdash;</option>
+          </select>
+          <span id="instance-status" class="validator-status"></span>
+        </div>
+
+        <div class="form-field">
+          <label for="solution-upload">2. Upload a solution file&hellip;</label>
+          <input type="file" id="solution-upload" accept=".sln,.txt,text/plain" />
+          <span class="field-hint">A file named after the instance (e.g. <code>tai30a.sln</code>) selects it automatically.</span>
+        </div>
+      </div>
+
+      <div class="form-field">
+        <label for="permutation-input">&hellip;or paste the permutation</label>
+        <textarea id="permutation-input" class="permutation-input" rows="4" spellcheck="false"
+          placeholder="e.g. 8 15 16 14 19 6 7 17 1 12 10 11 5 20 2 3 4 9 18 13"></textarea>
+        <span class="field-hint">Numbers 1..n separated by spaces, commas or line breaks; 0-based lists and full <code>.sln</code> files are accepted too.</span>
+      </div>
+
+      <div>
+        <button class="validate-btn" id="validate-btn">Check</button>
+        <span id="validate-status" class="validator-status"></span>
+      </div>
+    </div>
+
+    <details class="help-details">
+      <summary>How the cost is computed</summary>
+      <p>
+        For an instance with matrices <em>a</em> and <em>b</em> (the first and second matrix in the
+        <code>.dat</code> file) and a permutation <em>p</em>, where <em>p</em>(<em>i</em>) is the
+        location of facility <em>i</em>:
+      </p>
+      <pre>cost(p) = sum over i, j of  a[i][j] * b[p(i)][p(j)]</pre>
+      <p>
+        This is the QAPLIB convention. If your code uses the opposite one, the checker also reports
+        the cost of the inverse permutation.
+      </p>
+    </details>
+
+    <details class="help-details">
+      <summary>Use your own instance file</summary>
+      <p>Check against a QAPLIB-format <code>.dat</code> file that is not in the collection (no BKS comparison):</p>
+      <input type="file" id="instance-upload" accept=".dat,.txt,text/plain" aria-label="Upload instance file" />
+    </details>
+
+    <div id="results-section" hidden>
+      <h2>Result</h2>
+      <div id="results-content"></div>
+    </div>
+  </main>
+
+  <footer class="site-footer">
+    <p>
+      <a href="mailto:tommanmaz.math@gmail.com">tommanmaz.math@gmail.com</a>
+      <span class="sep">&middot;</span>
+      <a href="https://github.com/TomManMaz/tommanmaz.github.io" target="_blank" rel="noopener">Source on GitHub</a>
+    </p>
+  </footer>
+
+  <script src="data/qap_instances.js"></script>
+  <script src="js/qap_core.js"></script>
+  <script src="js/qap_validate.js"></script>
+</body>
+</html>

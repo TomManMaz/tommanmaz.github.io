@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="description" content="All QAPLIB instances with verified best known values, optimality status, best lower bounds and gaps. Filter by family or status, sort, search, and download." />
+  <meta name="keywords" content="QAPLIB, quadratic assignment problem, best known solutions, lower bounds, instances" />
+  <meta name="author" content="Tommaso Mannelli Mazzoli" />
+
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://tommanmaz.github.io/qap_collection.html" />
+  <meta property="og:title" content="QAPLIB Instances &mdash; Tommaso Mannelli Mazzoli" />
+  <meta property="og:description" content="QAPLIB instances with verified best known values and lower bounds." />
+  <meta property="og:image" content="https://tommanmaz.github.io/icon.png" />
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="QAPLIB Instances &mdash; Tommaso Mannelli Mazzoli" />
+  <meta name="twitter:description" content="QAPLIB instances with verified best known values and lower bounds." />
+  <meta name="twitter:image" content="https://tommanmaz.github.io/icon.png" />
+
+  <meta http-equiv="X-Content-Type-Options" content="nosniff" />
+  <meta http-equiv="X-Frame-Options" content="SAMEORIGIN" />
+  <meta name="referrer" content="no-referrer-when-downgrade" />
+
+  <title>QAPLIB Instances &mdash; Tommaso Mannelli Mazzoli</title>
+  <link rel="icon" type="image/png" href="icon.png" />
+  <link rel="apple-touch-icon" href="icon.png" />
+  <link rel="stylesheet" href="stylesheet.css" />
+  <script src="js/theme.js"></script></head>
+<body>
+  <a href="#main-content" class="skip-link">Skip to main content</a>
+
+  <header class="header">
+    <h1>Tommaso Mannelli Mazzoli</h1>
+    <p>AI Architect at PORR AG, Vienna, Austria</p>
+  </header>
+
+  <nav class="navbar" role="navigation" aria-label="Main navigation">
+    <a href="index.html">Home</a>
+    <a href="publications.html">Publications</a>
+    <a href="bdsp.html">BDSP</a>
+    <a class="active" href="qap.html" aria-current="page">QAP</a>
+    <a href="amm.html">AMM</a>  </nav>
+
+  <main id="main-content" class="wide">
+    <a href="qap.html" class="back-link">&larr; QAP overview</a>
+    <h1>QAPLIB Instances</h1>
+    <p class="last-updated">Data checked: <span id="qap-updated">&hellip;</span></p>
+
+    <p>
+      Every best known value (BKS) below is the cost of a stored permutation, recomputed on the
+      official instance data. Rows highlighted in <span class="legend-optimal">green</span> are
+      <strong>proven optimal</strong>; for the others, the lower bound is the best one published
+      and the gap is (BKS &minus; lower bound) / BKS. Instances marked
+      <span class="community-tag">updated</span> differ from the official 2012 tables.
+      Click an instance for its permutation, sources and history.
+    </p>
+
+    <div id="qap-table-container">
+      <p>Loading instance data&hellip;</p>
+    </div>
+    <button onclick="exportQapCSV()">Download CSV (current view)</button>
+
+    <h2>Families</h2>
+    <div class="table-scroll" id="qap-families"></div>
+
+    <h2 id="data-access">Data Access</h2>
+    <p>Static files with stable URLs, relative to <code>https://tommanmaz.github.io</code>:</p>
+    <div class="table-scroll">
+    <table>
+      <thead>
+        <tr>
+          <th>URL</th>
+          <th>Content</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><code>/data/qap_instances.json</code></td>
+          <td>Index of all instances: <code>name</code>, <code>family</code>, <code>n</code>,
+          <code>bks</code>, <code>status</code>, <code>lower_bound</code>, <code>gap_pct</code>,
+          the value and status in the official 2012 tables (<code>qaplib_2012</code>), the
+          <code>changes</code> since then, record <code>history</code>, and the
+          <code>references</code> behind each value, proof and bound.</td>
+        </tr>
+        <tr>
+          <td><code>/downloads/qap/instances/&lt;name&gt;.dat</code></td>
+          <td>Official QAPLIB instance file, unchanged.</td>
+        </tr>
+        <tr>
+          <td><code>/downloads/qap/solutions/&lt;name&gt;.sln</code></td>
+          <td>Verified best known solution: <code>n value</code>, then the permutation (1-based,
+          <em>p</em>(<em>i</em>) = location of facility <em>i</em>).</td>
+        </tr>
+      </tbody>
+    </table>
+    </div>
+    <pre class="citation-box">import json, urllib.request
+
+BASE = "https://tommanmaz.github.io"
+data = json.load(urllib.request.urlopen(f"{BASE}/data/qap_instances.json"))
+open_instances = [(e["name"], e["bks"], e["lower_bound"]) for e in data["instances"] if e["status"] == "open"]
+print(len(open_instances), "open instances")</pre>
+    <p>
+      To check permutations in bulk, load the computation core in Node.js:
+      <code>require('./js/qap_core.js')</code>.
+    </p>
+
+    <h2>Reporting a New Best Solution</h2>
+    <p>
+      Found a permutation that beats a listed BKS, or a proof of optimality or a better lower bound?
+      Check the permutation with the <a href="qap_validate.html">online checker</a>, then
+      <a href="https://github.com/TomManMaz/tommanmaz.github.io/issues/new?template=new-qap-bks.yml">open
+      a submission issue</a> or email
+      <a href="mailto:tommanmaz.math@gmail.com">tommanmaz.math@gmail.com</a>.
+      It is published here with credit once the permutation has been checked.
+    </p>
+  </main>
+
+  <footer class="site-footer">
+    <p>
+      <a href="mailto:tommanmaz.math@gmail.com">tommanmaz.math@gmail.com</a>
+      <span class="sep">&middot;</span>
+      <a href="https://github.com/TomManMaz/tommanmaz.github.io" target="_blank" rel="noopener">Source on GitHub</a>
+    </p>
+  </footer>
+
+  <script src="data/qap_instances.js"></script>
+  <script src="js/qap_collection.js"></script>
+</body>
+</html>

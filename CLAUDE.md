@@ -16,7 +16,7 @@ into the navbar that sets `<html data-theme>`; use color tokens, never
 literal colors, so both themes work (the Gantt SVG uses `style="fill:var(..)"`).
 All styling goes in `stylesheet.css` (tokens at the top);
 never in page-level `<style>` blocks. Every page repeats the same chrome
-(skip-link, header, navbar Home/Publications/BDSP/AMM, footer) by hand —
+(skip-link, header, navbar Home/Publications/BDSP/QAP/AMM, footer) by hand —
 keep them in sync. Table-heavy pages use `<main class="wide">`. MathJax is
 loaded only on `bdsp_problem/instance/validate.html` and
 `amm.html`.
@@ -33,6 +33,33 @@ loaded only on `bdsp_problem/instance/validate.html` and
 
 Collection and instance pages read `window.BDSP_INSTANCES` from
 `data/instances.js` (inline copy of `data/instances.json`).
+
+| QAP page | Purpose |
+|---|---|
+| `qap.html` + `js/qap_overview.js` | Landing: what changed since the official QAPLIB tables, conventions, citation |
+| `qap_collection.html` + `js/qap_collection.js` | All QAPLIB instances (sort/filter/search/export), families, Data Access |
+| `qap_instance.html` + `js/qap_instance.js` | Per-instance detail via `?instance=<name>`: permutation, proof or bound, history |
+| `qap_validate.html` + `js/qap_validate.js` | Permutation checker (paste or upload `.sln`), submission panel |
+
+## QAP section — an unofficial, verified update of the QAPLIB tables
+
+- `data/qap_ledger.json` — **the source of truth, edited by hand**: per
+  instance `bks`, `status`, `proof` / `lower_bound_source` / `bks_source`
+  (keys into `references`), the official 2012 value (`qaplib_2012`), and
+  `history`. Keep one instance per line.
+- `downloads/qap/instances/*.dat` — official QAPLIB data (`qapdata.tar.gz`),
+  never modified. `downloads/qap/solutions/*.sln` — one permutation per
+  instance in the QAPLIB convention (`cost = sum a[i][j] b[p(i)][p(j)]`,
+  1-based); the official archive's inverse / 0-based files were normalized.
+- `python scripts/build_qap_data.py` regenerates `data/qap_instances.json` and
+  `data/qap_instances.js` (never hand-edit them) and **fails unless every
+  stored permutation costs exactly the ledger's bks**.
+- `node scripts/qap_parity_test.js` checks `js/qap_core.js` against the
+  published values. Run both after any change.
+- Submissions: `.github/ISSUE_TEMPLATE/new-qap-bks.yml` (title `[QAP]`,
+  label `qap-submission`), reviewed by hand — no workflow yet. To accept one:
+  check the permutation, write the `.sln`, update the ledger (move the old
+  value into `history`), rebuild.
 
 ## Validator architecture — the key invariant
 
