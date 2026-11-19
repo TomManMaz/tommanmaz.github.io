@@ -1,10 +1,10 @@
 {
- "updated": "2026-11-03",
+ "updated": "2026-11-19",
  "objective": "cost(p) = sum over i, j of a[i][j] * b[p(i)][p(j)], with a the first and b the second matrix of the .dat file and p a 1-based permutation.",
  "references": {
    "qaplib": {
      "short": "QAPLIB",
-     "text": "R.E. Burkard, S.E. Karisch, F. Rendl. QAPLIB – A Quadratic Assignment Problem Library. Journal of Global Optimization 10:391–403, 1997. Instance and solution tables at Lehigh University, last updated April 2012.",
+     "text": "R.E. Burkard, S.E. Karisch, F. Rendl. QAPLIB – A Quadratic Assignment Problem Library. Journal of Global Optimization 10:391–403, 1997. Instance and solution tables at Lehigh University, last updated April 2012; instances and solutions archived at Edinburgh DataShare, doi:10.7488/ds/3428.",
      "url": "https://coral.ise.lehigh.edu/data-sets/qaplib/qaplib-problem-instances-and-solutions/"
    },
    "goncalves2017": {
@@ -39,12 +39,12 @@
    },
    "mittelmann2026": {
      "short": "Mittelmann 2026",
-     "text": "H.D. Mittelmann. Improved QAPLIB lower bounds using BBCPOP and NewtBracket. Web page dated 26 August 2026.",
+     "text": "H.D. Mittelmann. Improved QAPLIB lower bounds using BBCPOP and NewtBracket. Web page, bounds of 26 August 2026, last updated 7 November 2026.",
      "url": "https://plato.asu.edu/ftp/qaplib_bounds.html"
    },
    "quadi": {
      "short": "QUADI (Baylis)",
-     "text": "QUADI (T. Baylis, quadi.dev), as listed by H.D. Mittelmann on 26 August 2026.",
+     "text": "QUADI (T. Baylis, quadi.dev): the bound 44,445,735.21, listed by H.D. Mittelmann on 26 August 2026 and submitted the next day to the QAPLIB maintainer with a dual certificate and a verifier. QAPLIB data are integers, so the optimum is an integer and the bound is rounded up.",
      "url": "https://plato.asu.edu/ftp/qaplib_bounds.html"
    },
    "enumeration": {
@@ -241,7 +241,7 @@
   {"name": "tai17a", "n": 17, "bks": 491812, "qaplib_2012": {"value": 491812, "status": "optimal"}, "status": "optimal", "proof": "qaplib"},
   {"name": "tai20a", "n": 20, "bks": 703482, "qaplib_2012": {"value": 703482, "status": "optimal"}, "status": "optimal", "proof": "qaplib"},
   {"name": "tai20b", "n": 20, "bks": 122455319, "qaplib_2012": {"value": 122455319, "status": "optimal"}, "status": "optimal", "proof": "qaplib"},
-  {"name": "tai256c", "n": 256, "bks": 44759294, "qaplib_2012": {"value": 44759294, "status": "open", "found_by": "ANT", "lower_bound": 43849646}, "status": "open", "lower_bound": 44445735, "lower_bound_source": "quadi", "notes": ["fujii2025"]},
+  {"name": "tai256c", "n": 256, "bks": 44759294, "qaplib_2012": {"value": 44759294, "status": "open", "found_by": "ANT", "lower_bound": 43849646}, "status": "open", "lower_bound": 44445736, "lower_bound_source": "quadi", "notes": ["fujii2025"]},
   {"name": "tai25a", "n": 25, "bks": 1167256, "qaplib_2012": {"value": 1167256, "status": "optimal"}, "status": "optimal", "proof": "qaplib"},
   {"name": "tai25b", "n": 25, "bks": 344355646, "qaplib_2012": {"value": 344355646, "status": "optimal"}, "status": "optimal", "proof": "qaplib"},
   {"name": "tai30a", "n": 30, "bks": 1818146, "qaplib_2012": {"value": 1818146, "status": "open", "found_by": "Ro-TS", "lower_bound": 1706855}, "status": "optimal", "proof": "fujii2021"},
